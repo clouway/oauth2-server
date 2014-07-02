@@ -3,7 +3,7 @@ package com.example.auth.http;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class TokenRequestDTO {
+class TokenRequestDTO {
   private String grantType;
   private String username;
   private String password;

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> TelcoNG Login</title>
+</head>
+
+<body>
+
+<div class="form-container">
+    <div id="login-title">TelcoNG</div>
+
+    <div class="alert-error">
+        <div class="error-message"></div>
+    </div>
+
+    <form method="post">
+        <div>
+            <label>Username:</label>
+            <input type="text" name="username"/>
+        </div>
+
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password"/>
+        </div>
+
+        <button type="submit" class="btn btn-success">Login</button>
+    </form>
+</div>
+
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+        color: #333333;
+        background-color: #ffffff;
+    }
+
+    .form-container {
+        position: fixed;
+        left: 50%;
+        right: 50%;
+        margin-left: -175px;
+        margin-top: 50px;
+        padding: 10px;
+        border: solid 1px #0088cc;
+        margin-right: auto;
+        width: 300px;
+        height: auto;
+
+    }
+
+    #login-title {
+        text-align: center;
+        padding: 10px;
+        margin-bottom: 15px;
+        font-family: Arial, Helvetica, sans-serif;
+        color: white;
+        background: #0088cc;
+        font-size: 20px;
+
+    }
+
+    .error-message {
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    label,
+    input,
+    button,
+    select,
+    textarea {
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 20px;
+    }
+
+    textarea,
+    input[type="text"],
+    input[type="password"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="date"],
+    input[type="month"],
+    input[type="time"],
+    input[type="week"],
+    input[type="number"],
+    input[type="email"],
+    input[type="url"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="color"],
+    .uneditable-input {
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+        -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+        -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+        transition: border linear 0.2s, box-shadow linear 0.2s;
+    }
+
+    select,
+    textarea,
+    input[type="text"],
+    input[type="password"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="date"],
+    input[type="month"],
+    input[type="time"],
+    input[type="week"],
+    input[type="number"],
+    input[type="email"],
+    input[type="url"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="color"],
+    .uneditable-input {
+        display: inline-block;
+        height: 20px;
+        padding: 4px 6px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 20px;
+        color: #555555;
+        vertical-align: middle;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    input,
+    textarea,
+    .uneditable-input {
+        margin-left: 0;
+    }
+
+    input,
+    textarea,
+    .uneditable-input {
+        width: 206px;
+    }
+
+    input,
+    button,
+    select,
+    textarea {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    label,
+    input,
+    button,
+    select,
+    textarea {
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        *display: inline;
+        padding: 4px 12px;
+        margin-bottom: 0;
+        *margin-left: .3em;
+        font-size: 14px;
+        line-height: 20px;
+        color: #333333;
+        text-align: center;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+        vertical-align: middle;
+        cursor: pointer;
+        background-color: #f5f5f5;
+        *background-color: #e6e6e6;
+        background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+        background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+        background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+        background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+        background-repeat: repeat-x;
+        border: 1px solid #bbbbbb;
+        *border: 0;
+        border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        border-bottom-color: #a2a2a2;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+        *zoom: 1;
+        -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+        -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    button.btn,
+    input[type="submit"].btn {
+        *padding-top: 3px;
+        *padding-bottom: 3px;
+    }
+
+    .btn-success {
+        color: #ffffff;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+        background-color: #5bb75b;
+        *background-color: #51a351;
+        background-image: -moz-linear-gradient(top, #62c462, #51a351);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+        background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+        background-image: -o-linear-gradient(top, #62c462, #51a351);
+        background-image: linear-gradient(to bottom, #62c462, #51a351);
+        background-repeat: repeat-x;
+        border-color: #51a351 #51a351 #387038;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    }
+
+    .alert-error {
+        color: #b94a48;
+        background-color: #f2dede;
+        border-color: #eed3d7;
+    }
+</style>
+</body>
+</html>

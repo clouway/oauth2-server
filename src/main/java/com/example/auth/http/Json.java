@@ -13,11 +13,11 @@ import java.io.OutputStream;
 /**
  * @author Miroslav Genov (mgenov@gmail.com)
  */
-public class Json implements Transport {
+class Json implements Transport {
   private Gson gson;
 
   @Inject
-  public Json(Gson gson) {
+  Json(Gson gson) {
     this.gson = gson;
   }
 

@@ -1,9 +1,9 @@
 package com.example.auth.memory;
 
+import com.example.auth.core.AccessTokenGenerator;
 import com.example.auth.core.Clock;
 import com.example.auth.core.Interval;
 import com.example.auth.core.Token;
-import com.example.auth.core.TokenGenerator;
 import com.example.auth.core.TokenRepository;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -16,12 +16,12 @@ import java.util.Map;
 class InMemoryTokenRepository implements TokenRepository {
   private final Map<String, TokenEntity> tokens = Maps.newHashMap();
 
-  private final TokenGenerator tokenGenerator;
+  private final AccessTokenGenerator tokenGenerator;
   private final Clock clock;
   private final Interval expirationDuration;
 
   @Inject
-  InMemoryTokenRepository(TokenGenerator tokenGenerator, Clock clock, Interval expirationDuration) {
+  InMemoryTokenRepository(AccessTokenGenerator tokenGenerator, Clock clock, Interval expirationDuration) {
     this.tokenGenerator = tokenGenerator;
     this.clock = clock;
     this.expirationDuration = expirationDuration;

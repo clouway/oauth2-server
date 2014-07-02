@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class ErrorResponseDTO {
+class ErrorResponseDTO {
   @SerializedName("error")
   private final String code;
 

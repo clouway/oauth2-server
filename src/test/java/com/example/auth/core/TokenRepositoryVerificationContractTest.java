@@ -18,7 +18,7 @@ public abstract class TokenRepositoryVerificationContractTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private TokenGenerator tokenGenerator = context.mock(TokenGenerator.class);
+  private AccessTokenGenerator tokenGenerator = context.mock(AccessTokenGenerator.class);
   private Clock clock = context.mock(Clock.class);
   private Interval interval = minutes(60);
 
@@ -102,5 +102,5 @@ public abstract class TokenRepositoryVerificationContractTest {
     repository.create();
   }
 
-  protected abstract TokenRepository create(TokenGenerator tokenGenerator, Clock clock, Interval interval);
+  protected abstract TokenRepository create(AccessTokenGenerator tokenGenerator, Clock clock, Interval interval);
 }

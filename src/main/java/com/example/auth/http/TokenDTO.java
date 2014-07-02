@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class TokenDTO {
+class TokenDTO {
   @SerializedName("access_token")
   private final String value;
 

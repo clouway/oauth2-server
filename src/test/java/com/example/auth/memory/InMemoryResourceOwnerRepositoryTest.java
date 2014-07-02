@@ -1,14 +1,88 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.ResourceOwnerRepository;
-import com.example.auth.core.ResourceOwnerRepositoryContractTest;
+import com.example.auth.core.ResourceOwner;
+import com.example.auth.core.Session;
+import com.example.auth.core.TokenGenerator;
+import com.google.common.base.Optional;
+import org.jmock.Expectations;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class InMemoryResourceOwnerRepositoryTest extends ResourceOwnerRepositoryContractTest {
-  @Override
-  public ResourceOwnerRepository create() {
-    return new InMemoryResourceOwnerRepository();
+public class InMemoryResourceOwnerRepositoryTest {
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+
+  private TokenGenerator tokenGenerator = context.mock(TokenGenerator.class);
+
+  private InMemoryResourceOwnerRepository repository = new InMemoryResourceOwnerRepository(tokenGenerator);
+
+  @Test
+  public void correctCredentials() throws Exception {
+    ResourceOwner owner = new ResourceOwner("username", "password");
+
+    context.checking(new Expectations() {{
+      oneOf(tokenGenerator).generate();
+      will(returnValue("token1234"));
+    }});
+
+    repository.save(owner);
+
+    Optional<Session> session = repository.auth(owner.username, owner.password);
+
+    assertThat(session.get().value, is("token1234"));
+  }
+
+  @Test
+  public void notExistingUser() throws Exception {
+    Optional<Session> session = repository.auth("joro", "123456");
+
+    assertFalse(session.isPresent());
+  }
+
+  @Test
+  public void wrongPassword() throws Exception {
+    ResourceOwner owner = new ResourceOwner("username", "pass");
+
+    repository.save(owner);
+
+    Optional<Session> session = repository.auth("username", "123456");
+
+    assertFalse(session.isPresent());
+  }
+
+  @Test
+  public void existingSession() throws Exception {
+    final ResourceOwner owner = new ResourceOwner("Ivan", "password");
+    final Session session = new Session("token4321");
+
+    context.checking(new Expectations() {{
+      oneOf(tokenGenerator).generate();
+      will(returnValue(session.value));
+    }});
+
+    repository.save(owner);
+    repository.auth(owner.username, owner.password);
+
+    Boolean sessionIsPresented = repository.exists(session);
+
+    assertTrue(sessionIsPresented);
+  }
+
+  @Test
+  public void notExistingSession() throws Exception {
+    Session session = new Session("session123");
+
+    Boolean sessionIsPresented = repository.exists(session);
+
+    assertFalse(sessionIsPresented);
   }
 }
