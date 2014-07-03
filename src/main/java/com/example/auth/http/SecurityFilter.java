@@ -15,6 +15,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -78,9 +80,9 @@ public class SecurityFilter implements Filter {
     return "";
   }
 
-  private String getRedirectURI(HttpServletRequest request) {
+  private String getRedirectURI(HttpServletRequest request) throws UnsupportedEncodingException {
     String query = (request.getQueryString() == null) ? "" : "?" + request.getQueryString();
 
-    return request.getRequestURI() + query;
+    return URLEncoder.encode(request.getRequestURI() + query, "UTF-8");
   }
 }

@@ -36,7 +36,6 @@ public class WebModule extends AbstractModule {
   public SecuredResources provideSecuredResources() {
     return new SecuredResources() {{
       add("/authorize");
-      add("/token");
     }};
   }
 }

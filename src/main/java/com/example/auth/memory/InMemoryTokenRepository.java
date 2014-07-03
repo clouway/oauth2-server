@@ -4,7 +4,8 @@ import com.example.auth.core.AccessTokenGenerator;
 import com.example.auth.core.Clock;
 import com.example.auth.core.Interval;
 import com.example.auth.core.Token;
-import com.example.auth.core.TokenRepository;
+import com.example.auth.core.TokenCreator;
+import com.example.auth.core.TokenVerifier;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-class InMemoryTokenRepository implements TokenRepository {
+class InMemoryTokenRepository implements TokenCreator, TokenVerifier {
   private final Map<String, TokenEntity> tokens = Maps.newHashMap();
 
   private final AccessTokenGenerator tokenGenerator;

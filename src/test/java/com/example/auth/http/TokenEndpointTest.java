@@ -1,6 +1,6 @@
 package com.example.auth.http;
 
-import com.example.auth.core.ErrorResponseException;
+import com.example.auth.core.TokenErrorResponse;
 import com.example.auth.core.Token;
 import com.example.auth.core.TokenSecurity;
 import com.example.auth.core.TokenRequest;
@@ -30,10 +30,10 @@ public class TokenEndpointTest {
 
   @Test
   public void happyPath() throws Exception {
-    final TokenRequest tokenRequest = new TokenRequest("password", "FeNoMeNa", "parola");
+    final TokenRequest tokenRequest = new TokenRequest("grant_type", "code", "client_id", "client_secret");
     final Token token = new Token("token_value", "token_type");
     final TokenDTO tokenDTO = new TokenDTO("token_value", "token_type");
-    final Request request = new ParameterRequest(ImmutableMap.of("grant_type", "password", "username", "FeNoMeNa", "password", "parola"));
+    final Request request = new ParameterRequest(ImmutableMap.of("grant_type", "grant_type", "code", "code", "client_id", "client_id", "client_secret", "client_secret"));
 
     context.checking(new Expectations() {{
       oneOf(tokenSecurity).create(tokenRequest);
@@ -48,13 +48,13 @@ public class TokenEndpointTest {
 
   @Test
   public void errorResponse() throws Exception {
-    final TokenRequest tokenRequest = new TokenRequest("password", "Ronaldo", "brazil");
-    final Request request = new ParameterRequest(ImmutableMap.of("grant_type", "password", "username", "Ronaldo", "password", "brazil"));
+    final TokenRequest tokenRequest = new TokenRequest("auth_code", "1234", "client123", "secret123");
+    final Request request = new ParameterRequest(ImmutableMap.of("grant_type", "auth_code", "code", "1234", "client_id", "client123", "client_secret", "secret123"));
     final ErrorResponseDTO errorResponse = new ErrorResponseDTO("invalid_grant", "The username or password is incorrect!");
 
     context.checking(new Expectations() {{
       oneOf(tokenSecurity).create(tokenRequest);
-      will(throwException(new ErrorResponseException("invalid_grant", "The username or password is incorrect!")));
+      will(throwException(new TokenErrorResponse("invalid_grant", "The username or password is incorrect!")));
     }});
 
     Reply<?> reply = endpoint.generate(request);

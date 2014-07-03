@@ -1,5 +1,9 @@
-package com.example.auth.core;
+package com.example.auth.memory;
 
+import com.example.auth.core.AccessTokenGenerator;
+import com.example.auth.core.Clock;
+import com.example.auth.core.Interval;
+import com.example.auth.core.Token;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -14,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public abstract class TokenRepositoryVerificationContractTest {
+public class InMemoryTokenRepositoryTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
@@ -22,7 +26,7 @@ public abstract class TokenRepositoryVerificationContractTest {
   private Clock clock = context.mock(Clock.class);
   private Interval interval = minutes(60);
 
-  private TokenRepository repository = create(tokenGenerator, clock, interval);
+  private InMemoryTokenRepository repository = new InMemoryTokenRepository(tokenGenerator, clock, interval);
 
   @Test
   public void happyPath() throws Exception {
@@ -101,6 +105,4 @@ public abstract class TokenRepositoryVerificationContractTest {
 
     repository.create();
   }
-
-  protected abstract TokenRepository create(AccessTokenGenerator tokenGenerator, Clock clock, Interval interval);
 }

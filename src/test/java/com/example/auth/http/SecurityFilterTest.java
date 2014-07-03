@@ -53,7 +53,7 @@ public class SecurityFilterTest {
 
     filter.doFilter(servletRequest, servletResponse, chain);
 
-    servletResponse.assertRedirectTo("/login?page=/xxx?redirect_uri=http://abv.bg/");
+    servletResponse.assertRedirectTo("/login?page=%2Fxxx%3Fredirect_uri%3Dhttp%3A%2F%2Fabv.bg%2F");
   }
 
   @Test

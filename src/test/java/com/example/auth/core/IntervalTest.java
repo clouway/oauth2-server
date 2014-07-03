@@ -17,4 +17,12 @@ public class IntervalTest {
 
     assertThat(expectedInterval, is(actualInterval));
   }
+
+  @Test
+  public void hoursCalculation() throws Exception {
+    Interval expectedInterval = hours(24);
+    Interval actualInterval = new Interval(86400000);
+
+    assertThat(expectedInterval, is(actualInterval));
+  }
 }

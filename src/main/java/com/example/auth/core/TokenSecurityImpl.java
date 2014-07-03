@@ -6,25 +6,27 @@ import com.google.inject.Inject;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 class TokenSecurityImpl implements TokenSecurity {
-  private ResourceOwnerStore resourceOwners;
-  private TokenRepository tokens;
+  private final ClientAuthentication clientAuthentication;
+  private final AuthorizationVerifier authorizationVerifier;
+  private final TokenCreator tokenCreator;
 
   @Inject
-  public TokenSecurityImpl(ResourceOwnerStore resourceOwners, TokenRepository tokens) {
-    this.resourceOwners = resourceOwners;
-    this.tokens = tokens;
+  TokenSecurityImpl(ClientAuthentication clientAuthentication, AuthorizationVerifier authorizationVerifier, TokenCreator tokenCreator) {
+    this.clientAuthentication = clientAuthentication;
+    this.authorizationVerifier = authorizationVerifier;
+    this.tokenCreator = tokenCreator;
   }
 
   @Override
   public Token create(TokenRequest request) {
-/*    Boolean ownerExist = resourceOwners.exist(request.username, request.password);
-
-    if (!ownerExist) {
-      throw new ErrorResponseException("invalid_grant", "The username or password is incorrect!");
+    if (!clientAuthentication.authenticate(request.clientId, request.clientSecret)) {
+      throw new TokenErrorResponse("invalid_client", "The client is not authenticated!");
     }
 
-    return tokens.create();*/
+    if (!authorizationVerifier.verify(request.code, request.clientId)) {
+      throw new TokenErrorResponse("invalid_grant", "The authorization code does not exist!");
+    }
 
-    return null;
+    return tokenCreator.create();
   }
 }

@@ -16,41 +16,57 @@ public class TokenSecurityTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private ResourceOwnerStore resourceOwners = context.mock(ResourceOwnerStore.class);
-  private TokenRepository tokens = context.mock(TokenRepository.class);
+  private ClientAuthentication clientAuthentication = context.mock(ClientAuthentication.class);
+  private AuthorizationVerifier authorizationVerifier = context.mock(AuthorizationVerifier.class);
+  private TokenCreator tokenCreator = context.mock(TokenCreator.class);
 
-  private TokenSecurity generator = new TokenSecurityImpl(resourceOwners, tokens);
+  private TokenSecurity tokenSecurity = new TokenSecurityImpl(clientAuthentication, authorizationVerifier, tokenCreator);
 
   @Test
   public void happyPath() throws Exception {
-//    final TokenRequest request = new TokenRequest("grant_type", "FeNoMeNa", "password");
-//    final Token token = new Token("generated_token", "Bearer");
-//
-//    context.checking(new Expectations() {{
-//      oneOf(resourceOwners).exist(request.username, request.password);
-//      will(returnValue(true));
-//
-//      oneOf(tokens).create();
-//      will(returnValue(token));
-//    }});
-//
-//    Token actualToken = generator.create(request);
-//
-//    assertThat(actualToken, is(token));
+    final TokenRequest request = new TokenRequest("grant_type", "code", "client_id", "client_secret");
+    final Token token = new Token("generated_token", "Bearer");
 
-    fail();
+    context.checking(new Expectations() {{
+      oneOf(clientAuthentication).authenticate(request.clientId, request.clientSecret);
+      will(returnValue(true));
+
+      oneOf(authorizationVerifier).verify(request.code, request.clientId);
+      will(returnValue(true));
+
+      oneOf(tokenCreator).create();
+      will(returnValue(token));
+    }});
+
+    Token actualToken = tokenSecurity.create(request);
+
+    assertThat(actualToken, is(token));
   }
 
-  @Test(expected = ErrorResponseException.class)
-  public void notMatchingCredentials() throws Exception {
-//    final TokenRequest request = new TokenRequest("type_grant", "Ivan", "123456");
-//
-//    context.checking(new Expectations() {{
-//      oneOf(resourceOwners).exist(request.username, request.password);
-//      will(returnValue(false));
-//    }});
-//
-//    generator.create(request);
-    fail();
+  @Test(expected = TokenErrorResponse.class)
+  public void wrongClientCredentials() throws Exception {
+    final TokenRequest request = new TokenRequest("grant_type1", "code1", "client_id1", "client_secret1");
+
+    context.checking(new Expectations() {{
+      oneOf(clientAuthentication).authenticate(request.clientId, request.clientSecret);
+      will(returnValue(false));
+    }});
+
+    tokenSecurity.create(request);
+  }
+
+  @Test(expected = TokenErrorResponse.class)
+  public void notExistingCode() throws Exception {
+    final TokenRequest request = new TokenRequest("grant_type2", "code2", "client_id2", "client_secret2");
+
+    context.checking(new Expectations() {{
+      oneOf(clientAuthentication).authenticate(request.clientId, request.clientSecret);
+      will(returnValue(true));
+
+      oneOf(authorizationVerifier).verify(request.code, request.clientId);
+      will(returnValue(false));
+    }});
+
+    tokenSecurity.create(request);
   }
 }

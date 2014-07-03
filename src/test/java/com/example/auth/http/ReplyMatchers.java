@@ -39,6 +39,20 @@ public class ReplyMatchers {
     };
   }
 
+  public static Matcher<Reply<?>> redirectUriIs(final String uri) {
+    return new TypeSafeMatcher<Reply<?>>() {
+      @Override
+      public boolean matchesSafely(Reply<?> reply) {
+        Object responseValue = property("redirectUri", reply);
+        return uri.equals(responseValue);
+      }
+
+      public void describeTo(Description description) {
+        description.appendText("reply redirect uri is different from the expected one");
+      }
+    };
+  }
+
   public static Matcher<Reply<?>> isOk() {
     return returnCodeMatcher(SC_OK);
   }

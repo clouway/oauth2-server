@@ -13,5 +13,6 @@ public class CoreModule extends AbstractModule {
     bind(AccessTokenGenerator.class).to(BearerAccessTokenGenerator.class).in(Singleton.class);
     bind(TokenGenerator.class).to(Sha1TokenGenerator.class).in(Singleton.class);
     bind(TokenSecurity.class).to(TokenSecurityImpl.class).in(Singleton.class);
+    bind(AuthorizationSecurity.class).to(AuthorizationSecurityImpl.class).in(Singleton.class);
   }
 }

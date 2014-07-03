@@ -1,6 +1,6 @@
 package com.example.auth.http;
 
-import com.example.auth.core.TokenRepository;
+import com.example.auth.core.TokenVerifier;
 import com.google.sitebricks.headless.Reply;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -18,14 +18,14 @@ public class VerificationEndpointTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private TokenRepository repository = context.mock(TokenRepository.class);
+  private TokenVerifier verifier = context.mock(TokenVerifier.class);
 
-  private VerificationEndpoint endpoint = new VerificationEndpoint(repository);
+  private VerificationEndpoint endpoint = new VerificationEndpoint(verifier);
 
   @Test
   public void existingToken() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(repository).verify("b93568bbf73436511032843ec459f08b");
+      oneOf(verifier).verify("b93568bbf73436511032843ec459f08b");
       will(returnValue(true));
     }});
 
@@ -37,7 +37,7 @@ public class VerificationEndpointTest {
   @Test
   public void notExistingToken() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(repository).verify("2f5a7bba8d0c5e713f059eefd0de9662");
+      oneOf(verifier).verify("2f5a7bba8d0c5e713f059eefd0de9662");
       will(returnValue(false));
     }});
 

@@ -1,6 +1,6 @@
 package com.example.auth.http;
 
-import com.example.auth.core.ClientRepository;
+import com.example.auth.core.ClientRegister;
 import com.example.auth.core.RegistrationRequest;
 import com.example.auth.core.RegistrationResponse;
 import com.google.sitebricks.headless.Reply;
@@ -20,7 +20,7 @@ public class RegistrationEndpointTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private ClientRepository repository = context.mock(ClientRepository.class);
+  private ClientRegister repository = context.mock(ClientRegister.class);
 
   private RegistrationEndpoint endpoint = new RegistrationEndpoint(repository);
 

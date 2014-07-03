@@ -14,6 +14,10 @@ public class Interval {
     return new Interval(minutes * 60 * 1000);
   }
 
+  public static Interval hours(Integer hours) {
+    return new Interval(hours * 60 * 60 * 1000);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

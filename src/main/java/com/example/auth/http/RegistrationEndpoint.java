@@ -1,6 +1,6 @@
 package com.example.auth.http;
 
-import com.example.auth.core.ClientRepository;
+import com.example.auth.core.ClientRegister;
 import com.example.auth.core.RegistrationRequest;
 import com.example.auth.core.RegistrationResponse;
 import com.google.inject.Inject;
@@ -16,10 +16,10 @@ import com.google.sitebricks.http.Post;
 @Service
 @At("/register")
 public class RegistrationEndpoint {
-  private final ClientRepository repository;
+  private final ClientRegister repository;
 
   @Inject
-  public RegistrationEndpoint(ClientRepository repository) {
+  public RegistrationEndpoint(ClientRegister repository) {
     this.repository = repository;
   }
 

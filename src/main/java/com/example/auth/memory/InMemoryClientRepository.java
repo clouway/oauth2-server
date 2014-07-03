@@ -1,7 +1,9 @@
 package com.example.auth.memory;
 
 import com.example.auth.core.Client;
-import com.example.auth.core.ClientRepository;
+import com.example.auth.core.ClientAuthentication;
+import com.example.auth.core.ClientFinder;
+import com.example.auth.core.ClientRegister;
 import com.example.auth.core.RegistrationRequest;
 import com.example.auth.core.RegistrationResponse;
 import com.example.auth.core.TokenGenerator;
@@ -14,7 +16,7 @@ import java.util.Map;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-class InMemoryClientRepository implements ClientRepository {
+class InMemoryClientRepository implements ClientRegister, ClientFinder, ClientAuthentication {
   private Map<String, Client> clients = Maps.newHashMap();
 
   private TokenGenerator tokenGenerator;
@@ -37,5 +39,16 @@ class InMemoryClientRepository implements ClientRepository {
   @Override
   public Optional<Client> findById(String id) {
     return Optional.fromNullable(clients.get(id));
+  }
+
+  @Override
+  public Boolean authenticate(String id, String secret) {
+    if (clients.containsKey(id)) {
+      if (clients.get(id).secret.equals(secret)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
