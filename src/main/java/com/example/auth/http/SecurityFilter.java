@@ -43,7 +43,7 @@ public class SecurityFilter implements Filter {
     HttpServletResponse response = (HttpServletResponse) servletResponse;
 
     if (securedResources.contains(request.getRequestURI())) {
-      Session session = new Session(getCookieValue(request, "auth_token"));
+      Session session = new Session(getCookieValue(request, "session_id"));
 
       if (!sessionSecurity.exists(session)) {
         response.sendRedirect("/login?page=" + getRedirectURI(request));

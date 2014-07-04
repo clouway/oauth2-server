@@ -79,6 +79,6 @@ public class SecurityFilterTest {
   }
 
   private Cookie[] authCookie(String value) {
-    return new Cookie[] {new Cookie("auth_token", value)};
+    return new Cookie[] {new Cookie("session_id", value)};
   }
 }

@@ -33,7 +33,7 @@ public class LoginEndpoint {
     Optional<Session> session = authentication.auth(username, password);
 
     if (session.isPresent()) {
-      response.addCookie(new Cookie("auth_token", session.get().value));
+      response.addCookie(new Cookie("session_id", session.get().value));
     }
 
     return page;

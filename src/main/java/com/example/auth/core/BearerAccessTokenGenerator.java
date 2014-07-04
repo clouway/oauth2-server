@@ -11,7 +11,7 @@ public class BearerAccessTokenGenerator implements AccessTokenGenerator {
   @Override
   public Token generate() {
     String value = Hashing.sha1().hashString(UUID.randomUUID().toString()).toString();
-    String type = "Bearer";
+    String type = "bearer";
 
     return new Token(value, type);
   }

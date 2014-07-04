@@ -1,15 +1,20 @@
 package com.example.auth.http;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 class RegistrationResponseDTO {
-  private final String id;
-  private final String secret;
+  @SerializedName("client_id")
+  private final String clientId;
 
-  RegistrationResponseDTO(String id, String secret) {
-    this.id = id;
-    this.secret = secret;
+  @SerializedName("client_secret")
+  private final String clientSecret;
+
+  RegistrationResponseDTO(String clientId, String clientSecret) {
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
   }
 
   @Override
@@ -19,16 +24,16 @@ class RegistrationResponseDTO {
 
     RegistrationResponseDTO that = (RegistrationResponseDTO) o;
 
-    if (id != null ? !id.equals(that.id) : that.id != null) return false;
-    if (secret != null ? !secret.equals(that.secret) : that.secret != null) return false;
+    if (clientId != null ? !clientId.equals(that.clientId) : that.clientId != null) return false;
+    if (clientSecret != null ? !clientSecret.equals(that.clientSecret) : that.clientSecret != null) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (secret != null ? secret.hashCode() : 0);
+    int result = clientId != null ? clientId.hashCode() : 0;
+    result = 31 * result + (clientSecret != null ? clientSecret.hashCode() : 0);
     return result;
   }
 }

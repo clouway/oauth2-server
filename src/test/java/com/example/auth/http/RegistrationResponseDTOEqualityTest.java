@@ -12,8 +12,8 @@ import static org.junit.Assert.assertThat;
 public class RegistrationResponseDTOEqualityTest {
   @Test
   public void areEqual() {
-    RegistrationResponseDTO response1 = new RegistrationResponseDTO("id", "secret");
-    RegistrationResponseDTO response2 = new RegistrationResponseDTO("id", "secret");
+    RegistrationResponseDTO response1 = new RegistrationResponseDTO("clientId", "secret");
+    RegistrationResponseDTO response2 = new RegistrationResponseDTO("clientId", "secret");
 
     assertThat(response1, is(response2));
   }

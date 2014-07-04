@@ -28,7 +28,7 @@ public class LoginEndpointTest {
   @Test
   public void happyPath() throws Exception {
     final Session session = new Session("session_value");
-    final Cookie cookie = new Cookie("auth_token", session.value);
+    final Cookie cookie = new Cookie("session_id", session.value);
 
     context.checking(new Expectations() {{
       oneOf(authentication).auth("FeNoMeNa", "parola");
@@ -54,7 +54,7 @@ public class LoginEndpointTest {
 
     String redirectPage = endpoint.login(response);
 
-    response.assertDoesNotExist("auth_token");
+    response.assertDoesNotExist("session_id");
     assertThat(redirectPage, is("/xxx"));
   }
 

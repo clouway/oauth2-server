@@ -38,6 +38,6 @@ public class RegistrationEndpoint {
   }
 
   private RegistrationResponseDTO adapt(RegistrationResponse domain) {
-    return new RegistrationResponseDTO(domain.id, domain.secret);
+    return new RegistrationResponseDTO(domain.clientId, domain.clientSecret);
   }
 }
