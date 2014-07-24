@@ -11,7 +11,7 @@ public class TokenSecurityImpl implements TokenSecurity {
   private final ClientAuthentication clientAuthentication;
   private final ClientAuthorizationRequestVerifier clientAuthorizationRequestVerifier;
   private final TokenRepository tokenRepository;
-  private TokenFactory tokenFactory;
+  private final TokenFactory tokenFactory;
 
   @Inject
   TokenSecurityImpl(ClientAuthentication clientAuthentication, ClientAuthorizationRequestVerifier clientAuthorizationRequestVerifier, TokenRepository tokenRepository, TokenFactory tokenFactory) {
