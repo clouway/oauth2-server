@@ -6,6 +6,7 @@
  */
 package com.example.auth.http.security;
 
+import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -35,9 +36,7 @@ public class OauthAuthorizationServerSecurityModule extends AbstractModule {
   @Provides
   @Singleton
   public SecuredResources provideSecuredResources() {
-    return new SecuredResources() {{
-      add(url + "/authorize");
-    }};
+    return new SecuredResources(Sets.newHashSet("/authorize"));
   }
 
   @Provides

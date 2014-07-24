@@ -4,6 +4,7 @@ import com.example.auth.core.Session;
 import com.example.auth.core.SessionSecurity;
 import com.example.auth.http.FakeHttpServletRequest;
 import com.example.auth.http.FakeHttpServletResponse;
+import com.google.common.collect.Sets;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -71,13 +72,7 @@ public class OauthSecurityFilterTest {
   }
 
   private SecuredResources createSecuredResources(final String... resources) {
-    SecuredResources securedResources = new SecuredResources();
-
-    for (String resource : resources) {
-      securedResources.add(resource);
-    }
-
-    return securedResources;
+    return new SecuredResources(Sets.newHashSet(resources));
   }
 
   private Cookie[] authCookie(String value) {
