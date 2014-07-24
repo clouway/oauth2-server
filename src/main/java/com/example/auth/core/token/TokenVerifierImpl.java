@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-@ImplementedBy(TokenVerifier.class)
 public class TokenVerifierImpl implements TokenVerifier {
 
   private TokenRepository repository;
