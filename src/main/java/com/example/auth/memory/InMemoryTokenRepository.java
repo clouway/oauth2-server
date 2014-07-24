@@ -1,54 +1,44 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.AccessTokenGenerator;
-import com.example.auth.core.Clock;
-import com.example.auth.core.Interval;
-import com.example.auth.core.Token;
-import com.example.auth.core.TokenCreator;
-import com.example.auth.core.TokenVerifier;
+import com.example.auth.core.token.Token;
+import com.example.auth.core.token.TokenRepository;
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-class InMemoryTokenRepository implements TokenCreator, TokenVerifier {
-  private final Map<String, TokenEntity> tokens = Maps.newHashMap();
-
-  private final AccessTokenGenerator tokenGenerator;
-  private final Clock clock;
-  private final Interval expirationDuration;
+class InMemoryTokenRepository implements TokenRepository {
+  private final Map<String, Token> tokens = Maps.newHashMap();
+  private Date currentDate;
 
   @Inject
-  InMemoryTokenRepository(AccessTokenGenerator tokenGenerator, Clock clock, Interval expirationDuration) {
-    this.tokenGenerator = tokenGenerator;
-    this.clock = clock;
-    this.expirationDuration = expirationDuration;
+  public InMemoryTokenRepository(Date currentDate) {
+    this.currentDate = currentDate;
   }
 
   @Override
-  public Token create() {
-    Token token = tokenGenerator.generate();
+  public void save(Token token) {
+    tokens.put(token.value,token);
 
-    tokens.put(token.value, new TokenEntity(token.value, token.type, clock.nowPlus(expirationDuration)));
-
-    return token;
   }
 
   @Override
-  public Boolean verify(String token) {
-    if (tokens.containsKey(token)) {
-      TokenEntity tokenEntity = tokens.get(token);
+  public Optional<Token> getNotExpiredToken(String tokenValue) {
+    if (tokens.containsKey(tokenValue)) {
+          Token token = tokens.get(tokenValue);
 
-      if (clock.now().before(tokenEntity.expiration)) {
-        tokens.put(token, new TokenEntity(tokenEntity.value, tokenEntity.type, clock.nowPlus(expirationDuration)));
+          if (currentDate.before(token.expiration)) {
+            //update token expiration time
+            token.setExpiration(new Date(token.expiration.getTime() + 900000000));
+            return Optional.of(token);
+          }
+        }
 
-        return true;
-      }
-    }
-
-    return false;
+    return Optional.absent();
   }
 }

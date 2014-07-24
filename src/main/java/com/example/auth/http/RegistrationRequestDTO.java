@@ -9,6 +9,9 @@ class RegistrationRequestDTO {
   private String description;
   private String redirectURI;
 
+  RegistrationRequestDTO() {
+  }
+
   RegistrationRequestDTO(String name, String url, String description, String redirectURI) {
     this.name = name;
     this.url = url;

@@ -1,5 +1,6 @@
 package com.example.auth.core;
 
+import com.example.auth.core.token.Token;
 import com.google.common.hash.Hashing;
 
 import java.util.UUID;
@@ -10,7 +11,7 @@ import java.util.UUID;
 public class BearerAccessTokenGenerator implements AccessTokenGenerator {
   @Override
   public Token generate() {
-    String value = Hashing.sha1().hashString(UUID.randomUUID().toString()).toString();
+    String value = Hashing.sha1().hashBytes(UUID.randomUUID().toString().getBytes()).toString();
     String type = "bearer";
 
     return new Token(value, type);

@@ -1,6 +1,6 @@
 package com.example.auth.http;
 
-import com.example.auth.core.TokenVerifier;
+import com.example.auth.core.token.TokenVerifier;
 import com.google.sitebricks.headless.Reply;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;

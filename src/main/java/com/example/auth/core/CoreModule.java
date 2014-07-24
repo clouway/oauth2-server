@@ -1,5 +1,11 @@
 package com.example.auth.core;
 
+import com.example.auth.core.authorization.AuthorizationSecurity;
+import com.example.auth.core.authorization.AuthorizationSecurityImpl;
+import com.example.auth.core.token.Sha1TokenGenerator;
+import com.example.auth.core.token.TokenGenerator;
+import com.example.auth.core.token.TokenSecurity;
+import com.example.auth.core.token.TokenSecurityImpl;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 

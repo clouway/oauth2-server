@@ -2,7 +2,7 @@ package com.example.auth.memory;
 
 import com.example.auth.core.ResourceOwner;
 import com.example.auth.core.Session;
-import com.example.auth.core.TokenGenerator;
+import com.example.auth.core.token.TokenGenerator;
 import com.google.common.base.Optional;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -24,6 +24,7 @@ public class InMemoryResourceOwnerRepositoryTest {
   private TokenGenerator tokenGenerator = context.mock(TokenGenerator.class);
 
   private InMemoryResourceOwnerRepository repository = new InMemoryResourceOwnerRepository(tokenGenerator);
+  private String remoteAddress= "123.1.1.1";
 
   @Test
   public void correctCredentials() throws Exception {
@@ -36,14 +37,14 @@ public class InMemoryResourceOwnerRepositoryTest {
 
     repository.save(owner);
 
-    Optional<Session> session = repository.auth(owner.username, owner.password);
+    Optional<Session> session = repository.auth(owner.username, owner.password, remoteAddress);
 
     assertThat(session.get().value, is("token1234"));
   }
 
   @Test
   public void notExistingUser() throws Exception {
-    Optional<Session> session = repository.auth("joro", "123456");
+    Optional<Session> session = repository.auth("joro", "123456", remoteAddress);
 
     assertFalse(session.isPresent());
   }
@@ -54,7 +55,7 @@ public class InMemoryResourceOwnerRepositoryTest {
 
     repository.save(owner);
 
-    Optional<Session> session = repository.auth("username", "123456");
+    Optional<Session> session = repository.auth("username", "123456", remoteAddress);
 
     assertFalse(session.isPresent());
   }
@@ -70,7 +71,7 @@ public class InMemoryResourceOwnerRepositoryTest {
     }});
 
     repository.save(owner);
-    repository.auth(owner.username, owner.password);
+    repository.auth(owner.username, owner.password, remoteAddress);
 
     Boolean sessionIsPresented = repository.exists(session);
 

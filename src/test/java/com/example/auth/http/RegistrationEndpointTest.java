@@ -1,6 +1,6 @@
 package com.example.auth.http;
 
-import com.example.auth.core.ClientRegister;
+import com.example.auth.core.client.ClientRegister;
 import com.example.auth.core.RegistrationRequest;
 import com.example.auth.core.RegistrationResponse;
 import com.google.sitebricks.headless.Reply;

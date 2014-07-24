@@ -1,20 +1,20 @@
 package com.example.auth.http;
 
-import com.example.auth.core.ClientRegister;
+import com.example.auth.core.client.ClientRegister;
 import com.example.auth.core.RegistrationRequest;
 import com.example.auth.core.RegistrationResponse;
 import com.google.inject.Inject;
-import com.google.sitebricks.At;
 import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Request;
 import com.google.sitebricks.headless.Service;
+import com.google.sitebricks.http.Get;
 import com.google.sitebricks.http.Post;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Service
-@At("/register")
+//@At("/register")
 public class RegistrationEndpoint {
   private final ClientRegister repository;
 
@@ -24,6 +24,7 @@ public class RegistrationEndpoint {
   }
 
   @Post
+  @Get
   public Reply<RegistrationResponseDTO> register(Request request) {
     RegistrationRequestDTO requestDTO = request.read(RegistrationRequestDTO.class).as(Json.class);
     RegistrationRequest requestDomain = adapt(requestDTO);

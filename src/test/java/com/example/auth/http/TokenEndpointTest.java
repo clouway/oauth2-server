@@ -1,9 +1,9 @@
 package com.example.auth.http;
 
-import com.example.auth.core.TokenErrorResponse;
-import com.example.auth.core.Token;
-import com.example.auth.core.TokenSecurity;
-import com.example.auth.core.TokenRequest;
+import com.example.auth.core.token.TokenErrorResponse;
+import com.example.auth.core.token.Token;
+import com.example.auth.core.token.TokenSecurity;
+import com.example.auth.core.token.TokenRequest;
 import com.google.common.collect.ImmutableMap;
 import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Request;

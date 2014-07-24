@@ -4,18 +4,18 @@ import com.example.auth.core.ResourceOwnerAuthentication;
 import com.example.auth.core.Session;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import com.google.sitebricks.At;
 import com.google.sitebricks.Show;
 import com.google.sitebricks.http.Post;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Show("login.html")
-@At("/login")
+//@At("/login")
 public class LoginEndpoint {
   private String username;
   private String password;
@@ -29,8 +29,8 @@ public class LoginEndpoint {
   }
 
   @Post
-  public String login(HttpServletResponse response) {
-    Optional<Session> session = authentication.auth(username, password);
+  public String login(HttpServletRequest request, HttpServletResponse response) {
+    Optional<Session> session = authentication.auth(username, password, request.getRemoteAddr());
 
     if (session.isPresent()) {
       response.addCookie(new Cookie("session_id", session.get().value));

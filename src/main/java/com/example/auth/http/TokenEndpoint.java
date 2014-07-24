@@ -1,23 +1,22 @@
 package com.example.auth.http;
 
-import com.example.auth.core.TokenErrorResponse;
-import com.example.auth.core.Token;
-import com.example.auth.core.TokenSecurity;
-import com.example.auth.core.TokenRequest;
+import com.example.auth.core.token.Token;
+import com.example.auth.core.token.TokenErrorResponse;
+import com.example.auth.core.token.TokenRequest;
+import com.example.auth.core.token.TokenSecurity;
 import com.google.inject.Inject;
-import com.google.sitebricks.At;
 import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Request;
 import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Post;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Service
-@At("/token")
+//@At("/token")
 public class TokenEndpoint {
   private final TokenSecurity tokenSecurity;
 

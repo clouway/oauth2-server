@@ -5,7 +5,7 @@ import com.example.auth.core.ResourceOwnerAuthentication;
 import com.example.auth.core.ResourceOwnerStore;
 import com.example.auth.core.Session;
 import com.example.auth.core.SessionSecurity;
-import com.example.auth.core.TokenGenerator;
+import com.example.auth.core.token.TokenGenerator;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
@@ -37,7 +37,7 @@ class InMemoryResourceOwnerRepository implements ResourceOwnerStore, ResourceOwn
   }
 
   @Override
-  public Optional<Session> auth(String username, String password) {
+  public Optional<Session> auth(String username, String password, String remoteAddress) {
     if (resourceOwners.containsKey(username)) {
       if (password.equals(resourceOwners.get(username).password)) {
         Session session = new Session(tokenGenerator.generate());
