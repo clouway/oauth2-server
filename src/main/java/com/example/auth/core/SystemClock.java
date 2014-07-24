@@ -6,10 +6,6 @@ import java.util.Date;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 public class SystemClock implements Clock {
-  @Override
-  public Date now() {
-    return new Date();
-  }
 
   @Override
   public Date nowPlus(Interval interval) {
