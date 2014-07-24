@@ -8,7 +8,6 @@ import java.util.UUID;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-@ImplementedBy(Sha1TokenGenerator.class)
 public class Sha1TokenGenerator implements TokenGenerator {
   @Override
   public String generate() {

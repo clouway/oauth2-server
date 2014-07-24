@@ -9,13 +9,10 @@ import com.google.inject.Inject;
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
 public class TokenFactoryImpl implements TokenFactory {
-
-
   private final AccessTokenGenerator tokenGenerator;
   private final Clock clock;
   private final Interval expirationDuration;
 
-  @Inject
   public TokenFactoryImpl(AccessTokenGenerator tokenGenerator, Clock clock, Interval expirationDuration) {
     this.tokenGenerator = tokenGenerator;
     this.clock = clock;
