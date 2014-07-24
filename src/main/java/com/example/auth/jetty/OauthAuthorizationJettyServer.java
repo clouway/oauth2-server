@@ -1,7 +1,7 @@
 package com.example.auth.jetty;
 
 import com.example.auth.http.OauthAuthorizationServerModule;
-import com.example.auth.memory.OauthAuthorizationServerInMemoryModule;
+import com.example.auth.memory.InMemoryModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceFilter;
@@ -33,7 +33,7 @@ public class OauthAuthorizationJettyServer {
     context.addEventListener(new GuiceServletContextListener() {
       @Override
       protected Injector getInjector() {
-        return Guice.createInjector(new OauthAuthorizationServerModule(), new OauthAuthorizationServerInMemoryModule());
+        return Guice.createInjector(new OauthAuthorizationServerModule(), new InMemoryModule());
       }
     });
 

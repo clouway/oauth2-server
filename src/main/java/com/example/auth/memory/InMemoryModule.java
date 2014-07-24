@@ -16,7 +16,7 @@ import java.util.Date;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class OauthAuthorizationServerInMemoryModule extends AbstractModule {
+public class InMemoryModule extends AbstractModule {
   @Override
   protected void configure() {
 

@@ -91,93 +91,49 @@
       <scope>test</scope>
     </dependency>
 
-
-
-
-    <!--
-             GAE libraries for local testing as described here:
-             http://code.google.com/appengine/docs/java/howto/unittesting.html
-           -->
-
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>${gae.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-labs</artifactId>
-      <version>${gae.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-stubs</artifactId>
-      <version>${gae.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-testing</artifactId>
-      <version>${gae.version}</version>
-    </dependency>
-
-
-    <!-- Google App Engine meta-package -->
-    <dependency>
-      <groupId>net.kindleit</groupId>
-      <artifactId>gae-runtime</artifactId>
-      <version>1.7.5.1</version>
-      <type>pom</type>
-    </dependency>
   </dependencies>
 
   <build>
- 		<plugins>
- 			<!-- Java compiler version -->
- 			<plugin>
- 				<groupId>org.apache.maven.plugins</groupId>
- 				<artifactId>maven-compiler-plugin</artifactId>
- 				<version>2.0</version>
- 				<configuration>
- 					<source>1.6</source>
- 					<target>1.6</target>
- 				</configuration>
- 			</plugin>
+    <plugins>
+      <!-- Java compiler version -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
 
-       <plugin>
- 				<groupId>org.apache.maven.plugins</groupId>
- 				<artifactId>maven-source-plugin</artifactId>
- 				<executions>
- 					<execution>
- 						<id>attach-sources</id>
- 						<goals>
- 							<goal>jar</goal>
- 						</goals>
- 					</execution>
- 				</executions>
- 			</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
- 		</plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
 
 
- 	</build>
-
-
-  <!-- Specify hard-coded project properties here -->
-  <properties>
-    <!-- Sets the project's default encoding.
-         http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!--
-      This is just for "eclipse:eclipse" goal to always attempt downloading
-      sources
-    -->
-    <downloadSources>true</downloadSources>
-
-    <!--
-      Specify AppEngine version for your project. It should match SDK
-      version pointed to by ${gae.home} property (Typically, one used by
-      your Eclipse plug-in)
-    -->
-    <gae.version>1.9.7</gae.version>
-  </properties>
+  </build>
 </project>
