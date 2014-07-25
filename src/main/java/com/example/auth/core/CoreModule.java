@@ -12,6 +12,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
+import static com.example.auth.core.Interval.minutes;
+
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
@@ -27,6 +29,6 @@ public class CoreModule extends AbstractModule {
 
   @Provides
   public TokenFactory getTokenFactory(AccessTokenGenerator generator) {
-    return new TokenFactoryImpl(generator,new SystemClock(),new Interval(50000));
+    return new TokenFactoryImpl(generator, new SystemClock(), minutes(60));
   }
 }
