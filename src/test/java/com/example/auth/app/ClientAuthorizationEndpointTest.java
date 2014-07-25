@@ -13,7 +13,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static com.example.auth.app.ParameterRequest.makeRequestWithParameters;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -28,7 +28,7 @@ public class ClientAuthorizationEndpointTest {
 
   @Test
   public void happyPath() throws Exception {
-    final Request request = ParameterRequest.makeRequestWithParameters(ImmutableMap.of("response_type", "code", "client_id", "123456"));
+    final Request request = makeRequestWithParameters(ImmutableMap.of("response_type", "code", "client_id", "123456"));
     final AuthorizationRequest authorizationRequest = new AuthorizationRequest("code", "123456");
     final AuthorizationResponse authorizationResponse = new AuthorizationResponse("54321", "http://abv.bg/");
 
@@ -43,7 +43,7 @@ public class ClientAuthorizationEndpointTest {
 
   @Test
   public void onAuthorizationError() throws Exception {
-    final Request request = ParameterRequest.makeRequestWithParameters(ImmutableMap.of("response_type", "code", "client_id", "654321"));
+    final Request request = makeRequestWithParameters(ImmutableMap.of("response_type", "code", "client_id", "654321"));
     final AuthorizationRequest authorizationRequest = new AuthorizationRequest("code", "654321");
 
     context.checking(new Expectations() {{
