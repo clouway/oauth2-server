@@ -1,9 +1,3 @@
-/*
- * Created by IntelliJ IDEA.
- * User: mlesikov
- * Date: 7/22/14
- * Time: 5:44 PM
- */
 package com.example.auth.http.security;
 
 import com.google.common.collect.Sets;

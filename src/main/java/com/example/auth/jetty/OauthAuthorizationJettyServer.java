@@ -33,7 +33,7 @@ public class OauthAuthorizationJettyServer {
     context.addEventListener(new GuiceServletContextListener() {
       @Override
       protected Injector getInjector() {
-        return Guice.createInjector(new OauthAuthorizationServerModule(), new InMemoryModule());
+        return Guice.createInjector(new OauthAuthorizationServerModule(""), new InMemoryModule());
       }
     });
 

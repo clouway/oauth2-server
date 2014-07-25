@@ -9,6 +9,7 @@ package com.example.auth.http;
 import com.example.auth.core.CoreModule;
 import com.example.auth.http.security.OauthAuthorizationServerSecurityModule;
 import com.google.inject.AbstractModule;
+import com.google.sitebricks.SitebricksModule;
 
 public class OauthAuthorizationServerModule extends AbstractModule {
 
@@ -18,21 +19,19 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     this.url = url;
   }
 
-  public OauthAuthorizationServerModule() {
-  }
 
   protected void configure() {
     install(new CoreModule());
     install(new OauthAuthorizationServerSecurityModule(url));
-//    install(new SitebricksModule() {
-//      @Override
-//      protected void configureSitebricks() {
-//        at(url + "/register").serve(RegistrationEndpoint.class);
-//        at(url + "/authorize").serve(AuthorizationEndpoint.class);
-//        at(url + "/login").show(LoginEndpoint.class);
-//        at(url + "/token").serve(TokenEndpoint.class);
-//        at(url + "/verify").serve(VerificationEndpoint.class);
-//      }
-//    });
+    install(new SitebricksModule() {
+      @Override
+      protected void configureSitebricks() {
+        at(url + "/register").serve(RegistrationEndpoint.class);
+        at(url + "/authorize").serve(AuthorizationEndpoint.class);
+        at(url + "/login").show(LoginEndpoint.class);
+        at(url + "/token").serve(TokenEndpoint.class);
+        at(url + "/verify").serve(VerificationEndpoint.class);
+      }
+    });
   }
 }
