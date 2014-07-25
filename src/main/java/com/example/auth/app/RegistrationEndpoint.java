@@ -1,13 +1,12 @@
 package com.example.auth.app;
 
-import com.example.auth.core.client.ClientRegister;
 import com.example.auth.core.RegistrationRequest;
 import com.example.auth.core.RegistrationResponse;
+import com.example.auth.core.client.ClientRegister;
 import com.google.inject.Inject;
 import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Request;
 import com.google.sitebricks.headless.Service;
-import com.google.sitebricks.http.Get;
 import com.google.sitebricks.http.Post;
 
 /**
@@ -24,7 +23,6 @@ public class RegistrationEndpoint {
   }
 
   @Post
-  @Get
   public Reply<RegistrationResponseDTO> register(Request request) {
     RegistrationRequestDTO requestDTO = request.read(RegistrationRequestDTO.class).as(Json.class);
     RegistrationRequest requestDomain = adapt(requestDTO);

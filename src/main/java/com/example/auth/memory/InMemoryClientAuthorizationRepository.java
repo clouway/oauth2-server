@@ -20,9 +20,6 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
 
   @Override
   public Optional<ClientAuthorizationRequest> findByCode(String authorizationCode) {
-    if(authorizations.containsKey(authorizationCode)) {
-      return Optional.of(authorizations.get(authorizationCode));
-    }
-    return Optional.absent();
+    return Optional.fromNullable(authorizations.get(authorizationCode));
   }
 }
