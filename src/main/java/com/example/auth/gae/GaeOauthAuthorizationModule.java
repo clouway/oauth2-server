@@ -1,6 +1,6 @@
 package com.example.auth.gae;
 
-import com.example.auth.http.OauthAuthorizationServerModule;
+import com.example.auth.app.OauthAuthorizationServerModule;
 import com.google.inject.AbstractModule;
 
 /**

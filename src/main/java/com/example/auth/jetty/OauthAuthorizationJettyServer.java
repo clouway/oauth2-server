@@ -1,6 +1,6 @@
 package com.example.auth.jetty;
 
-import com.example.auth.http.OauthAuthorizationServerModule;
+import com.example.auth.app.OauthAuthorizationServerModule;
 import com.example.auth.memory.InMemoryModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
