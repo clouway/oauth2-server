@@ -16,9 +16,6 @@ public class OauthAuthorizationServerSecurityModule extends AbstractModule {
 
   private String url = "";
 
-  public OauthAuthorizationServerSecurityModule() {
-  }
-
   public OauthAuthorizationServerSecurityModule(String url) {
     this.url = url;
   }
