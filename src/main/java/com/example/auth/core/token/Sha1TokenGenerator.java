@@ -1,7 +1,6 @@
 package com.example.auth.core.token;
 
 import com.google.common.hash.Hashing;
-import com.google.inject.ImplementedBy;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.example.auth.jetty;
+package com.example.auth;
 
 import com.example.auth.app.OauthAuthorizationServerModule;
 import com.example.auth.memory.InMemoryModule;
@@ -16,10 +16,10 @@ import java.util.EnumSet;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class OauthAuthorizationJettyServer {
+public class AppServer {
   private final Server server;
 
-  public OauthAuthorizationJettyServer(Integer port) {
+  public AppServer(Integer port) {
     server = new Server(port);
   }
 

@@ -22,7 +22,7 @@ public abstract class ClientAuthorizationRepositoryContractTest {
   }
 
   @Test
-  public void findById() throws Exception {
+  public void findByCode() throws Exception {
 
     String authorizationCode = "code";
     ClientAuthorizationRequest clientClientAuthorizationRequest = new ClientAuthorizationRequest("type","clientId", authorizationCode, "redirectURI");
@@ -34,7 +34,7 @@ public abstract class ClientAuthorizationRepositoryContractTest {
   }
 
   @Test
-  public void notExistingId() throws Exception {
+  public void notExistingCode() throws Exception {
     Optional<ClientAuthorizationRequest> client = repository.findByCode("id2");
 
     assertFalse(client.isPresent());

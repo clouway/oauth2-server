@@ -32,7 +32,7 @@ public class AuthorizationEndpoint {
 
       AuthorizationResponse response = authorizationSecurity.auth(authorizationRequest);
 
-      return Reply.saying().redirect(response.buildURI()).ok();
+      return Reply.saying().redirect(response.buildURI());
     } catch (AuthorizationErrorResponse error) {
       return Reply.with(error.description).status(SC_BAD_REQUEST);
     }

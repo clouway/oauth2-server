@@ -1,7 +1,5 @@
 package com.example.auth;
 
-import com.example.auth.jetty.OauthAuthorizationJettyServer;
-
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
@@ -10,7 +8,7 @@ public class AuthBootstrap {
 
   public static void main(String[] args) {
 
-    OauthAuthorizationJettyServer server = new OauthAuthorizationJettyServer(PORT);
+    AppServer server = new AppServer(PORT);
     try {
       server.start();
     } catch (Exception e) {

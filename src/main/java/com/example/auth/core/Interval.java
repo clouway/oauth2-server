@@ -4,7 +4,10 @@ package com.example.auth.core;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 public class Interval {
-  public final Integer milliseconds; //It contains the interval in milliseconds
+  public Integer milliseconds; //It contains the interval in milliseconds
+
+  public Interval() {
+  }
 
   public Interval(Integer milliseconds) {
     this.milliseconds = milliseconds;

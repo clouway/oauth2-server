@@ -4,7 +4,6 @@ import com.example.auth.core.ResourceOwnerAuthentication;
 import com.example.auth.core.ResourceOwnerStore;
 import com.example.auth.core.SessionSecurity;
 import com.example.auth.core.authorization.ClientAuthorizationRepository;
-import com.example.auth.core.client.ClientAuthentication;
 import com.example.auth.core.client.ClientRepository;
 import com.example.auth.core.token.Sha1TokenGenerator;
 import com.example.auth.core.token.TokenRepository;
@@ -28,7 +27,6 @@ public class InMemoryModule extends AbstractModule {
 
     InMemoryClientRepository clientRepository = new InMemoryClientRepository();
     bind(ClientRepository.class).toInstance(clientRepository);
-    bind(ClientAuthentication.class).toInstance(clientRepository);
 
     InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository();
     bind(ClientAuthorizationRepository.class).toInstance(authorizationRepository);
