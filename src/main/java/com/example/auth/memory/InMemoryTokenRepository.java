@@ -1,5 +1,7 @@
 package com.example.auth.memory;
 
+import com.example.auth.app.TokenTimeToLive;
+import com.example.auth.core.Duration;
 import com.example.auth.core.token.Token;
 import com.example.auth.core.token.TokenRepository;
 import com.google.common.base.Optional;
@@ -15,10 +17,12 @@ import java.util.Map;
 class InMemoryTokenRepository implements TokenRepository {
   private final Map<String, Token> tokens = Maps.newHashMap();
   private Date currentDate;
+  private Duration timeToLive;
 
   @Inject
-  public InMemoryTokenRepository(Date currentDate) {
+  public InMemoryTokenRepository(Date currentDate, @TokenTimeToLive Duration timeToLive) {
     this.currentDate = currentDate;
+    this.timeToLive = timeToLive;
   }
 
   @Override
@@ -37,7 +41,7 @@ class InMemoryTokenRepository implements TokenRepository {
             //remove the current token
             tokens.remove(tokenValue);
             // new instance
-            token = token.expiresOn(new Date(token.expiration.getTime() + 900000000));
+            token = token.expiresOn(new Date(token.expiration.getTime() + timeToLive.milliseconds));
             //add the new token
             tokens.put(tokenValue, token);
 

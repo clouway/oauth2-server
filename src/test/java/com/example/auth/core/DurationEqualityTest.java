@@ -9,20 +9,20 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class IntervalEqualityTest {
+public class DurationEqualityTest {
   @Test
   public void areEqual() {
-    Interval interval1 = new Interval(1000);
-    Interval interval2 = new Interval(1000);
+    Duration duration1 = new Duration(1000l);
+    Duration duration2 = new Duration(1000l);
 
-    assertThat(interval1, is(interval2));
+    assertThat(duration1, is(duration2));
   }
 
   @Test
   public void areNotEqual() {
-    Interval interval1 = new Interval(1000);
-    Interval interval2 = new Interval(2000);
+    Duration duration1 = new Duration(1000l);
+    Duration duration2 = new Duration(2000l);
 
-    assertThat(interval1, is(not(interval2)));
+    assertThat(duration1, is(not(duration2)));
   }
 }

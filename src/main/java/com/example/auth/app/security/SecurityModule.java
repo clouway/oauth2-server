@@ -6,11 +6,11 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 
-public class OauthAuthorizationServerSecurityModule extends AbstractModule {
+public class SecurityModule extends AbstractModule {
 
   private String url = "";
 
-  public OauthAuthorizationServerSecurityModule(String url) {
+  public SecurityModule(String url) {
     this.url = url;
   }
 

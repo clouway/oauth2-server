@@ -1,13 +1,17 @@
 package com.example.auth.core;
 
+import com.example.auth.app.TokenTimeToLive;
 import com.example.auth.core.authorization.AuthorizationSecurity;
 import com.example.auth.core.authorization.AuthorizationSecurityImpl;
-import com.example.auth.core.token.*;
+import com.example.auth.core.token.BearerTokenFactoryImpl;
+import com.example.auth.core.token.Sha1TokenGenerator;
+import com.example.auth.core.token.TokenFactory;
+import com.example.auth.core.token.TokenGenerator;
+import com.example.auth.core.token.TokenSecurity;
+import com.example.auth.core.token.TokenSecurityImpl;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-
-import static com.example.auth.core.Interval.minutes;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -22,7 +26,7 @@ public class CoreModule extends AbstractModule {
   }
 
   @Provides
-  public TokenFactory getTokenFactory(TokenGenerator generator) {
-    return new BearerTokenFactoryImpl(generator, new SystemClock(), minutes(60));
+  public TokenFactory getTokenFactory(TokenGenerator generator,  @TokenTimeToLive Duration timeToLive) {
+    return new BearerTokenFactoryImpl(generator, new SystemClock(), timeToLive);
   }
 }

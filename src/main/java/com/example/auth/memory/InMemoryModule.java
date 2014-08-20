@@ -1,5 +1,6 @@
 package com.example.auth.memory;
 
+import com.example.auth.core.Duration;
 import com.example.auth.core.ResourceOwnerAuthentication;
 import com.example.auth.core.ResourceOwnerStore;
 import com.example.auth.core.SessionSecurity;
@@ -36,7 +37,7 @@ public class InMemoryModule extends AbstractModule {
 
   @Provides
   TokenRepository getTokenRepository() {
-    return new InMemoryTokenRepository(new Date());
+    return new InMemoryTokenRepository(new Date(), new Duration(900000000l));
   }
 
 }

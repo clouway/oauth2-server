@@ -1,7 +1,7 @@
 package com.example.auth.core.token;
 
 import com.example.auth.core.Clock;
-import com.example.auth.core.Interval;
+import com.example.auth.core.Duration;
 
 import java.util.Date;
 
@@ -11,9 +11,9 @@ import java.util.Date;
 public class BearerTokenFactoryImpl implements TokenFactory {
   private final TokenGenerator tokenGenerator;
   private final Clock clock;
-  private final Interval expirationDuration;
+  private final Duration expirationDuration;
 
-  public BearerTokenFactoryImpl(TokenGenerator tokenGenerator, Clock clock, Interval expirationDuration) {
+  public BearerTokenFactoryImpl(TokenGenerator tokenGenerator, Clock clock, Duration expirationDuration) {
     this.tokenGenerator = tokenGenerator;
     this.clock = clock;
     this.expirationDuration = expirationDuration;

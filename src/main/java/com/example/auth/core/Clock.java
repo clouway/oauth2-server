@@ -7,5 +7,5 @@ import java.util.Date;
  */
 public interface Clock {
 
-  Date nowPlus(Interval interval);
+  Date nowPlus(Duration duration);
 }

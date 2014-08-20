@@ -1,7 +1,7 @@
 package com.example.auth.core.token;
 
 import com.example.auth.core.Clock;
-import com.example.auth.core.Interval;
+import com.example.auth.core.Duration;
 import org.hamcrest.CoreMatchers;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static com.example.auth.core.Interval.minutes;
+import static com.example.auth.core.Duration.minutes;
 import static org.junit.Assert.assertThat;
 
 public class BearerTokenFactoryImplTest {
@@ -23,7 +23,7 @@ public class BearerTokenFactoryImplTest {
 
   private Clock clock = context.mock(Clock.class);
 
-  private Interval interval = minutes(60);
+  private Duration duration = minutes(60);
 
   @Mock
   private TokenGenerator tokenGenerator;
@@ -31,7 +31,7 @@ public class BearerTokenFactoryImplTest {
 
   @Before
   public void setUp() throws Exception {
-    tokenFactory = new BearerTokenFactoryImpl(tokenGenerator, clock, interval);
+    tokenFactory = new BearerTokenFactoryImpl(tokenGenerator, clock, duration);
   }
 
   @Test
@@ -40,7 +40,7 @@ public class BearerTokenFactoryImplTest {
     final String value = "1014bdf32c0edb3ef6e39a5ac551350f";
     final Date expirationDate = new Date(System.currentTimeMillis() - 9000000);
     context.checking(new Expectations() {{
-      oneOf(clock).nowPlus(interval);
+      oneOf(clock).nowPlus(duration);
       will(returnValue(expirationDate));
 
       oneOf(tokenGenerator).generate();

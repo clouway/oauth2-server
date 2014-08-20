@@ -8,7 +8,7 @@ import java.util.Date;
 public class SystemClock implements Clock {
 
   @Override
-  public Date nowPlus(Interval interval) {
-    return new Date(System.currentTimeMillis() + interval.milliseconds);
+  public Date nowPlus(Duration duration) {
+    return new Date(System.currentTimeMillis() + duration.milliseconds);
   }
 }

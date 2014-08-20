@@ -6,22 +6,32 @@
  */
 package com.example.auth.app;
 
-import com.example.auth.app.security.OauthAuthorizationServerSecurityModule;
+import com.example.auth.app.security.SecurityModule;
 import com.example.auth.core.CoreModule;
+import com.example.auth.core.Duration;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
 public class OauthAuthorizationServerModule extends AbstractModule {
 
   private String url = "";
+  private Duration tokenTimeToLive;
 
-  public OauthAuthorizationServerModule(String url) {
+  /**
+   * constructs the module
+   * @param url
+   * @param tokenTimeToLive in seconds
+   */
+  public OauthAuthorizationServerModule(String url, Long tokenTimeToLive) {
     this.url = url;
+    this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
   }
 
 
   protected void configure() {
+
     install(new CoreModule());
-    install(new OauthAuthorizationServerSecurityModule(url));
+    install(new SecurityModule(url));
 //    install(new SitebricksModule() {
 //      @Override
 //      protected void configureSitebricks() {
@@ -32,5 +42,12 @@ public class OauthAuthorizationServerModule extends AbstractModule {
 //        at(url + "/verify").serve(VerificationEndpoint.class);
 //      }
 //    });
+  }
+
+
+  @Provides
+  @TokenTimeToLive
+  public Duration getTokenLive() {
+    return tokenTimeToLive;
   }
 }

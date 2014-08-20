@@ -1,5 +1,6 @@
 package com.example.auth.memory;
 
+import com.example.auth.core.Duration;
 import com.example.auth.core.token.TokenRepository;
 import com.example.auth.core.token.TokenRepositoryContractTest;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 public class InMemoryTokenRepositoryTest extends TokenRepositoryContractTest {
 
   @Override
-  protected TokenRepository createRepo(Date currentDate) {
-    return new InMemoryTokenRepository(currentDate);
+  protected TokenRepository createRepo(Date currentDate, Duration timeToLive) {
+    return new InMemoryTokenRepository(currentDate, timeToLive);
   }
 }
