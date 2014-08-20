@@ -1,6 +1,5 @@
 package com.example.auth.core.token;
 
-import com.example.auth.core.AccessTokenGenerator;
 import com.example.auth.core.Clock;
 import com.example.auth.core.Interval;
 import org.hamcrest.CoreMatchers;
@@ -16,7 +15,7 @@ import java.util.Date;
 import static com.example.auth.core.Interval.minutes;
 import static org.junit.Assert.assertThat;
 
-public class TokenFactoryImplTest {
+public class BearerTokenFactoryImplTest {
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
@@ -27,29 +26,31 @@ public class TokenFactoryImplTest {
   private Interval interval = minutes(60);
 
   @Mock
-  private AccessTokenGenerator tokenGenerator;
+  private TokenGenerator tokenGenerator;
 
 
   @Before
   public void setUp() throws Exception {
-    tokenFactory = new TokenFactoryImpl(tokenGenerator, clock, interval);
+    tokenFactory = new BearerTokenFactoryImpl(tokenGenerator, clock, interval);
   }
 
   @Test
   public void create() throws Exception {
 
-    final Token token = new Token("1014bdf32c0edb3ef6e39a5ac551350f", "bearer");
+    final String value = "1014bdf32c0edb3ef6e39a5ac551350f";
     final Date expirationDate = new Date(System.currentTimeMillis() - 9000000);
     context.checking(new Expectations() {{
       oneOf(clock).nowPlus(interval);
       will(returnValue(expirationDate));
 
       oneOf(tokenGenerator).generate();
-      will(returnValue(token));
+      will(returnValue(value));
     }});
 
     Token actualToken = tokenFactory.create();
 
-    assertThat(actualToken, CoreMatchers.is(CoreMatchers.equalTo(token)));
+    assertThat(actualToken.value, CoreMatchers.is(CoreMatchers.equalTo(value)));
+    assertThat(actualToken.type, CoreMatchers.is(CoreMatchers.equalTo("bearer")));
+    assertThat(actualToken.expiration, CoreMatchers.is(CoreMatchers.equalTo(expirationDate)));
   }
 }

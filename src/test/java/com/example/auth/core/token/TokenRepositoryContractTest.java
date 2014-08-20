@@ -23,17 +23,17 @@ public abstract class TokenRepositoryContractTest {
   @Test
   public void happyPath() throws Exception {
     final Date expirationTime = new Date(System.currentTimeMillis() + 9000000);
-    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", expirationTime);
+    final Token notExpiredToken = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", expirationTime);
 
     repository = createRepo(new Date());
 
-    repository.save(token);
+    repository.save(notExpiredToken);
 
-    Optional<Token> tokenOptional = repository.getNotExpiredToken(token.value);
+    Optional<Token> tokenOptional = repository.getNotExpiredToken(notExpiredToken.value);
 
-    assertThat(tokenOptional.get().value, is(equalTo(token.value)));
-    assertThat(tokenOptional.get().type, is(equalTo(token.type)));
-    assertThat(tokenOptional.get().expiration, is(equalTo(token.expiration)));
+    assertThat(tokenOptional.get().value, is(equalTo(notExpiredToken.value)));
+    assertThat(tokenOptional.get().type, is(equalTo(notExpiredToken.type)));
+    assertThat(tokenOptional.get().expiration, is(equalTo(new Date(expirationTime.getTime() + 900000000))));
   }
 
   @Test

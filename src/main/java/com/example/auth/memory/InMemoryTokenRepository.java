@@ -34,7 +34,13 @@ class InMemoryTokenRepository implements TokenRepository {
 
           if (currentDate.before(token.expiration)) {
             //update token expiration time
-            token.setExpiration(new Date(token.expiration.getTime() + 900000000));
+            //remove the current token
+            tokens.remove(tokenValue);
+            // new instance
+            token = token.expiresOn(new Date(token.expiration.getTime() + 900000000));
+            //add the new token
+            tokens.put(tokenValue, token);
+
             return Optional.of(token);
           }
         }

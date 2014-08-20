@@ -38,7 +38,7 @@ public class TokenSecurityTest {
   @Test
   public void happyPath() throws Exception {
     final TokenRequest request = new TokenRequest("grant_type", "code", "client_id", "client_secret");
-    final Token token = new Token("generated_token", "Bearer");
+    final Token token = new Token("generated_token", "Bearer", null);
 
     context.checking(new Expectations() {{
       oneOf(clientAuthentication).authenticate(request.clientId, request.clientSecret);

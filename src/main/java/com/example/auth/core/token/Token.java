@@ -8,17 +8,17 @@ import java.util.Date;
 public class Token {
   public final String value;
   public final String type;
-  public Date expiration;
+  public final Date expiration;
 
-  public Token(String value, String type) {
-    this.value = value;
-    this.type = type;
-  }
 
   public Token(String value, String type, Date expirationTime) {
     this.value = value;
     this.type = type;
     this.expiration = expirationTime;
+  }
+
+  public Token expiresOn(Date expirationTime) {
+    return new Token(value, type, expirationTime);
   }
 
   @Override
@@ -41,9 +41,5 @@ public class Token {
     result = 31 * result + (type != null ? type.hashCode() : 0);
     result = 31 * result + (expiration != null ? expiration.hashCode() : 0);
     return result;
-  }
-
-  public void setExpiration(Date expiration) {
-    this.expiration = expiration;
   }
 }

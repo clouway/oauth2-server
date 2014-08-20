@@ -12,6 +12,8 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Date;
+
 import static com.example.auth.app.ReplyMatchers.containsValue;
 import static com.example.auth.app.ReplyMatchers.isBadRequest;
 import static com.example.auth.app.ReplyMatchers.isOk;
@@ -31,7 +33,7 @@ public class TokenEndpointTest {
   @Test
   public void happyPath() throws Exception {
     final TokenRequest tokenRequest = new TokenRequest("grant_type", "code", "client_id", "client_secret");
-    final Token token = new Token("token_value", "token_type");
+    final Token token = new Token("token_value", "token_type", new Date());
     final TokenDTO tokenDTO = new TokenDTO("token_value", "token_type");
     final Request request = new ParameterRequest(ImmutableMap.of("grant_type", "grant_type", "code", "code", "client_id", "client_id", "client_secret", "client_secret"));
 

@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -29,7 +31,7 @@ public class TokenVerifierImplTest {
 
   @Test
   public void happyPath() throws Exception {
-    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer");
+    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", new Date());
 
     context.checking(new Expectations() {{
       oneOf(repository).getNotExpiredToken(tokenValue);
