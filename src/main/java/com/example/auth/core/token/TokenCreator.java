@@ -5,6 +5,7 @@ import com.google.inject.ImplementedBy;
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-public interface TokenFactory {
+@ImplementedBy(BearerTokenCreator.class)
+public interface TokenCreator {
   Token create();
 }

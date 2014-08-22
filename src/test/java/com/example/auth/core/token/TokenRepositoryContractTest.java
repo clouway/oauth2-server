@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import static com.example.auth.core.Duration.hours;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -18,17 +19,17 @@ public abstract class TokenRepositoryContractTest {
 
   private TokenRepository repository;
 
-  private Duration timeToLive = new Duration(900000000l);
+  protected Duration timeToLive = hours(1);//
+  private final Date currentDate = new Date();
 
-  protected abstract TokenRepository createRepo(Date currentDate, Duration timeToLive);
+  protected abstract TokenRepository createRepo(Date currentDate);
 
 
   @Test
   public void happyPath() throws Exception {
-    final Date expirationTime = new Date(System.currentTimeMillis() + 9000000);
-    final Token notExpiredToken = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", expirationTime);
+    final Token notExpiredToken = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", timeToLive.seconds, currentDate);
 
-    repository = createRepo(new Date(), timeToLive);
+    repository = createRepo(new Date());
 
     repository.save(notExpiredToken);
 
@@ -36,12 +37,13 @@ public abstract class TokenRepositoryContractTest {
 
     assertThat(tokenOptional.get().value, is(equalTo(notExpiredToken.value)));
     assertThat(tokenOptional.get().type, is(equalTo(notExpiredToken.type)));
-    assertThat(tokenOptional.get().expiration, is(equalTo(new Date(expirationTime.getTime() + timeToLive.milliseconds))));
+    assertThat(tokenOptional.get().creationDate, is(equalTo(currentDate)));
+    assertThat(tokenOptional.get().expiresInSeconds, is(equalTo(3600l)));
   }
 
   @Test
   public void notExistingToken() throws Exception {
-    repository = createRepo(new Date(), timeToLive);
+    repository = createRepo(new Date());
     Optional<Token> tokenOptional = repository.getNotExpiredToken("token.value");
 
     assertFalse(tokenOptional.isPresent());
@@ -49,12 +51,13 @@ public abstract class TokenRepositoryContractTest {
 
   @Test
   public void expiredToken() throws Exception {
-    final Date expirationTime = new Date(System.currentTimeMillis());
-    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", expirationTime);
+    //created two hours ago
+    final Date creationDate = new Date(System.currentTimeMillis() - hours(2).asMills());
+    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", timeToLive.seconds, creationDate);
 
 
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
-    repository = createRepo(currentDate, timeToLive);
+    repository = createRepo(currentDate);
 
     repository.save(token);
 

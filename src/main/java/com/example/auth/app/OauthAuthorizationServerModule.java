@@ -16,6 +16,7 @@ public class OauthAuthorizationServerModule extends AbstractModule {
 
   private String url = "";
   private Duration tokenTimeToLive;
+  private Boolean generatesNewRefreshToken = false;
 
   /**
    * constructs the module
@@ -24,6 +25,16 @@ public class OauthAuthorizationServerModule extends AbstractModule {
    */
   public OauthAuthorizationServerModule(String url, Long tokenTimeToLive) {
     this.url = url;
+    this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
+  }
+  /**
+   * constructs the module
+   * @param url
+   * @param tokenTimeToLive in seconds
+   */
+  public OauthAuthorizationServerModule(String url, Long tokenTimeToLive, Boolean generatesNewRefreshToken) {
+    this.url = url;
+    this.generatesNewRefreshToken = generatesNewRefreshToken;
     this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
   }
 
@@ -49,5 +60,11 @@ public class OauthAuthorizationServerModule extends AbstractModule {
   @TokenTimeToLive
   public Duration getTokenLive() {
     return tokenTimeToLive;
+  }
+
+  @Provides
+  @GenerateNewRefreshToken
+  public Boolean getGeneratesNewRefreshToken() {
+    return generatesNewRefreshToken;
   }
 }

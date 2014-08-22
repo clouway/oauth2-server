@@ -1,6 +1,6 @@
 package com.example.auth.core.token;
 
-import com.example.auth.core.authorization.ClientAuthorizationRequestVerifier;
+import com.example.auth.core.authorization.TokenCreationVerifier;
 import com.example.auth.core.client.ClientAuthentication;
 import com.google.inject.Inject;
 
@@ -9,32 +9,32 @@ import com.google.inject.Inject;
  */
 public class TokenSecurityImpl implements TokenSecurity {
   private final ClientAuthentication clientAuthentication;
-  private final ClientAuthorizationRequestVerifier clientAuthorizationRequestVerifier;
-  private final TokenRepository tokenRepository;
-  private final TokenFactory tokenFactory;
+  private final TokenCreationVerifier tokenCreationVerifier;
 
   @Inject
-  TokenSecurityImpl(ClientAuthentication clientAuthentication, ClientAuthorizationRequestVerifier clientAuthorizationRequestVerifier, TokenRepository tokenRepository, TokenFactory tokenFactory) {
+  TokenSecurityImpl(ClientAuthentication clientAuthentication,
+                    TokenCreationVerifier tokenCreationVerifier
+
+                    ) {
     this.clientAuthentication = clientAuthentication;
-    this.clientAuthorizationRequestVerifier = clientAuthorizationRequestVerifier;
-    this.tokenRepository = tokenRepository;
-    this.tokenFactory = tokenFactory;
+    this.tokenCreationVerifier = tokenCreationVerifier;
+  }
+
+
+  @Override
+  public void validateRefreshToken(TokenRequest request) {
+    if (!tokenCreationVerifier.verifyRefreshToken(request.clientId, request.clientSecret, request.refreshToken)) {
+      throw new TokenErrorResponse("invalid_client", "Invalid token request!");
+    }
   }
 
   @Override
-  public Token create(TokenRequest request) {
+  public void validateAuthCode(TokenRequest request) {
     if (!clientAuthentication.authenticate(request.clientId, request.clientSecret)) {
       throw new TokenErrorResponse("invalid_client", "The client is not authenticated!");
     }
-
-    if (!clientAuthorizationRequestVerifier.verify(request.code, request.clientId)) {
+    if (!tokenCreationVerifier.verify(request.code, request.clientId)) {
       throw new TokenErrorResponse("invalid_grant", "The authorization code does not exist!");
     }
-
-    Token token = tokenFactory.create();
-
-    tokenRepository.save(token);
-
-    return token;
   }
 }

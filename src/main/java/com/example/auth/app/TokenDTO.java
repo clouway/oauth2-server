@@ -6,15 +6,24 @@ import com.google.gson.annotations.SerializedName;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 class TokenDTO {
+
   @SerializedName("access_token")
   private final String value;
+
+  @SerializedName("refresh_token")
+  private final String refreshValue;
 
   @SerializedName("token_type")
   private final String type;
 
-  public TokenDTO(String value, String type) {
+  @SerializedName("expires_in")
+  private final Long expiresIn;
+
+  TokenDTO(String value, String refreshValue, String type, Long expiresIn) {
     this.value = value;
+    this.refreshValue = refreshValue;
     this.type = type;
+    this.expiresIn = expiresIn;
   }
 
   @Override

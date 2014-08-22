@@ -27,27 +27,27 @@ class InMemoryTokenRepository implements TokenRepository {
 
   @Override
   public void save(Token token) {
-    tokens.put(token.value,token);
+    tokens.put(token.value, token);
 
   }
 
   @Override
   public Optional<Token> getNotExpiredToken(String tokenValue) {
     if (tokens.containsKey(tokenValue)) {
-          Token token = tokens.get(tokenValue);
+      Token token = tokens.get(tokenValue);
 
-          if (currentDate.before(token.expiration)) {
-            //update token expiration time
-            //remove the current token
-            tokens.remove(tokenValue);
-            // new instance
-            token = token.expiresOn(new Date(token.expiration.getTime() + timeToLive.milliseconds));
-            //add the new token
-            tokens.put(tokenValue, token);
+      if (!token.isExpiredOn(currentDate)) {
+        //update token expirationDate time
+        //remove the current token
+        tokens.remove(tokenValue);
+        // new instance
+        Token updatedToken = new Token(token.value, token.type, timeToLive.seconds, currentDate);
+        //add the new token
+        tokens.put(tokenValue, updatedToken);
 
-            return Optional.of(token);
-          }
-        }
+        return Optional.of(token);
+      }
+    }
 
     return Optional.absent();
   }

@@ -6,12 +6,14 @@ package com.example.auth.core.token;
 public class TokenRequest {
   public final String grantType;
   public final String code;
+  public final String refreshToken;
   public final String clientId;
   public final String clientSecret;
 
-  public TokenRequest(String grantType, String code, String clientId, String clientSecret) {
+  public TokenRequest(String grantType, String code, String refreshToken, String clientId, String clientSecret) {
     this.grantType = grantType;
     this.code = code;
+    this.refreshToken = refreshToken;
     this.clientId = clientId;
     this.clientSecret = clientSecret;
   }

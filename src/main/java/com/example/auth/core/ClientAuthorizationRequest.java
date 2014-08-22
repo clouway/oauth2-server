@@ -1,5 +1,7 @@
 package com.example.auth.core;
 
+import java.util.Date;
+
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
@@ -8,6 +10,7 @@ public class ClientAuthorizationRequest {
   public final String clientId;
   public final String code;
   public final String redirectURI;
+  private Date usageDate = null;
 
   public ClientAuthorizationRequest(String responseType, String clientId, String code, String redirectURI) {
     this.responseType = responseType;
@@ -38,5 +41,13 @@ public class ClientAuthorizationRequest {
     result = 31 * result + (code != null ? code.hashCode() : 0);
     result = 31 * result + (redirectURI != null ? redirectURI.hashCode() : 0);
     return result;
+  }
+
+  public void usedOn(Date date) {
+    usageDate = date;
+  }
+
+  public boolean isNotUsed() {
+    return usageDate == null;
   }
 }

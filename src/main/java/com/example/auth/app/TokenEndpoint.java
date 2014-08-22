@@ -1,9 +1,12 @@
 package com.example.auth.app;
 
 import com.example.auth.core.token.Token;
+import com.example.auth.core.token.TokenCreator;
 import com.example.auth.core.token.TokenErrorResponse;
 import com.example.auth.core.token.TokenRequest;
 import com.example.auth.core.token.TokenSecurity;
+import com.example.auth.core.token.refreshtoken.RefreshToken;
+import com.example.auth.core.token.refreshtoken.RefreshTokenProvider;
 import com.google.inject.Inject;
 import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Request;
@@ -19,10 +22,14 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 //@At("/token")
 public class TokenEndpoint {
   private final TokenSecurity tokenSecurity;
+  private RefreshTokenProvider refreshTokenProvider;
+  private TokenCreator tokenCreator;
 
   @Inject
-  public TokenEndpoint(TokenSecurity tokenSecurity) {
+  public TokenEndpoint(TokenSecurity tokenSecurity, RefreshTokenProvider refreshTokenProvider, TokenCreator tokenCreator) {
     this.tokenSecurity = tokenSecurity;
+    this.refreshTokenProvider = refreshTokenProvider;
+    this.tokenCreator = tokenCreator;
   }
 
   @Post
@@ -30,11 +37,27 @@ public class TokenEndpoint {
     try {
       TokenRequest tokenRequest = read(request);
 
-      Token token = tokenSecurity.create(tokenRequest);
 
-      return Reply.with(adapt(token)).as(Json.class).ok();
+      if ("refresh_token".equals(tokenRequest.grantType)) {
+
+        tokenSecurity.validateRefreshToken(tokenRequest);
+
+      } else {
+
+        tokenSecurity.validateAuthCode(tokenRequest);
+
+      }
+
+      RefreshToken refreshToken = refreshTokenProvider.provide(tokenRequest.refreshToken, tokenRequest.clientId, tokenRequest.clientSecret);
+
+      Token token = tokenCreator.create();
+
+      return Reply.with(adapt(token, refreshToken)).as(Json.class).ok();
+
     } catch (TokenErrorResponse exception) {
+
       return Reply.with(adapt(exception)).status(SC_BAD_REQUEST).as(Json.class);
+
     }
   }
 
@@ -43,12 +66,13 @@ public class TokenEndpoint {
     String code = request.param("code");
     String clientId = request.param("client_id");
     String clientSecret = request.param("client_secret");
+    String refreshToken = request.param("refresh_token");
 
-    return new TokenRequest(grantType, code, clientId, clientSecret);
+    return new TokenRequest(grantType, code, refreshToken, clientId, clientSecret);
   }
 
-  private TokenDTO adapt(Token token) {
-    return new TokenDTO(token.value, token.type);
+  private TokenDTO adapt(Token token, RefreshToken refreshToken) {
+    return new TokenDTO(token.value, refreshToken.value, token.type, token.expiresInSeconds);
   }
 
   private ErrorResponseDTO adapt(TokenErrorResponse exception) {

@@ -22,4 +22,10 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
   public Optional<ClientAuthorizationRequest> findByCode(String authorizationCode) {
     return Optional.fromNullable(authorizations.get(authorizationCode));
   }
+
+  @Override
+  public void update(ClientAuthorizationRequest clientAuthorizationRequest) {
+    authorizations.remove(clientAuthorizationRequest.code);
+    authorizations.put(clientAuthorizationRequest.code, clientAuthorizationRequest);
+  }
 }

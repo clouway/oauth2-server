@@ -8,17 +8,28 @@ import java.util.Date;
 public class Token {
   public final String value;
   public final String type;
-  public final Date expiration;
+  public final Long expiresInSeconds;
+  public final Date creationDate;
 
 
-  public Token(String value, String type, Date expirationTime) {
+  public Token(String value,  String type, Long expiresInSeconds, Date creationDate) {
     this.value = value;
     this.type = type;
-    this.expiration = expirationTime;
+    this.expiresInSeconds = expiresInSeconds;
+    this.creationDate = creationDate;
   }
 
-  public Token expiresOn(Date expirationTime) {
-    return new Token(value, type, expirationTime);
+  public Date createdOn() {
+    return creationDate;
+  }
+
+  public Token expiresIn(Long seconds) {
+    return new Token(value, type, seconds, creationDate);
+  }
+
+  public boolean isExpiredOn(Date date){
+    Date expirationDate = new Date(creationDate.getTime() + expiresInSeconds * 1000);
+    return date.after(expirationDate);
   }
 
   @Override
@@ -28,7 +39,9 @@ public class Token {
 
     Token token = (Token) o;
 
-    if (expiration != null ? !expiration.equals(token.expiration) : token.expiration != null) return false;
+    if (creationDate != null ? !creationDate.equals(token.creationDate) : token.creationDate != null) return false;
+    if (expiresInSeconds != null ? !expiresInSeconds.equals(token.expiresInSeconds) : token.expiresInSeconds != null)
+      return false;
     if (type != null ? !type.equals(token.type) : token.type != null) return false;
     if (value != null ? !value.equals(token.value) : token.value != null) return false;
 
@@ -39,7 +52,8 @@ public class Token {
   public int hashCode() {
     int result = value != null ? value.hashCode() : 0;
     result = 31 * result + (type != null ? type.hashCode() : 0);
-    result = 31 * result + (expiration != null ? expiration.hashCode() : 0);
+    result = 31 * result + (expiresInSeconds != null ? expiresInSeconds.hashCode() : 0);
+    result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
     return result;
   }
 }

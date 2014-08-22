@@ -8,6 +8,7 @@ import com.example.auth.core.authorization.ClientAuthorizationRepository;
 import com.example.auth.core.client.ClientRepository;
 import com.example.auth.core.token.Sha1TokenGenerator;
 import com.example.auth.core.token.TokenRepository;
+import com.example.auth.core.token.refreshtoken.RefreshTokenRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
@@ -31,6 +32,8 @@ public class InMemoryModule extends AbstractModule {
 
     InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository();
     bind(ClientAuthorizationRepository.class).toInstance(authorizationRepository);
+
+    bind(RefreshTokenRepository.class).to(InMemoryRefreshTokenRepository.class);
 
   }
 

@@ -8,4 +8,6 @@ import java.util.Date;
 public interface Clock {
 
   Date nowPlus(Duration duration);
+
+  Date now();
 }

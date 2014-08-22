@@ -32,7 +32,7 @@ public class TokenVerifierImpl implements TokenVerifier {
 //     if (tokens.containsKey(token)) {
 //       TokenEntity tokenEntity = tokens.get(token);
 //
-//       if (clock.now().before(tokenEntity.expiration)) {
+//       if (clock.now().before(tokenEntity.expirationDate)) {
 //         tokens.put(token, new TokenEntity(tokenEntity.value, tokenEntity.type, clock.nowPlus(expirationDuration)));
 //
 //         return true;
