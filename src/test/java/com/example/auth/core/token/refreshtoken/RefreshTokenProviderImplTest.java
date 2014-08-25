@@ -130,6 +130,8 @@ public class RefreshTokenProviderImplTest {
       oneOf(tokenGenerator).generate();
       will(returnValue(generatedToken));
 
+      oneOf(refreshTokenRepository).save(expectedToken);
+
     }});
 
     RefreshToken token = provider.provide(existingToken, clientId, secret);

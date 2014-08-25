@@ -6,9 +6,11 @@ import com.example.auth.core.authorization.AuthorizationResponse;
 import com.example.auth.core.authorization.AuthorizationSecurity;
 import com.google.inject.Inject;
 import com.google.sitebricks.headless.Reply;
-import com.google.sitebricks.headless.Request;
 import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Get;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
@@ -16,7 +18,6 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Service
-//@At("/authorize")
 public class AuthorizationEndpoint {
   private final AuthorizationSecurity authorizationSecurity;
 
@@ -26,13 +27,11 @@ public class AuthorizationEndpoint {
   }
 
   @Get
-  public Reply<?> authorize(Request request) {
+  public Reply<?> authorize(HttpServletRequest httpRequest) {
     try {
-      AuthorizationRequest authorizationRequest = read(request);
+      AuthorizationRequest authorizationRequest = read(httpRequest);
 
       AuthorizationResponse response = authorizationSecurity.auth(authorizationRequest);
-
-
 
       return Reply.saying().redirect(response.buildURI());
     } catch (AuthorizationErrorResponse error) {
@@ -40,10 +39,32 @@ public class AuthorizationEndpoint {
     }
   }
 
-  private AuthorizationRequest read(Request request) {
-    String responseType = request.param("response_type");
-    String clientId = request.param("client_id");
+  private AuthorizationRequest read(HttpServletRequest request) {
+    String responseType = request.getParameter("response_type");
+    String clientId = request.getParameter("client_id");
+    String sessionId = getCookieValue(request, "session_id");
 
-    return new AuthorizationRequest(responseType, clientId);
+    return new AuthorizationRequest(responseType, clientId, sessionId);
   }
+
+  /**
+     * Find and returns the value of the cookie with the provided name
+     *
+     * @param request http request from which cookie will be extracted
+     * @param name    cookie name
+     * @return the value of the cookie if found null otherwise
+     */
+    private String getCookieValue(HttpServletRequest request, String name) {
+      Cookie[] cookies = request.getCookies();
+
+      if (cookies != null) { //Stupid servlet API!
+        for (Cookie cookie : cookies) {
+          if (name.equals(cookie.getName())) {
+            return cookie.getValue();
+          }
+        }
+      }
+
+      return "";
+    }
 }

@@ -50,7 +50,8 @@ public class OauthAuthorizationServerModule extends AbstractModule {
 //        at(url + "/authorize").serve(AuthorizationEndpoint.class);
 //        at(url + "/login").show(LoginEndpoint.class);
 //        at(url + "/token").serve(TokenEndpoint.class);
-//        at(url + "/verify").serve(VerificationEndpoint.class);
+//        at(url + "/verify/:token").serve(VerificationEndpoint.class);
+//        at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);
 //      }
 //    });
   }

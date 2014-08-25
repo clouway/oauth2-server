@@ -41,7 +41,7 @@ class InMemoryTokenRepository implements TokenRepository {
         //remove the current token
         tokens.remove(tokenValue);
         // new instance
-        Token updatedToken = new Token(token.value, token.type, timeToLive.seconds, currentDate);
+        Token updatedToken = new Token(token.value, token.type, token.userId, timeToLive.seconds, currentDate);
         //add the new token
         tokens.put(tokenValue, updatedToken);
 

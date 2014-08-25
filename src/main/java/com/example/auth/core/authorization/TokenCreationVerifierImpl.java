@@ -25,11 +25,11 @@ public class TokenCreationVerifierImpl implements TokenCreationVerifier {
 
   @Override
   public Boolean verify(String authCode, String clintId) {
-    Optional<ClientAuthorizationRequest> authorization = repository.findByCode(authCode);
+    Optional<Authorization> authorization = repository.findByCode(authCode);
 
     if (authorization.isPresent()) {
 
-      ClientAuthorizationRequest authorizationRequest = authorization.get();
+      Authorization authorizationRequest = authorization.get();
 
       if (authorizationRequest.clientId.equals(clintId) && authorizationRequest.isNotUsed()) {
 

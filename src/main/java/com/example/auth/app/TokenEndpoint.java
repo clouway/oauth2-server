@@ -19,11 +19,10 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Service
-//@At("/token")
 public class TokenEndpoint {
   private final TokenSecurity tokenSecurity;
-  private RefreshTokenProvider refreshTokenProvider;
-  private TokenCreator tokenCreator;
+  private final RefreshTokenProvider refreshTokenProvider;
+  private final TokenCreator tokenCreator;
 
   @Inject
   public TokenEndpoint(TokenSecurity tokenSecurity, RefreshTokenProvider refreshTokenProvider, TokenCreator tokenCreator) {
@@ -50,7 +49,7 @@ public class TokenEndpoint {
 
       RefreshToken refreshToken = refreshTokenProvider.provide(tokenRequest.refreshToken, tokenRequest.clientId, tokenRequest.clientSecret);
 
-      Token token = tokenCreator.create();
+      Token token = tokenCreator.create(tokenRequest.code);
 
       return Reply.with(adapt(token, refreshToken)).as(Json.class).ok();
 

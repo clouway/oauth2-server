@@ -27,7 +27,7 @@ public abstract class TokenRepositoryContractTest {
 
   @Test
   public void happyPath() throws Exception {
-    final Token notExpiredToken = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", timeToLive.seconds, currentDate);
+    final Token notExpiredToken = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", "userId", timeToLive.seconds, currentDate);
 
     repository = createRepo(new Date());
 
@@ -53,7 +53,7 @@ public abstract class TokenRepositoryContractTest {
   public void expiredToken() throws Exception {
     //created two hours ago
     final Date creationDate = new Date(System.currentTimeMillis() - hours(2).asMills());
-    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", timeToLive.seconds, creationDate);
+    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", "userId", timeToLive.seconds, creationDate);
 
 
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);

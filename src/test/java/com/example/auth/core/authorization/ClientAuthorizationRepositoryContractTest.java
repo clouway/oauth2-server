@@ -24,17 +24,34 @@ public abstract class ClientAuthorizationRepositoryContractTest {
   public void findByCode() throws Exception {
 
     String authorizationCode = "code";
-    ClientAuthorizationRequest clientClientAuthorizationRequest = new ClientAuthorizationRequest("type","clientId", authorizationCode, "redirectURI");
-    repository.register(clientClientAuthorizationRequest);
+    Authorization clientAuthorization = new Authorization("type","clientId", authorizationCode, "redirectURI", "userId");
+    repository.register(clientAuthorization);
 
-    Optional<ClientAuthorizationRequest> actualClientAuthentication = repository.findByCode(authorizationCode);
+    Optional<Authorization> actualClientAuthentication = repository.findByCode(authorizationCode);
 
-    assertThat(actualClientAuthentication.get(), is(clientClientAuthorizationRequest));
+    assertThat(actualClientAuthentication.get(), is(clientAuthorization));
+  }
+
+  @Test
+  public void update() throws Exception {
+
+    String authorizationCode = "code";
+    Authorization clientAuthorization = new Authorization("type","clientId", authorizationCode, "redirectURI", "userId");
+    repository.register(clientAuthorization);
+
+    Optional<Authorization> actualClientAuthentication = repository.findByCode(authorizationCode);
+    assertThat(actualClientAuthentication.get(), is(clientAuthorization));
+
+    Authorization updatedAuthorization = new Authorization("type","clientId", authorizationCode, "redirectURI", "other user userId");
+    repository.update(updatedAuthorization);
+
+    actualClientAuthentication = repository.findByCode(authorizationCode);
+    assertThat(actualClientAuthentication.get(), is(updatedAuthorization));
   }
 
   @Test
   public void notExistingCode() throws Exception {
-    Optional<ClientAuthorizationRequest> client = repository.findByCode("id2");
+    Optional<Authorization> client = repository.findByCode("id2");
 
     assertFalse(client.isPresent());
   }

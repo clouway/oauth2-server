@@ -13,7 +13,6 @@ import com.google.sitebricks.http.Post;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Service
-//@At("/register")
 public class RegistrationEndpoint {
   private final ClientRegister repository;
 

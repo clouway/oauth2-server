@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Show("login.html")
-//@At("/login")
 public class LoginEndpoint {
   private String username;
   private String password;

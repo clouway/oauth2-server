@@ -6,9 +6,9 @@ import com.google.common.base.Optional;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 public interface ClientAuthorizationRepository {
-  void register(ClientAuthorizationRequest clientAuthorizationRequest);
+  void register(Authorization authorization);
 
-  Optional<ClientAuthorizationRequest> findByCode(String authorizationCode);
+  Optional<Authorization> findByCode(String authorizationCode);
 
-  void update(ClientAuthorizationRequest clientAuthorizationRequest);
+  void update(Authorization authorization);
 }

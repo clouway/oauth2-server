@@ -43,7 +43,7 @@ public class TokenCreationVerifierImplTest {
   @Test
   public void verify() throws Exception {
 
-    final ClientAuthorizationRequest authorizationRequest = new ClientAuthorizationRequest("type", clientId, "Code", "redirectURI");
+    final Authorization authorizationRequest = new Authorization("type", clientId, "Code", "redirectURI", "userId");
 
     context.checking(new Expectations() {{
       oneOf(repository).findByCode(code);
@@ -69,7 +69,7 @@ public class TokenCreationVerifierImplTest {
   @Test
   public void notVerifiedWhenOtherClientIdWasPassed() throws Exception {
 
-    final ClientAuthorizationRequest authorizationRequest = new ClientAuthorizationRequest("type", "other_clientId", "Code", "redirectURI");
+    final Authorization authorizationRequest = new Authorization("type", "other_clientId", "Code", "redirectURI", "userId");
 
     context.checking(new Expectations() {{
       oneOf(repository).findByCode(code);
@@ -82,7 +82,7 @@ public class TokenCreationVerifierImplTest {
   @Test
   public void notVerifiedWhenAlreadyUsedAuthorization() throws Exception {
 
-    final ClientAuthorizationRequest authorizationRequest = new ClientAuthorizationRequest("type", "other_clientId", "Code", "redirectURI");
+    final Authorization authorizationRequest = new Authorization("type", "other_clientId", "Code", "redirectURI", "userId");
     //already used
     authorizationRequest.usedOn(new Date());
 

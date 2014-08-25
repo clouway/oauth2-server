@@ -13,7 +13,6 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Service
-//@At("/verify")
 public class VerificationEndpoint {
   private final TokenVerifier verifier;
 
@@ -23,7 +22,6 @@ public class VerificationEndpoint {
   }
 
   @Get
-//  @At("/:token")
   public Reply<?> verify(@Named("token") String token) {
     if (!verifier.verify(token)) {
       return Reply.saying().status(SC_BAD_REQUEST);

@@ -49,7 +49,7 @@ public class TokenEndpointTest {
   @Test
   public void generatingToken() throws Exception {
     final TokenRequest tokenRequest = new TokenRequest("grant_type", "code", "refresh_token", "client_id", "client_secret");
-    final Token token = new Token("token_value", "token_type", 0l, new Date());
+    final Token token = new Token("token_value", "token_type", "userId", 0l, new Date());
     final TokenDTO tokenDTO = new TokenDTO("token_value", "refresh_value", "token_type", 0l);
     final Request request = new ParameterRequest(ImmutableMap.of("grant_type", "grant_type", "code", "code", "client_id", "client_id", "client_secret", "client_secret", "refresh_token", "refresh_token"));
 
@@ -62,7 +62,7 @@ public class TokenEndpointTest {
       oneOf(refreshTokenProvider).provide(tokenRequest.refreshToken, tokenRequest.clientId, tokenRequest.clientSecret);
       will(returnValue(refreshToken));
 
-      oneOf(tokenCreator).create();
+      oneOf(tokenCreator).create(tokenRequest.code);
       will(returnValue(token));
     }});
 
@@ -75,7 +75,7 @@ public class TokenEndpointTest {
   @Test
   public void generatingTokenUsingRefreshToken() throws Exception {
     final TokenRequest tokenRequest = new TokenRequest("refresh_token", "code", "refresh_token_value", "client_id", "client_secret");
-    final Token token = new Token("token_value", "token_type", 0l, new Date());
+    final Token token = new Token("token_value", "token_type", "userId", 0l, new Date());
     final TokenDTO tokenDTO = new TokenDTO("token_value", "refresh_value", "token_type", 0l);
     final Request request = new ParameterRequest(ImmutableMap.of("grant_type", "refresh_token", "code", "code", "client_id", "client_id", "client_secret", "client_secret", "refresh_token", "refresh_token_value"));
 
@@ -88,7 +88,7 @@ public class TokenEndpointTest {
       oneOf(refreshTokenProvider).provide(tokenRequest.refreshToken, tokenRequest.clientId, tokenRequest.clientSecret);
       will(returnValue(refreshToken));
 
-      oneOf(tokenCreator).create();
+      oneOf(tokenCreator).create(tokenRequest.code);
       will(returnValue(token));
     }});
 

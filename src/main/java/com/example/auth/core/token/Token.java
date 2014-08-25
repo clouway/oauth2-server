@@ -8,13 +8,15 @@ import java.util.Date;
 public class Token {
   public final String value;
   public final String type;
+  public final String userId;
   public final Long expiresInSeconds;
   public final Date creationDate;
 
 
-  public Token(String value,  String type, Long expiresInSeconds, Date creationDate) {
+  public Token(String value, String type, String userId, Long expiresInSeconds, Date creationDate) {
     this.value = value;
     this.type = type;
+    this.userId = userId;
     this.expiresInSeconds = expiresInSeconds;
     this.creationDate = creationDate;
   }
@@ -24,7 +26,7 @@ public class Token {
   }
 
   public Token expiresIn(Long seconds) {
-    return new Token(value, type, seconds, creationDate);
+    return new Token(value, type, userId, seconds, creationDate);
   }
 
   public boolean isExpiredOn(Date date){

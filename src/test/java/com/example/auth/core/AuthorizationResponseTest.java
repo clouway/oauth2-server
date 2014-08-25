@@ -9,7 +9,7 @@ import static org.hamcrest.core.Is.is;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class ClientAuthorizationRequestResponseTest {
+public class AuthorizationResponseTest {
   @Test
   public void buildRedirectURI() throws Exception {
     AuthorizationResponse response = new AuthorizationResponse("123456789", "http://abv.bg/auth");

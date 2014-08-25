@@ -31,7 +31,7 @@ public class TokenVerifierImplTest {
 
   @Test
   public void happyPath() throws Exception {
-    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", 1l, new Date());
+    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", "userId", 1l, new Date());
 
     context.checking(new Expectations() {{
       oneOf(repository).getNotExpiredToken(tokenValue);

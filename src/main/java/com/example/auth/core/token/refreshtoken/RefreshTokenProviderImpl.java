@@ -49,11 +49,16 @@ public class RefreshTokenProviderImpl implements RefreshTokenProvider {
     }
 
     String refreshTokenValue = existingRefreshToken;
+    //when no existing token then generate and save
     if (Strings.isNullOrEmpty(refreshTokenValue)) {
       refreshTokenValue = tokenGenerator.generate();
+      RefreshToken firstRefreshToken = aNewRefreshToken(refreshTokenValue, clientId, clientSecret).build();
+      refreshTokenRepository.save(firstRefreshToken);
+      return firstRefreshToken;
     }
 
-    return aNewRefreshToken(refreshTokenValue, clientId, clientSecret).build();
+    RefreshToken refreshToken = aNewRefreshToken(refreshTokenValue, clientId, clientSecret).build();
+    return refreshToken;
   }
 
   private void clearOldRefreshToken(String refreshToken) {

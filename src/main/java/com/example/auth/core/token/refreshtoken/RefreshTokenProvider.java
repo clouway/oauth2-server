@@ -5,7 +5,7 @@ import com.google.inject.ImplementedBy;
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-@ImplementedBy(RefreshTokenProvider.class)
+@ImplementedBy(RefreshTokenProviderImpl.class)
 public interface RefreshTokenProvider {
 
   RefreshToken provide(String existingRefreshToken, String clientId, String clientSecret);

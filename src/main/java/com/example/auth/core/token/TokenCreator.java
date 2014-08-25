@@ -7,5 +7,5 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(BearerTokenCreator.class)
 public interface TokenCreator {
-  Token create();
+  Token create(String authorizationCode);
 }
