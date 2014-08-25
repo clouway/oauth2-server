@@ -1,8 +1,8 @@
 package com.example.auth.app;
 
-import com.example.auth.core.AuthorizationErrorResponse;
-import com.example.auth.core.AuthorizationRequest;
-import com.example.auth.core.AuthorizationResponse;
+import com.example.auth.core.authorization.AuthorizationErrorResponse;
+import com.example.auth.core.authorization.AuthorizationRequest;
+import com.example.auth.core.authorization.AuthorizationResponse;
 import com.example.auth.core.authorization.AuthorizationSecurity;
 import com.google.inject.Inject;
 import com.google.sitebricks.headless.Reply;
@@ -31,6 +31,8 @@ public class AuthorizationEndpoint {
       AuthorizationRequest authorizationRequest = read(request);
 
       AuthorizationResponse response = authorizationSecurity.auth(authorizationRequest);
+
+
 
       return Reply.saying().redirect(response.buildURI());
     } catch (AuthorizationErrorResponse error) {

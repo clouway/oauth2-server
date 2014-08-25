@@ -1,4 +1,4 @@
-package com.example.auth.core;
+package com.example.auth.core.session;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>

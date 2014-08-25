@@ -1,7 +1,7 @@
 package com.example.auth.app.security;
 
-import com.example.auth.core.Session;
-import com.example.auth.core.SessionSecurity;
+import com.example.auth.core.session.Session;
+import com.example.auth.core.session.SessionSecurity;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

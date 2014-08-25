@@ -3,7 +3,7 @@ package com.example.auth.memory;
 import com.example.auth.core.Duration;
 import com.example.auth.core.ResourceOwnerAuthentication;
 import com.example.auth.core.ResourceOwnerStore;
-import com.example.auth.core.SessionSecurity;
+import com.example.auth.core.session.SessionSecurity;
 import com.example.auth.core.authorization.ClientAuthorizationRepository;
 import com.example.auth.core.client.ClientRepository;
 import com.example.auth.core.token.Sha1TokenGenerator;

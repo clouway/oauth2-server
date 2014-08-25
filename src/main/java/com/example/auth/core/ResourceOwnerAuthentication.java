@@ -1,5 +1,6 @@
 package com.example.auth.core;
 
+import com.example.auth.core.session.Session;
 import com.google.common.base.Optional;
 
 /**

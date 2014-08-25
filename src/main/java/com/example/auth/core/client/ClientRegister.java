@@ -1,7 +1,5 @@
 package com.example.auth.core.client;
 
-import com.example.auth.core.RegistrationRequest;
-import com.example.auth.core.RegistrationResponse;
 import com.google.inject.ImplementedBy;
 
 /**

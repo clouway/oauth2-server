@@ -1,7 +1,7 @@
 package com.example.auth.app;
 
 import com.example.auth.core.ResourceOwnerAuthentication;
-import com.example.auth.core.Session;
+import com.example.auth.core.session.Session;
 import com.google.common.base.Optional;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;

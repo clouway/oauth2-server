@@ -1,8 +1,6 @@
 package com.example.auth.core.client;
 
 import com.example.auth.ArgumentCaptor;
-import com.example.auth.core.RegistrationRequest;
-import com.example.auth.core.RegistrationResponse;
 import com.example.auth.core.token.TokenGenerator;
 import com.google.inject.util.Providers;
 import org.jmock.Expectations;

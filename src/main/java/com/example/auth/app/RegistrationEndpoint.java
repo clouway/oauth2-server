@@ -1,7 +1,7 @@
 package com.example.auth.app;
 
-import com.example.auth.core.RegistrationRequest;
-import com.example.auth.core.RegistrationResponse;
+import com.example.auth.core.client.RegistrationRequest;
+import com.example.auth.core.client.RegistrationResponse;
 import com.example.auth.core.client.ClientRegister;
 import com.google.inject.Inject;
 import com.google.sitebricks.headless.Reply;

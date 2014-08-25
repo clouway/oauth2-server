@@ -1,4 +1,4 @@
-package com.example.auth.core;
+package com.example.auth.core.authorization;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>

@@ -1,6 +1,6 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.ClientAuthorizationRequest;
+import com.example.auth.core.authorization.ClientAuthorizationRequest;
 import com.example.auth.core.authorization.ClientAuthorizationRepository;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;

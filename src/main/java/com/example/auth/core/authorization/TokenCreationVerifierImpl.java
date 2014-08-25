@@ -1,6 +1,5 @@
 package com.example.auth.core.authorization;
 
-import com.example.auth.core.ClientAuthorizationRequest;
 import com.example.auth.core.Clock;
 import com.example.auth.core.token.refreshtoken.RefreshToken;
 import com.example.auth.core.token.refreshtoken.RefreshTokenRepository;

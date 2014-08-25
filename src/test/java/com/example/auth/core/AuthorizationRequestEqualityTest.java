@@ -1,5 +1,6 @@
 package com.example.auth.core;
 
+import com.example.auth.core.authorization.AuthorizationRequest;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;

@@ -1,8 +1,5 @@
 package com.example.auth.core.authorization;
 
-import com.example.auth.core.AuthorizationErrorResponse;
-import com.example.auth.core.AuthorizationRequest;
-import com.example.auth.core.ClientAuthorizationRequest;
 import com.example.auth.core.client.Client;
 import com.example.auth.core.client.ClientRepository;
 import com.example.auth.core.token.TokenGenerator;

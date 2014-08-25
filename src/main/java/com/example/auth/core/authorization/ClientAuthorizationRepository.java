@@ -1,6 +1,5 @@
 package com.example.auth.core.authorization;
 
-import com.example.auth.core.ClientAuthorizationRequest;
 import com.google.common.base.Optional;
 
 /**

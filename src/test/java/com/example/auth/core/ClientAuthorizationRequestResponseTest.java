@@ -1,5 +1,6 @@
 package com.example.auth.core;
 
+import com.example.auth.core.authorization.AuthorizationResponse;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

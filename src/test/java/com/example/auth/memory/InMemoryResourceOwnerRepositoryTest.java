@@ -1,7 +1,7 @@
 package com.example.auth.memory;
 
 import com.example.auth.core.ResourceOwner;
-import com.example.auth.core.Session;
+import com.example.auth.core.session.Session;
 import com.example.auth.core.token.TokenGenerator;
 import com.google.common.base.Optional;
 import org.jmock.Expectations;
