@@ -9,9 +9,15 @@ import com.google.inject.servlet.ServletModule;
 public class SecurityModule extends AbstractModule {
 
   private String url = "";
+  private String loginPageUrl = "";
 
   public SecurityModule(String url) {
     this.url = url;
+  }
+
+  public SecurityModule(String url, String loginPageUrl) {
+    this.url = url;
+    this.loginPageUrl = loginPageUrl;
   }
 
   protected void configure() {
@@ -34,5 +40,11 @@ public class SecurityModule extends AbstractModule {
   @UriPath
   public String uriPath() {
     return url;
+  }
+
+  @Provides
+  @LoginPageUrl
+  public String loginPageUrl() {
+    return loginPageUrl;
   }
 }

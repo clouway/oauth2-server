@@ -25,7 +25,7 @@ public class OauthSecurityFilterTest {
 
   private SecuredResources securedResources = createSecuredResources("/auth", "/xxx", "movies");
 
-  private OauthSecurityFilter filter = new OauthSecurityFilter(sessionSecurity, securedResources,"");
+  private OauthSecurityFilter filter = new OauthSecurityFilter(sessionSecurity, securedResources,"", "");
 
   @Test
   public void happyPath() throws Exception {
@@ -56,8 +56,27 @@ public class OauthSecurityFilterTest {
 
     filter.doFilter(servletRequest, servletResponse, chain);
 
-    servletResponse.assertRedirectTo("/login?page=%2Fxxx%3Fredirect_uri%3Dhttp%3A%2F%2Fabv.bg%2F");
+    servletResponse.assertRedirectTo("/login?redirectUrl=%2Fxxx%3Fredirect_uri%3Dhttp%3A%2F%2Fabv.bg%2F");
   }
+
+  @Test
+  public void invalidSessionRedirectToThLoginPath() throws Exception {
+    final Session session = new Session("123token");
+    final FakeHttpServletRequest servletRequest = new FakeHttpServletRequest("/xxx?redirect_uri=http://abv.bg/", authCookie(session.value));
+    final FakeHttpServletResponse servletResponse = new FakeHttpServletResponse();
+
+    context.checking(new Expectations() {{
+      oneOf(sessionSecurity).exists(session);
+      will(returnValue(false));
+    }});
+
+    filter = new OauthSecurityFilter(sessionSecurity,securedResources, "", "/loginPagePath");
+    filter.doFilter(servletRequest, servletResponse, chain);
+
+    servletResponse.assertRedirectTo("/loginPagePath?redirectUrl=%2Fxxx%3Fredirect_uri%3Dhttp%3A%2F%2Fabv.bg%2F");
+  }
+
+  @Test
 
   @Test
   public void unsecuredResource() throws Exception {
@@ -76,6 +95,6 @@ public class OauthSecurityFilterTest {
   }
 
   private Cookie[] authCookie(String value) {
-    return new Cookie[] {new Cookie("session_id", value)};
+    return new Cookie[] {new Cookie("SID", value)};
   }
 }

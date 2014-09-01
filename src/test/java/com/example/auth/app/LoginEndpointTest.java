@@ -34,7 +34,7 @@ public class LoginEndpointTest {
   @Test
   public void happyPath() throws Exception {
     final Session session = new Session("session_value");
-    final Cookie cookie = new Cookie("session_id", session.value);
+    final Cookie cookie = new Cookie("SID", session.value);
 
     context.checking(new Expectations() {{
       oneOf(request).getRemoteAddr();
@@ -64,13 +64,13 @@ public class LoginEndpointTest {
 
     String redirectPage = endpoint.login(request, response);
 
-    response.assertDoesNotExist("session_id");
+    response.assertDoesNotExist("SID");
     assertThat(redirectPage, is("/xxx"));
   }
 
   private void insertUserData(String username, String password, String redirectPage) {
     endpoint.setUsername(username);
     endpoint.setPassword(password);
-    endpoint.setPage(redirectPage);
+    endpoint.setRedirectUrl(redirectPage);
   }
 }

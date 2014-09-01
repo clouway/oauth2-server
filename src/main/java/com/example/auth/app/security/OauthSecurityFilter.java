@@ -2,6 +2,7 @@ package com.example.auth.app.security;
 
 import com.example.auth.core.session.Session;
 import com.example.auth.core.session.SessionSecurity;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -26,12 +27,14 @@ public class OauthSecurityFilter implements Filter {
   private final SessionSecurity sessionSecurity;
   private final SecuredResources securedResources;
   private String uriPath;
+  private String loginPagePath;
 
   @Inject
-  public OauthSecurityFilter(SessionSecurity sessionSecurity, SecuredResources securedResources, @UriPath String uriPath) {
+  public OauthSecurityFilter(SessionSecurity sessionSecurity, SecuredResources securedResources, @UriPath String uriPath, @LoginPageUrl String loginPagePath) {
     this.sessionSecurity = sessionSecurity;
     this.securedResources = securedResources;
     this.uriPath = uriPath;
+    this.loginPagePath = loginPagePath;
   }
 
   @Override
@@ -45,10 +48,20 @@ public class OauthSecurityFilter implements Filter {
     HttpServletResponse response = (HttpServletResponse) servletResponse;
 
     if (securedResources.contains(request.getRequestURI())) {
-      Session session = new Session(getCookieValue(request, "session_id"));
+      //"SID" - this value should be configurable
+      Session session = new Session(getCookieValue(request, "SID"));
 
       if (!sessionSecurity.exists(session)) {
-        response.sendRedirect(uriPath + "/login?page=" + getRedirectURI(request));
+
+        String path = uriPath + "/login";
+
+        if (!Strings.isNullOrEmpty(loginPagePath)) {
+          path = loginPagePath;
+        }
+
+        String location = path + "?redirectUrl=" + getRedirectURI(request);
+
+        response.sendRedirect(location);
         return;
       }
     }

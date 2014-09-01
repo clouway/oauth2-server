@@ -15,11 +15,13 @@ import com.google.inject.Provides;
 public class OauthAuthorizationServerModule extends AbstractModule {
 
   private String url = "";
+  private String loginPagePath = "";
   private Duration tokenTimeToLive;
   private Boolean generatesNewRefreshToken = false;
 
   /**
    * constructs the module
+   *
    * @param url
    * @param tokenTimeToLive in seconds
    */
@@ -27,8 +29,16 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     this.url = url;
     this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
   }
+
+  public OauthAuthorizationServerModule(String url, String loginPagePath, Long tokenTimeToLive) {
+    this.url = url;
+    this.loginPagePath = loginPagePath;
+    this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
+  }
+
   /**
    * constructs the module
+   *
    * @param url
    * @param tokenTimeToLive in seconds
    */
@@ -38,11 +48,24 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
   }
 
+  /**
+   * constructs the module
+   *
+   * @param url
+   * @param tokenTimeToLive in seconds
+   */
+  public OauthAuthorizationServerModule(String url, String loginPagePath, Long tokenTimeToLive, Boolean generatesNewRefreshToken) {
+    this.url = url;
+    this.loginPagePath = loginPagePath;
+    this.generatesNewRefreshToken = generatesNewRefreshToken;
+    this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
+  }
+
 
   protected void configure() {
 
     install(new CoreModule());
-    install(new SecurityModule(url));
+    install(new SecurityModule(url,loginPagePath));
 //    install(new SitebricksModule() {
 //      @Override
 //      protected void configureSitebricks() {
