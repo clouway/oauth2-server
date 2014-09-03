@@ -7,5 +7,8 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(BearerTokenCreator.class)
 public interface TokenCreator {
-  Token create(String authorizationCode);
+
+  Token create(ProvidedAuthorizationCode providedAuthorizationCode);
+
+  Token create(ProvidedRefreshToken providedRefreshToken);
 }

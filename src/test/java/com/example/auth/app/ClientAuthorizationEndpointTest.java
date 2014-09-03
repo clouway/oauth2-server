@@ -35,7 +35,7 @@ public class ClientAuthorizationEndpointTest {
 
   @Before
   public void setUp() throws Exception {
-    Lists.newArrayList(new Cookie("session_id", "xxxyyyzzz")).toArray(coockies);
+    Lists.newArrayList(new Cookie("SID", "xxxyyyzzz")).toArray(coockies);
   }
 
   @Test

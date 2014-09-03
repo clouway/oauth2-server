@@ -1,26 +1,21 @@
 package com.example.auth.core.authorization;
 
 import com.example.auth.core.Clock;
-import com.example.auth.core.token.refreshtoken.RefreshToken;
-import com.example.auth.core.token.refreshtoken.RefreshTokenRepository;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-public class TokenCreationVerifierImpl implements TokenCreationVerifier {
+class TokenCreationVerifierImpl implements TokenCreationVerifier {
 
   private ClientAuthorizationRepository repository;
   private Clock clock;
-  private RefreshTokenRepository refreshTokenRepository;
 
   @Inject
-  public TokenCreationVerifierImpl(ClientAuthorizationRepository repository, Clock clock, RefreshTokenRepository refreshTokenRepository) {
-
+  public TokenCreationVerifierImpl(ClientAuthorizationRepository repository, Clock clock) {
     this.repository = repository;
     this.clock = clock;
-    this.refreshTokenRepository = refreshTokenRepository;
   }
 
   @Override
@@ -43,20 +38,4 @@ public class TokenCreationVerifierImpl implements TokenCreationVerifier {
     return false;
   }
 
-  @Override
-  public Boolean verifyRefreshToken(String clientId, String clientSecret, String refreshToken) {
-
-    Optional<RefreshToken> token = refreshTokenRepository.load(refreshToken);
-
-
-    if (token.isPresent()) {
-
-      RefreshToken requiredToken = new RefreshToken(refreshToken, clientId, clientSecret);
-
-      return requiredToken.equals(token.get());
-    }
-
-
-    return false;
-  }
 }

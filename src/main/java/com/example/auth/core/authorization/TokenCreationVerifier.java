@@ -10,5 +10,4 @@ public interface TokenCreationVerifier {
 
   Boolean verify(String code, String clintId);
 
-  Boolean verifyRefreshToken(String clientId, String clientSecret, String refreshToken);
 }

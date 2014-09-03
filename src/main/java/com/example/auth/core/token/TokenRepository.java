@@ -10,4 +10,7 @@ public interface TokenRepository {
   void save(Token token);
 
   Optional<Token> getNotExpiredToken(String token);
+
+  Optional<Token> findByRefreshTokenCode(String value);
+
 }

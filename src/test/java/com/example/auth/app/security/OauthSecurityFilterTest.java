@@ -76,7 +76,6 @@ public class OauthSecurityFilterTest {
     servletResponse.assertRedirectTo("/loginPagePath?redirectUrl=%2Fxxx%3Fredirect_uri%3Dhttp%3A%2F%2Fabv.bg%2F");
   }
 
-  @Test
 
   @Test
   public void unsecuredResource() throws Exception {

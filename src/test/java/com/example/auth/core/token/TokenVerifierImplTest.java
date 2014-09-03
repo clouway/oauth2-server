@@ -31,7 +31,7 @@ public class TokenVerifierImplTest {
 
   @Test
   public void happyPath() throws Exception {
-    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", "userId", 1l, new Date());
+    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer","refresh", "userId", 1l, new Date());
 
     context.checking(new Expectations() {{
       oneOf(repository).getNotExpiredToken(tokenValue);
@@ -43,28 +43,6 @@ public class TokenVerifierImplTest {
     assertTrue(exists);
   }
 
-//  @Test
-//  public void updateExpirationTime() throws Exception {
-//    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer");
-//    final Date expirationTime = new Date(System.currentTimeMillis() + 10000000);
-//    final Date updatedTime = new Date(System.currentTimeMillis() + 30000000);
-//
-//    provide(token, expirationTime);
-//
-//    context.checking(new Expectations() {{
-//      oneOf(clock).now();
-//      will(returnValue(new Date()));
-//
-//      oneOf(clock).now();
-//      will(returnValue(new Date(System.currentTimeMillis() + 20000000)));
-//
-//      exactly(2).of(clock).nowPlus(interval);
-//      will(returnValue(updatedTime));
-//    }});
-//
-//    assertTrue(repository.verify("9c5084d190264d0de737a8049ed630fd"));
-//    assertTrue(repository.verify("9c5084d190264d0de737a8049ed630fd"));
-//  }
 
   @Test
   public void notExistingToken() throws Exception {

@@ -37,7 +37,7 @@ public class UserInfoEndPoint {
       return Reply.with(new UserDto(user.id, user.email, user.name)).as(Json.class).ok();
     }
 
-    return Reply.with(new ErrorResponseDTO("123", "User not found!")).status(SC_BAD_REQUEST).as(Json.class);
+    return Reply.with(new ErrorResponseDTO("123", "User not found or expired token!")).status(SC_BAD_REQUEST).as(Json.class);
   }
 
 }

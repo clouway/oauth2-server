@@ -41,7 +41,7 @@ class InMemoryTokenRepository implements TokenRepository {
         //remove the current token
         tokens.remove(tokenValue);
         // new instance
-        Token updatedToken = new Token(token.value, token.type, token.userId, timeToLive.seconds, currentDate);
+        Token updatedToken = new Token(token.value, token.type, token.refreshToken, token.userId, timeToLive.seconds, currentDate);
         //add the new token
         tokens.put(tokenValue, updatedToken);
 
@@ -49,6 +49,16 @@ class InMemoryTokenRepository implements TokenRepository {
       }
     }
 
+    return Optional.absent();
+  }
+
+  @Override
+  public Optional<Token> findByRefreshTokenCode(String value) {
+    for (Token token : tokens.values()) {
+      if (value.equals(token.refreshToken)) {
+        return Optional.of(token);
+      }
+    }
     return Optional.absent();
   }
 }

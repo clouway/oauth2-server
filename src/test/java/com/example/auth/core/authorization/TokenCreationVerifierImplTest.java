@@ -1,8 +1,6 @@
 package com.example.auth.core.authorization;
 
 import com.example.auth.core.Clock;
-import com.example.auth.core.token.refreshtoken.RefreshToken;
-import com.example.auth.core.token.refreshtoken.RefreshTokenRepository;
 import com.google.common.base.Optional;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -32,12 +30,10 @@ public class TokenCreationVerifierImplTest {
   private Date currentDate = new Date();
 
   private Clock clock = new StubClock(currentDate);
-  @Mock
-  private RefreshTokenRepository refreshTokenRepository;
 
   @Before
   public void setUp() throws Exception {
-    verifier = new TokenCreationVerifierImpl(repository, clock, refreshTokenRepository);
+    verifier = new TokenCreationVerifierImpl(repository, clock);
   }
 
   @Test
@@ -94,66 +90,4 @@ public class TokenCreationVerifierImplTest {
     assertFalse(verifier.verify(code, clientId));
   }
 
-  @Test
-  public void validRefreshToken() throws Exception {
-
-    final String refreshToken = "24323 234 rtwerrefresh ";
-
-    final RefreshToken token = new RefreshToken(refreshToken, clientId, secret);
-
-    context.checking(new Expectations() {{
-      oneOf(refreshTokenRepository).load(refreshToken);
-      will(returnValue(Optional.of(token)));
-    }});
-
-
-    assertTrue(verifier.verifyRefreshToken(clientId, secret, refreshToken));
-
-  }
-
-  @Test
-  public void existingTokenForOtherClient() throws Exception {
-
-    final String refreshToken = "24323 234 rtwerrefresh ";
-
-    final RefreshToken token = new RefreshToken(refreshToken, clientId, secret);
-
-    context.checking(new Expectations() {{
-      oneOf(refreshTokenRepository).load(refreshToken);
-      will(returnValue(Optional.of(token)));
-    }});
-
-    assertFalse(verifier.verifyRefreshToken("differentClientId", secret, refreshToken));
-
-  }
-
-  @Test
-  public void existingTokenSecretNotMatch() throws Exception {
-
-    final String refreshToken = "24323 234 rtwerrefresh ";
-
-    final RefreshToken token = new RefreshToken(refreshToken, clientId, secret);
-
-    context.checking(new Expectations() {{
-      oneOf(refreshTokenRepository).load(refreshToken);
-      will(returnValue(Optional.of(token)));
-    }});
-
-    assertFalse(verifier.verifyRefreshToken(clientId, "some wrong secret", refreshToken));
-
-  }
-
-  @Test
-  public void notExistingRefreshToken() throws Exception {
-
-    final String refreshToken = "24323 234 rtwerrefresh ";
-
-    context.checking(new Expectations() {{
-      oneOf(refreshTokenRepository).load(refreshToken);
-      will(returnValue(Optional.absent()));
-    }});
-
-    assertFalse(verifier.verifyRefreshToken(clientId, "some wrong secret", refreshToken));
-
-  }
 }

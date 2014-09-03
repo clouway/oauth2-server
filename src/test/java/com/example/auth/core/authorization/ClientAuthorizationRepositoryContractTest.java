@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
@@ -43,6 +45,7 @@ public abstract class ClientAuthorizationRepositoryContractTest {
     assertThat(actualClientAuthentication.get(), is(clientAuthorization));
 
     Authorization updatedAuthorization = new Authorization("type","clientId", authorizationCode, "redirectURI", "other user userId");
+    updatedAuthorization.usedOn(new Date());
     repository.update(updatedAuthorization);
 
     actualClientAuthentication = repository.findByCode(authorizationCode);
