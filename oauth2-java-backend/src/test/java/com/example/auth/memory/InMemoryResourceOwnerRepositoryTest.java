@@ -1,8 +1,8 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.ResourceOwner;
-import com.example.auth.core.session.Session;
-import com.example.auth.core.token.TokenGenerator;
+import com.clouway.oauth2.ResourceOwner;
+import com.clouway.oauth2.Session;
+import com.clouway.oauth2.token.TokenGenerator;
 import com.google.common.base.Optional;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;

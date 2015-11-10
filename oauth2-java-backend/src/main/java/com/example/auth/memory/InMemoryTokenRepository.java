@@ -1,9 +1,8 @@
 package com.example.auth.memory;
 
-import com.example.auth.app.TokenTimeToLive;
-import com.example.auth.core.Duration;
-import com.example.auth.core.token.Token;
-import com.example.auth.core.token.TokenRepository;
+import com.clouway.oauth2.Duration;
+import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.TokenRepository;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -20,7 +19,7 @@ class InMemoryTokenRepository implements TokenRepository {
   private Duration timeToLive;
 
   @Inject
-  public InMemoryTokenRepository(Date currentDate, @TokenTimeToLive Duration timeToLive) {
+  public InMemoryTokenRepository(Date currentDate, Duration timeToLive) {
     this.currentDate = currentDate;
     this.timeToLive = timeToLive;
   }

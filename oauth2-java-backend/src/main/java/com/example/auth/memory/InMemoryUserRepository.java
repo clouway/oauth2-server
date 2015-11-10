@@ -1,8 +1,8 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.user.User;
-import com.example.auth.core.user.UserIdFinder;
-import com.example.auth.core.user.UserRepository;
+import com.clouway.oauth2.user.User;
+import com.clouway.oauth2.user.UserIdFinder;
+import com.clouway.oauth2.user.UserRepository;
 import com.google.common.base.Optional;
 
 /**

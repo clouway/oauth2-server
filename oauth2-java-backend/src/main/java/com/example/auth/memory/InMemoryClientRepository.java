@@ -1,7 +1,7 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.client.Client;
-import com.example.auth.core.client.ClientRepository;
+import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.client.ClientRepository;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;

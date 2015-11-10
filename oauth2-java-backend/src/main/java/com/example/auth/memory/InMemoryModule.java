@@ -1,15 +1,15 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.Duration;
-import com.example.auth.core.ResourceOwnerAuthentication;
-import com.example.auth.core.ResourceOwnerStore;
-import com.example.auth.core.session.SessionSecurity;
-import com.example.auth.core.authorization.ClientAuthorizationRepository;
-import com.example.auth.core.client.ClientRepository;
-import com.example.auth.core.token.Sha1TokenGenerator;
-import com.example.auth.core.token.TokenRepository;
-import com.example.auth.core.user.UserIdFinder;
-import com.example.auth.core.user.UserRepository;
+import com.clouway.oauth2.Duration;
+import com.clouway.oauth2.ResourceOwnerAuthentication;
+import com.clouway.oauth2.ResourceOwnerStore;
+import com.clouway.oauth2.SessionSecurity;
+import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.token.Sha1TokenGenerator;
+import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.user.UserIdFinder;
+import com.clouway.oauth2.user.UserRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 

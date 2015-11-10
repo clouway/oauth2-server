@@ -1,7 +1,7 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.authorization.ClientAuthorizationRepositoryContractTest;
-import com.example.auth.core.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.authorization.ClientAuthorizationRepositoryContractTest;
+import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 
 public class InMemoryClientAuthorizationStoreTest extends ClientAuthorizationRepositoryContractTest {
 

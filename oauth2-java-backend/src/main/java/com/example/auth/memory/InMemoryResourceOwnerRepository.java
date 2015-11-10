@@ -1,11 +1,11 @@
 package com.example.auth.memory;
 
-import com.example.auth.core.ResourceOwner;
-import com.example.auth.core.ResourceOwnerAuthentication;
-import com.example.auth.core.ResourceOwnerStore;
-import com.example.auth.core.session.Session;
-import com.example.auth.core.session.SessionSecurity;
-import com.example.auth.core.token.TokenGenerator;
+import com.clouway.oauth2.ResourceOwner;
+import com.clouway.oauth2.ResourceOwnerAuthentication;
+import com.clouway.oauth2.ResourceOwnerStore;
+import com.clouway.oauth2.Session;
+import com.clouway.oauth2.SessionSecurity;
+import com.clouway.oauth2.token.TokenGenerator;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
