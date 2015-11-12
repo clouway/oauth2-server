@@ -1,4 +1,4 @@
-package com.example.auth.memory;
+package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.ResourceOwnerAuthentication;

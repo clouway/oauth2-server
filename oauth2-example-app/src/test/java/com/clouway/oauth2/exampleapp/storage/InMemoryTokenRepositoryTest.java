@@ -1,7 +1,6 @@
-package com.example.auth.memory;
+package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.token.TokenRepository;
-import com.clouway.oauth2.token.TokenRepositoryContractTest;
 
 import java.util.Date;
 

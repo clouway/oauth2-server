@@ -1,7 +1,7 @@
 package com.clouway.oauth2.app;
 
 import com.clouway.oauth2.exampleapp.OauthAuthorizationServerModule;
-import com.example.auth.memory.InMemoryModule;
+import com.clouway.oauth2.exampleapp.storage.InMemoryModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceFilter;

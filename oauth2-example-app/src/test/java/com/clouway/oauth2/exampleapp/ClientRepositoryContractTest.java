@@ -1,5 +1,7 @@
-package com.clouway.oauth2.client;
+package com.clouway.oauth2.exampleapp;
 
+import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.client.ClientRepository;
 import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.example.auth.memory;
+package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.user.User;
 import com.clouway.oauth2.user.UserIdFinder;

@@ -1,6 +1,8 @@
-package com.clouway.oauth2.token;
+package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.Duration;
+import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.TokenRepository;
 import com.google.common.base.Optional;
 import org.junit.Test;
 
