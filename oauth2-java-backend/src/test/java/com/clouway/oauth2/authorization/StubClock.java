@@ -16,11 +16,6 @@ public class StubClock implements Clock {
   }
 
   @Override
-  public Date nowPlus(Duration duration) {
-    return new Date(currentDate.getTime() + duration.asMills());
-  }
-
-  @Override
   public Date now() {
     return currentDate;
   }
