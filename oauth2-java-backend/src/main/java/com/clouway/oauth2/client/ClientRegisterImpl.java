@@ -9,20 +9,19 @@ import com.google.inject.Provider;
  */
 class ClientRegisterImpl implements ClientRegister {
 
-  private Provider<TokenGenerator> tokenGenerator;
+  private TokenGenerator tokenGenerator;
   private ClientRepository repository;
 
   @Inject
-  public ClientRegisterImpl(Provider<TokenGenerator> tokenGenerator, ClientRepository repository) {
+  public ClientRegisterImpl(TokenGenerator tokenGenerator, ClientRepository repository) {
     this.tokenGenerator = tokenGenerator;
     this.repository = repository;
   }
 
   @Override
   public RegistrationResponse register(RegistrationRequest request) {
-    TokenGenerator generator = tokenGenerator.get();
-    String id = generator.generate();
-    String secret = generator.generate();
+    String id = tokenGenerator.generate();
+    String secret = tokenGenerator.generate();
 
     Client client = new Client(id, secret, request.name, request.url, request.description, request.redirectURI);
 

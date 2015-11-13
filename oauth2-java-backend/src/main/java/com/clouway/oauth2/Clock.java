@@ -6,8 +6,10 @@ import java.util.Date;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 public interface Clock {
-
-  Date nowPlus(Duration duration);
-
+  /**
+   * Returns the current time.
+   * @return the current time
+   */
   Date now();
+
 }

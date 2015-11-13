@@ -29,7 +29,7 @@ public class ClientRegisterImplTest {
 
   @Before
   public void setUp() throws Exception {
-    register = new ClientRegisterImpl(Providers.of(tokenGenerator), repository);
+    register = new ClientRegisterImpl(tokenGenerator, repository);
   }
 
   @Test

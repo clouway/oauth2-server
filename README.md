@@ -1,6 +1,7 @@
-# ToDo
+# OAuth2 Java Backend 
+OAuth2 Java Backend is a backbone of OAuth2 provider which will provide basic OAuth2 support.    
 
- * ~~Find out how much of the http package could be moved in the app package.~~
- * Check which interfaces have to be implemented in the app package and how they will be wired with the other parts
- * Check how and where SecuredResources have to be used (app or lib)
- * We should consider where OauthSecurityFilter should be used or not    
+# ToDo 
+ * 2-legged oauth2 authorisation
+ * dependency clean up
+ * simple java servlet API 
