@@ -8,9 +8,9 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.clouway.security</groupId>
-  <artifactId>oauth2-java-backend</artifactId>
+  <artifactId>oauth2-server</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>oauth2-java-backend</name>
+  <name>oauth2-server</name>
   <url>http://maven.apache.org</url>
 
   <dependencies>

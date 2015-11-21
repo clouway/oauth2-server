@@ -21,7 +21,7 @@
 
     <dependency>
       <groupId>com.clouway.security</groupId>
-      <artifactId>oauth2-java-backend</artifactId>
+      <artifactId>oauth2-server</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 

@@ -13,12 +13,12 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>oauth2-java-backend (Parent)</name>
+  <name>oauth2-server (Parent)</name>
   <description>An oauth2 server library for Java applications</description>
-  <url>https://github.com/clouway/oauth2-java-backend</url>
+  <url>https://github.com/clouway/oauth2-server</url>
 
   <modules>
-    <module>oauth2-java-backend</module>
+    <module>oauth2-server</module>
     <module>oauth2-example-app</module>
   </modules>
 
@@ -95,25 +95,6 @@
 
     <plugins>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.10</version>
-        <configuration>
-          <failsOnError>true</failsOnError>
-          <configLocation>checkstyle.xml</configLocation>
-          <consoleOutput>true</consoleOutput>
-          <excludes>**/CipherSuite.java</excludes>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>checkstyle</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
