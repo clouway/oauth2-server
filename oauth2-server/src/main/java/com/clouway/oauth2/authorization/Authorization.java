@@ -54,6 +54,10 @@ public class Authorization {
     usageDate = date;
   }
 
+  public boolean wasAlreadyUsed() {
+    return usageDate != null;
+  }
+
   public boolean isNotUsed() {
     return usageDate == null;
   }

@@ -1,5 +1,8 @@
 package com.clouway.oauth2.token;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
+
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
@@ -23,9 +26,8 @@ public class ProvidedAuthorizationCode {
 
     if (clientId != null ? !clientId.equals(that.clientId) : that.clientId != null) return false;
     if (clientSecret != null ? !clientSecret.equals(that.clientSecret) : that.clientSecret != null) return false;
-    if (value != null ? !value.equals(that.value) : that.value != null) return false;
+    return value != null ? value.equals(that.value) : that.value == null;
 
-    return true;
   }
 
   @Override
@@ -34,5 +36,10 @@ public class ProvidedAuthorizationCode {
     result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
     result = 31 * result + (clientSecret != null ? clientSecret.hashCode() : 0);
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).add("code", value).add("clientId", clientId).add("secret",clientSecret).toString();
   }
 }

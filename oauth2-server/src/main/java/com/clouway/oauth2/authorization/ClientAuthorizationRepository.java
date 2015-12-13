@@ -1,5 +1,6 @@
 package com.clouway.oauth2.authorization;
 
+import com.clouway.oauth2.client.Client;
 import com.google.common.base.Optional;
 
 /**
@@ -8,7 +9,5 @@ import com.google.common.base.Optional;
 public interface ClientAuthorizationRepository {
   void register(Authorization authorization);
 
-  Optional<Authorization> findByCode(String authorizationCode);
-
-  void update(Authorization authorization);
+  Optional<Authorization> authorize(Client client, String authCode);
 }

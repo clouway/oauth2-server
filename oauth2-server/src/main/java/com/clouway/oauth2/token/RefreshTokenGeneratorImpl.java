@@ -7,7 +7,7 @@ import com.google.inject.Provider;
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-class RefreshTokenGeneratorImpl implements RefreshTokenGenerator {
+public class RefreshTokenGeneratorImpl implements RefreshTokenGenerator {
 
   private TokenGenerator tokenGenerator;
   private Provider<Boolean> generateNewRefreshToken;

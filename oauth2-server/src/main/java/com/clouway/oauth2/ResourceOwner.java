@@ -3,7 +3,7 @@ package com.clouway.oauth2;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class ResourceOwner {
+public final class ResourceOwner {
   public final String username;
   public final String password;
 

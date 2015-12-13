@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-
 class UserLoaderImpl implements UserLoader {
 
   private UserRepository repository;

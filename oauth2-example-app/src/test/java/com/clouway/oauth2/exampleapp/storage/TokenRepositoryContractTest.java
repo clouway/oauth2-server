@@ -33,7 +33,7 @@ public abstract class TokenRepositoryContractTest {
 
     repository = createRepo(new Date());
 
-    repository.save(notExpiredToken);
+    repository.register(notExpiredToken);
 
     Optional<Token> tokenOptional = repository.getNotExpiredToken(notExpiredToken.value);
 
@@ -51,7 +51,7 @@ public abstract class TokenRepositoryContractTest {
 
     repository = createRepo(new Date());
 
-    repository.save(notExpiredToken);
+    repository.register(notExpiredToken);
 
     Optional<Token> tokenOptional = repository.findByRefreshTokenCode(notExpiredToken.refreshToken);
 
@@ -88,7 +88,7 @@ public abstract class TokenRepositoryContractTest {
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
     repository = createRepo(currentDate);
 
-    repository.save(token);
+    repository.register(token);
 
     Optional<Token> tokenOptional = repository.getNotExpiredToken(token.value);
 
@@ -105,7 +105,7 @@ public abstract class TokenRepositoryContractTest {
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
     repository = createRepo(currentDate);
 
-    repository.save(token);
+    repository.register(token);
 
     Optional<Token> tokenOptional = repository.findByRefreshTokenCode(token.refreshToken);
 

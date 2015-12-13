@@ -1,5 +1,6 @@
 package com.clouway.oauth2.exampleapp.storage;
 
+import com.clouway.oauth2.token.Sha1TokenGenerator;
 import com.clouway.oauth2.token.TokenRepository;
 
 import java.util.Date;
@@ -11,6 +12,6 @@ public class InMemoryTokenRepositoryTest extends TokenRepositoryContractTest {
 
   @Override
   protected TokenRepository createRepo(Date currentDate) {
-    return new InMemoryTokenRepository(currentDate, timeToLive);
+    return new InMemoryTokenRepository(new Sha1TokenGenerator(), currentDate, timeToLive);
   }
 }

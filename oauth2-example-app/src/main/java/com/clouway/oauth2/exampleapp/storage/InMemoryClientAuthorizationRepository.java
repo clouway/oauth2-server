@@ -2,9 +2,11 @@ package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.client.Client;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -19,13 +21,23 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
   }
 
   @Override
-  public Optional<Authorization> findByCode(String authorizationCode) {
-    return Optional.fromNullable(authorizations.get(authorizationCode));
-  }
+  public Optional<Authorization> authorize(Client client, String authCode) {
 
-  @Override
-  public void update(Authorization authorization) {
-    authorizations.remove(authorization.code);
-    authorizations.put(authorization.code, authorization);
+    Authorization authorization = authorizations.get(authCode);
+    // No authorization was found for that code ?
+    if (authorization == null) {
+      return Optional.absent();
+    }
+
+    // Authorization was issued for different client is redirect uri ?
+    if (!authorization.clientId.equals(client.id) || authorization.wasAlreadyUsed()) {
+      return Optional.absent();
+    }
+
+    authorization.usedOn(new Date());
+
+    authorizations.put(authCode, authorization);
+
+    return Optional.of(authorization);
   }
 }

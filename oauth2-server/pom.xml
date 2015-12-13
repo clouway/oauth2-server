@@ -61,6 +61,21 @@
       <version>0.8.8</version>
     </dependency>
 
+
+    <dependency>
+      <groupId>javax.json</groupId>
+      <artifactId>javax.json-api</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+    	<groupId>net.hamnaberg.json</groupId>
+    	<artifactId>json-javax</artifactId>
+    	<version>1.0</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>

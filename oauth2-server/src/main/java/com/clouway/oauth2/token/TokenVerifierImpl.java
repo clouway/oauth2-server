@@ -20,10 +20,7 @@ public class TokenVerifierImpl implements TokenVerifier {
   public Boolean verify(String tokenValue) {
     Optional<Token> tokenOptional = repository.getNotExpiredToken(tokenValue);
 
-    if(tokenOptional.isPresent()){
-      return true;
-    }
-    return false;
+    return tokenOptional.isPresent();
   }
 
 //  @Override

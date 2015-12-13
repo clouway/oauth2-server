@@ -2,6 +2,7 @@ package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.TokenGenerator;
 import com.clouway.oauth2.token.TokenRepository;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -15,17 +16,19 @@ import java.util.Map;
  */
 class InMemoryTokenRepository implements TokenRepository {
   private final Map<String, Token> tokens = Maps.newHashMap();
+  private final TokenGenerator tokenGenerator;
   private Date currentDate;
   private Duration timeToLive;
 
   @Inject
-  public InMemoryTokenRepository(Date currentDate, Duration timeToLive) {
+  public InMemoryTokenRepository(TokenGenerator tokenGenerator, Date currentDate, Duration timeToLive) {
+    this.tokenGenerator = tokenGenerator;
     this.currentDate = currentDate;
     this.timeToLive = timeToLive;
   }
 
   @Override
-  public void save(Token token) {
+  public void register(Token token) {
     tokens.put(token.value, token);
 
   }
@@ -59,5 +62,39 @@ class InMemoryTokenRepository implements TokenRepository {
       }
     }
     return Optional.absent();
+  }
+
+  @Override
+  public Optional<Token> refreshToken(String refreshToken) {
+    for (Token token : tokens.values()) {
+      if (refreshToken.equals(token.refreshToken)) {
+
+        tokens.remove(token.value);
+        String newRefreshToken = tokenGenerator.generate();
+        Token updatedToken = issueToken(token.userId, Optional.of(newRefreshToken));
+
+        //add the new token
+        tokens.put(updatedToken.value, updatedToken);
+
+        return Optional.of(token);
+      }
+    }
+    return Optional.absent();
+  }
+
+  @Override
+  public Token issueToken(String userId, Optional<String> refreshToken) {
+    String token = tokenGenerator.generate();
+    String refreshTokenValue = "";
+
+    if (refreshToken.isPresent()) {
+      refreshTokenValue = refreshToken.get();
+    }
+
+    Token bearerToken = new Token(token, "bearer", refreshTokenValue, userId, timeToLive.seconds, currentDate);
+
+    tokens.put(token, bearerToken);
+
+    return bearerToken;
   }
 }

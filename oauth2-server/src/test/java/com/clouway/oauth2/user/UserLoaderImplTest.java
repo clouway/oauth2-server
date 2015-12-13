@@ -27,9 +27,9 @@ public class UserLoaderImplTest {
   private UserLoader userLoader;
 
   @Mock
-  private UserRepository repository;
+  UserRepository repository;
   @Mock
-  private TokenRepository tokenRepository;
+  TokenRepository tokenRepository;
 
   @Before
   public void setUp() throws Exception {

@@ -6,14 +6,52 @@
  */
 package com.clouway.oauth2.exampleapp;
 
-import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.CoreModule;
 import com.clouway.oauth2.Duration;
+import com.clouway.oauth2.OAuth2Servlet;
+import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.exampleapp.security.SecurityModule;
+import com.clouway.oauth2.token.TokenRepository;
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.servlet.ServletModule;
 import com.google.sitebricks.SitebricksModule;
 
 public class OauthAuthorizationServerModule extends AbstractModule {
+
+  @Singleton
+  static class OAuth2ServletBinding extends OAuth2Servlet {
+
+    private final ClientAuthorizationRepository clientAuthorizationRepository;
+    private final ClientRepository clientRepository;
+    private final TokenRepository tokenRepository;
+
+    @Inject
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, TokenRepository tokenRepository) {
+      this.clientAuthorizationRepository = clientAuthorizationRepository;
+      this.clientRepository = clientRepository;
+      this.tokenRepository = tokenRepository;
+    }
+
+    @Override
+    protected ClientAuthorizationRepository clientAuthorizationRepository() {
+      return clientAuthorizationRepository;
+    }
+
+    @Override
+    protected ClientRepository clientRepository() {
+      return clientRepository;
+    }
+
+    @Override
+    protected TokenRepository tokenRepository() {
+      return tokenRepository;
+    }
+  }
+
 
   private String url = "";
   private String loginPagePath = "";
@@ -66,18 +104,24 @@ public class OauthAuthorizationServerModule extends AbstractModule {
   protected void configure() {
 
     install(new CoreModule());
-    install(new SecurityModule(url,loginPagePath));
+    install(new SecurityModule(url, loginPagePath));
     install(new SitebricksModule() {
       @Override
       protected void configureSitebricks() {
         at(url + "/register").serve(RegistrationEndpoint.class);
         at(url + "/authorize").serve(AuthorizationEndpoint.class);
         at(url + "/login").show(LoginEndpoint.class);
-        at(url + "/token").serve(TokenEndpoint.class);
         at(url + "/verify/:token").serve(VerificationEndpoint.class);
         at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);
       }
     });
+    install(new ServletModule() {
+      @Override
+      protected void configureServlets() {
+        serve("/oauth2/*").with(OAuth2ServletBinding.class);
+      }
+    });
+
   }
 
 

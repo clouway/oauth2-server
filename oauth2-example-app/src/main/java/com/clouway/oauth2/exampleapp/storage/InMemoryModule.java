@@ -43,11 +43,10 @@ public class InMemoryModule extends AbstractModule {
 
   }
 
-
   @Provides
   @Singleton
   TokenRepository getTokenRepository() {
-    return new InMemoryTokenRepository(new Date(), new Duration(900000000L));
+    return new InMemoryTokenRepository(new Sha1TokenGenerator(), new Date(), new Duration(900000000L));
   }
 
 }
