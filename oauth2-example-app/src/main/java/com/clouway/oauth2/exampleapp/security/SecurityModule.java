@@ -24,7 +24,7 @@ public class SecurityModule extends AbstractModule {
     install(new ServletModule() {
       @Override
       protected void configureServlets() {
-        filter(url + "/*").through(OAuthFilter.class);
+        filter(url + "/*").through(OAuthSecurityFilter.class);
       }
     });
 
