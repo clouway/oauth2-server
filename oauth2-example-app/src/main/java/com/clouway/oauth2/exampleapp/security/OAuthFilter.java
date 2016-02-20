@@ -23,14 +23,14 @@ import java.net.URLEncoder;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 @Singleton
-public class OAuthSecurityFilter implements Filter {
+public class OAuthFilter implements Filter {
   private final SessionSecurity sessionSecurity;
   private final SecuredResources securedResources;
   private String uriPath;
   private String loginPagePath;
 
   @Inject
-  public OAuthSecurityFilter(SessionSecurity sessionSecurity, SecuredResources securedResources, @UriPath String uriPath, @LoginPageUrl String loginPagePath) {
+  public OAuthFilter(SessionSecurity sessionSecurity, SecuredResources securedResources, @UriPath String uriPath, @LoginPageUrl String loginPagePath) {
     this.sessionSecurity = sessionSecurity;
     this.securedResources = securedResources;
     this.uriPath = uriPath;

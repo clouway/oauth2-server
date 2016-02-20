@@ -16,7 +16,7 @@ import javax.servlet.http.Cookie;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class OAuthSecurityFilterTest {
+public class OAuthFilterTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
@@ -25,7 +25,7 @@ public class OAuthSecurityFilterTest {
 
   private SecuredResources securedResources = createSecuredResources("/auth", "/xxx", "movies");
 
-  private OAuthSecurityFilter filter = new OAuthSecurityFilter(sessionSecurity, securedResources,"", "");
+  private OAuthFilter filter = new OAuthFilter(sessionSecurity, securedResources,"", "");
 
   @Test
   public void happyPath() throws Exception {
@@ -70,7 +70,7 @@ public class OAuthSecurityFilterTest {
       will(Expectations.returnValue(false));
     }});
 
-    filter = new OAuthSecurityFilter(sessionSecurity,securedResources, "", "/loginPagePath");
+    filter = new OAuthFilter(sessionSecurity,securedResources, "", "/loginPagePath");
     filter.doFilter(servletRequest, servletResponse, chain);
 
     servletResponse.assertRedirectTo("/loginPagePath?redirectUrl=%2Fxxx%3Fredirect_uri%3Dhttp%3A%2F%2Fabv.bg%2F");
