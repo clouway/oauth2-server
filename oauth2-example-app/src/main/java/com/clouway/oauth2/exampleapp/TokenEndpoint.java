@@ -13,6 +13,7 @@ import com.google.sitebricks.headless.Request;
 import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Post;
 
+import static com.google.common.io.BaseEncoding.base64;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 /**
@@ -51,14 +52,26 @@ public class TokenEndpoint {
   }
 
   private TokenRequest read(Request request) {
-    String grantType = request.param("grant_type");
+    String[] credentials = decodeCredentials(request).split(":");
+
+    String clientId = credentials[0];
+    String clientSecret = credentials[1];
+
     String code = request.param("code");
-    String clientId = request.param("client_id");
-    String clientSecret = request.param("client_secret");
+    String grantType = request.param("grant_type");
     String refreshToken = request.param("refresh_token");
 
     return new TokenRequest(grantType, code, refreshToken, clientId, clientSecret);
   }
+
+  public String decodeCredentials(Request request) {
+    String authHeader = request.header("Authorization");
+
+    String credentials = authHeader.substring(6);
+
+    return new String(base64().decode(credentials));
+  }
+
 
   private TokenDTO adapt(Token token) {
     return new TokenDTO(token.value, token.refreshToken, token.type, token.expiresInSeconds);

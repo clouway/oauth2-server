@@ -1,6 +1,5 @@
 package com.clouway.oauth2.exampleapp;
 
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
@@ -10,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 /**
  * @author Miroslav Genov (mgenov@gmail.com)
@@ -33,7 +31,12 @@ class Json implements Transport {
   }
 
   public <T> void out(OutputStream outputStream, Class<T> tClass, T t) {
-    gson.toJson(t, new OutputStreamWriter(outputStream, Charsets.UTF_8));
+    String json = gson.toJson(t);
+    try {
+      outputStream.write(json.getBytes("UTF8"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public String contentType() {
