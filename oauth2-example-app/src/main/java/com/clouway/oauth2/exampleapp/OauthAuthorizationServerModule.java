@@ -11,6 +11,7 @@ import com.clouway.oauth2.CoreModule;
 import com.clouway.oauth2.Duration;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.sitebricks.SitebricksModule;
 
 public class OauthAuthorizationServerModule extends AbstractModule {
 
@@ -66,17 +67,17 @@ public class OauthAuthorizationServerModule extends AbstractModule {
 
     install(new CoreModule());
     install(new SecurityModule(url,loginPagePath));
-//    install(new SitebricksModule() {
-//      @Override
-//      protected void configureSitebricks() {
-//        at(url + "/register").serve(RegistrationEndpoint.class);
-//        at(url + "/authorize").serve(AuthorizationEndpoint.class);
-//        at(url + "/login").show(LoginEndpoint.class);
-//        at(url + "/token").serve(TokenEndpoint.class);
-//        at(url + "/verify/:token").serve(VerificationEndpoint.class);
-//        at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);
-//      }
-//    });
+    install(new SitebricksModule() {
+      @Override
+      protected void configureSitebricks() {
+        at(url + "/register").serve(RegistrationEndpoint.class);
+        at(url + "/authorize").serve(AuthorizationEndpoint.class);
+        at(url + "/login").show(LoginEndpoint.class);
+        at(url + "/token").serve(TokenEndpoint.class);
+        at(url + "/verify/:token").serve(VerificationEndpoint.class);
+        at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);
+      }
+    });
   }
 
 
