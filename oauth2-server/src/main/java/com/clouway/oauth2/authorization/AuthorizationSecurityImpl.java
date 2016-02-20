@@ -39,7 +39,7 @@ public class AuthorizationSecurityImpl implements AuthorizationSecurity {
     String redirectURI = client.get().redirectURI;
 
     //loading user info by the sessionId
-    String  userId =  userIdFinder.find(request.sessionId);
+    String userId = userIdFinder.find(request.sessionId);
 
     clientAuthorizationRepository.register(new Authorization(request.responseType, request.clientId, code, redirectURI, userId));
 
