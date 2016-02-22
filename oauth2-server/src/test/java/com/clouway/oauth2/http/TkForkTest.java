@@ -28,7 +28,7 @@ public class TkForkTest {
     });
 
     Response response = fork.ack(new ByteRequest("/test", ImmutableMap.<String, String>of(), "test".getBytes()));
-    assertThat(new RsPrint(response).print(), startsWith("text message"));
+    assertThat(new RsPrint(response).printBody(), startsWith("text message"));
   }
 
   @Test
@@ -49,8 +49,8 @@ public class TkForkTest {
             }
     );
 
-    Response response = fork.ack(new ByteRequest("/another message", ImmutableMap.<String, String>of(), "test".getBytes()));
-    assertThat(new RsPrint(response).print(), startsWith("another message"));
+    Response response = fork.ack(new ByteRequest("/another", ImmutableMap.<String, String>of(), "test".getBytes()));
+    assertThat(new RsPrint(response).printBody(), startsWith("another message"));
   }
 
   @Test
