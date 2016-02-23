@@ -34,7 +34,10 @@ public class LoginEndpoint {
     if (session.isPresent()) {
       // "SID" -this value should be configurable or in the
       // login should be responsible for that hardcoded string
-      response.addCookie(new Cookie("SID", session.get().value));
+      Cookie sid = new Cookie("SID", session.get().value);
+      sid.setPath("/");
+
+      response.addCookie(sid);
     }
 
     return redirectUrl;

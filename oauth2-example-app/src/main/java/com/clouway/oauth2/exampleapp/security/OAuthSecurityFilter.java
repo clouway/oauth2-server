@@ -97,7 +97,6 @@ public class OAuthSecurityFilter implements Filter {
 
   private String getRedirectURI(HttpServletRequest request) throws UnsupportedEncodingException {
     String query = (request.getQueryString() == null) ? "" : "?" + request.getQueryString();
-
     return URLEncoder.encode(request.getRequestURI() + query, "UTF-8");
   }
 }

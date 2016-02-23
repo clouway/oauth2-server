@@ -1,6 +1,6 @@
 package com.clouway.oauth2.exampleapp;
 
-import com.clouway.oauth2.client.ClientRegister;
+import com.clouway.oauth2.client.ClientRegistry;
 import com.clouway.oauth2.client.RegistrationRequest;
 import com.clouway.oauth2.client.RegistrationResponse;
 import com.google.sitebricks.headless.Reply;
@@ -19,7 +19,7 @@ public class RegistrationEndpointTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private ClientRegister repository = context.mock(ClientRegister.class);
+  private ClientRegistry repository = context.mock(ClientRegistry.class);
 
   private RegistrationEndpoint endpoint = new RegistrationEndpoint(repository);
 

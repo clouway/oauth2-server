@@ -15,8 +15,11 @@ class InMemoryUserRepository implements UserIdFinder, UserRepository {
   public Optional<String> find(Request request) {
     // get session id from cookie
     // and retrieve user information for that SID
+    for (String sid : request.cookie("SID")) {
+      return Optional.of("testUserID");
+    }
 
-    return Optional.of("testUserID");
+    return Optional.absent();
   }
 
   @Override

@@ -1,5 +1,7 @@
 package com.clouway.oauth2.http;
 
+import com.google.common.collect.Lists;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +30,22 @@ public class ParamRequest implements Request {
   }
 
   @Override
+  public Iterable<String> names() {
+    return params.keySet();
+  }
+
+  @Override
+  public Iterable<String> cookie(String name) {
+    return Lists.newLinkedList();
+  }
+
+  @Override
   public String header(String name) {
     return null;
   }
 
   @Override
   public InputStream body() throws IOException {
-    return new ByteArrayInputStream(new byte[] {});
+    return new ByteArrayInputStream(new byte[]{});
   }
 }

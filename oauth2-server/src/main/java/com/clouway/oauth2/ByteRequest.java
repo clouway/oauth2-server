@@ -2,6 +2,7 @@ package com.clouway.oauth2;
 
 import com.clouway.oauth2.http.Request;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -43,6 +44,16 @@ public class ByteRequest implements Request {
   @Override
   public String param(String name) {
     return params.get(name);
+  }
+
+  @Override
+  public Iterable<String> names() {
+    return params.keySet();
+  }
+
+  @Override
+  public Iterable<String> cookie(String name) {
+    return Lists.newLinkedList();
   }
 
   @Override

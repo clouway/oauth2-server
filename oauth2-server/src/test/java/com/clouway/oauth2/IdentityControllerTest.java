@@ -70,9 +70,13 @@ public class IdentityControllerTest {
   @Test
   public void userWasNotAuthorized() throws IOException {
     IdentityController identityController = new IdentityController(clientRepository, userIdFinder, identityActivity);
-    final Request request = new ParamRequest(ImmutableMap.<String, String>of());
+    final Request request = new ParamRequest(ImmutableMap.<String, String>of("client_id","::client1::"));
+    final Client anyExistingClient = aNewClient().build();
 
     context.checking(new Expectations() {{
+      oneOf(clientRepository).findById("::client1::");
+      will(returnValue(Optional.of(anyExistingClient)));
+
       oneOf(userIdFinder).find(request);
       will(returnValue(Optional.absent()));
     }});
@@ -81,7 +85,7 @@ public class IdentityControllerTest {
     Status status = response.status();
 
     assertThat(status.code, is(equalTo(HttpURLConnection.HTTP_MOVED_TEMP)));
-    assertThat(status.redirectUrl, is(equalTo("/login")));
+    assertThat(status.redirectUrl, is(equalTo("/r/oauth/login?redirectUrl=%2F%3Fclient_id%3D%3A%3Aclient1%3A%3A")));
   }
 
   @Test
@@ -90,9 +94,6 @@ public class IdentityControllerTest {
     final Request request = new ParamRequest(ImmutableMap.of("client_id", "::client_id::"));
 
     context.checking(new Expectations() {{
-      oneOf(userIdFinder).find(request);
-      will(returnValue(Optional.of("::user::")));
-
       oneOf(clientRepository).findById("::client_id::");
       will(returnValue(Optional.absent()));
     }});

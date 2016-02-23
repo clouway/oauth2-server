@@ -6,6 +6,10 @@ import com.clouway.oauth2.http.RsWrap;
 import javax.json.Json;
 
 /**
+ * BearerTokenResponse is representing the response which is returned by the OAuth Server when token is generated.
+ * <p/>
+ * Bearer Token Usage is described in <a href="https://tools.ietf.org/html/rfc6750">RFC6750</a>
+ *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public class BearerTokenResponse extends RsWrap {

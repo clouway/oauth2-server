@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.google.inject.servlet.ServletModule;
 
 public class SecurityModule extends AbstractModule {
 
@@ -21,19 +20,13 @@ public class SecurityModule extends AbstractModule {
   }
 
   protected void configure() {
-    install(new ServletModule() {
-      @Override
-      protected void configureServlets() {
-        filter(url + "/*").through(OAuthSecurityFilter.class);
-      }
-    });
 
   }
 
   @Provides
   @Singleton
   public SecuredResources provideSecuredResources() {
-    return new SecuredResources(Sets.newHashSet(url + "/authorize"));
+    return new SecuredResources(Sets.newHashSet("/oauth2/authorize"));
   }
 
   @Provides

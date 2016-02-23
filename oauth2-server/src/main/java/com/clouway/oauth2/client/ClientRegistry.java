@@ -5,7 +5,7 @@ import com.google.inject.ImplementedBy;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-@ImplementedBy(ClientRegisterImpl.class)
-public interface ClientRegister {
+@ImplementedBy(ClientRegistryImpl.class)
+public interface ClientRegistry {
   RegistrationResponse register(RegistrationRequest request);
 }

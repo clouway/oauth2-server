@@ -1,8 +1,7 @@
 package com.clouway.oauth2.client;
 
-import com.clouway.oauth2.util.ArgumentCaptor;
 import com.clouway.oauth2.token.TokenGenerator;
-import com.google.inject.util.Providers;
+import com.clouway.oauth2.util.ArgumentCaptor;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -14,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 
-public class ClientRegisterImplTest {
+public class ClientRegistryImplTest {
 
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -22,14 +21,14 @@ public class ClientRegisterImplTest {
   @Mock
   private TokenGenerator tokenGenerator;
 
-  private ClientRegister register;
+  private ClientRegistry register;
 
   @Mock
   private ClientRepository repository;
 
   @Before
   public void setUp() throws Exception {
-    register = new ClientRegisterImpl(tokenGenerator, repository);
+    register = new ClientRegistryImpl(tokenGenerator, repository);
   }
 
   @Test

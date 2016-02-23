@@ -11,6 +11,7 @@ import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.OAuth2Servlet;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.exampleapp.security.OAuthSecurityFilter;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.TokenRepository;
 import com.clouway.oauth2.user.UserIdFinder;
@@ -113,6 +114,14 @@ public class OauthAuthorizationServerModule extends AbstractModule {
 
     install(new CoreModule());
     install(new SecurityModule(url, loginPagePath));
+    install(new ServletModule() {
+      @Override
+      protected void configureServlets() {
+//        filter("/oauth2/*").through(OAuthSecurityFilter.class);
+        serve("/oauth2/*").with(OAuth2ServletBinding.class);
+      }
+    });
+
     install(new SitebricksModule() {
       @Override
       protected void configureSitebricks() {
@@ -122,12 +131,7 @@ public class OauthAuthorizationServerModule extends AbstractModule {
         at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);
       }
     });
-    install(new ServletModule() {
-      @Override
-      protected void configureServlets() {
-        serve("/oauth2/*").with(OAuth2ServletBinding.class);
-      }
-    });
+
 
   }
 

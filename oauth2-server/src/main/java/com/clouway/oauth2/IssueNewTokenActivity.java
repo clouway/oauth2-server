@@ -10,6 +10,8 @@ import com.clouway.oauth2.token.TokenRepository;
 import com.google.common.base.Optional;
 
 /**
+ * IssueNewTokenActivity is representing the activity which is performed for issuing of new token.
+ *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public class IssueNewTokenActivity implements ClientActivity {

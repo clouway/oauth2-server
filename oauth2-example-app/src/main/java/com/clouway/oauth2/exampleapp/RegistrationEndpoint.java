@@ -2,7 +2,7 @@ package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.client.RegistrationRequest;
 import com.clouway.oauth2.client.RegistrationResponse;
-import com.clouway.oauth2.client.ClientRegister;
+import com.clouway.oauth2.client.ClientRegistry;
 import com.google.inject.Inject;
 import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Request;
@@ -14,10 +14,10 @@ import com.google.sitebricks.http.Post;
  */
 @Service
 public class RegistrationEndpoint {
-  private final ClientRegister repository;
+  private final ClientRegistry repository;
 
   @Inject
-  public RegistrationEndpoint(ClientRegister repository) {
+  public RegistrationEndpoint(ClientRegistry repository) {
     this.repository = repository;
   }
 
