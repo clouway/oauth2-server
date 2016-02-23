@@ -1,6 +1,5 @@
 package com.clouway.oauth2.http;
 
-import javax.servlet.http.HttpServletResponse;
 import java.net.HttpURLConnection;
 
 /**
