@@ -10,4 +10,6 @@ public interface ClientAuthorizationRepository {
   void register(Authorization authorization);
 
   Optional<Authorization> authorize(Client client, String authCode);
+
+  Optional<Authorization> authorize(Client client, String userId, String responseType);
 }

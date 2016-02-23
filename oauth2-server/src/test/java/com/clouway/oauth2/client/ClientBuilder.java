@@ -10,6 +10,7 @@ public class ClientBuilder {
   }
 
   private String clientId;
+  private String redirectUrl = "::redirect_url::";
   private String clientSecret;
 
   public ClientBuilder withId(String clientId) {
@@ -22,7 +23,12 @@ public class ClientBuilder {
     return this;
   }
 
+  public ClientBuilder withRedirectUrl(String redirectUrl) {
+    this.redirectUrl = redirectUrl;
+    return this;
+  }
+
   public Client build() {
-    return new Client(clientId, clientSecret, "test name", "::url::", "::desc::", "::redirect_url::");
+    return new Client(clientId, clientSecret, "test name", "::url::", "::desc::", redirectUrl);
   }
 }

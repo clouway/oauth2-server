@@ -35,7 +35,7 @@ public class InMemoryModule extends AbstractModule {
 
     bind(ClientRepository.class).toInstance(clientRepository);
 
-    InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository();
+    InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository(new Sha1TokenGenerator());
     bind(ClientAuthorizationRepository.class).toInstance(authorizationRepository);
 
     bind(UserIdFinder.class).to(InMemoryUserRepository.class);

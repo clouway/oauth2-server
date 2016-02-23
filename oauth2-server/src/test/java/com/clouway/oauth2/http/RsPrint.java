@@ -65,6 +65,11 @@ public class RsPrint implements Response {
   }
 
   @Override
+  public Status status() {
+    return response.status();
+  }
+
+  @Override
   public Map<String,String> header() throws IOException {
     return response.header();
   }

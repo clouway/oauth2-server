@@ -6,9 +6,11 @@ import com.clouway.oauth2.http.FkParams;
 import com.clouway.oauth2.http.FkRegex;
 import com.clouway.oauth2.http.HttpException;
 import com.clouway.oauth2.http.Response;
+import com.clouway.oauth2.http.Status;
 import com.clouway.oauth2.http.TkFork;
 import com.clouway.oauth2.http.TkRequestWrap;
 import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.user.UserIdFinder;
 import com.google.common.io.ByteStreams;
 
 import javax.servlet.ServletConfig;
@@ -18,7 +20,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.util.Map;
 
 /**
@@ -33,6 +37,9 @@ public abstract class OAuth2Servlet extends HttpServlet {
     super.init(config);
 
     fork = new TkFork(
+            new FkRegex(".*/authorize",
+                    new IdentityController(clientRepository(), userIdFinder(), new AuthorizationActivity(clientAuthorizationRepository()))
+            ),
             new FkRegex(".*/token",
                     new TkFork(
                             new FkParams("grant_type", "authorization_code", new ClientController(
@@ -50,11 +57,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-    PrintWriter writer = resp.getWriter();
-    writer.print("GET operation is not supported.");
-    writer.flush();
+    doPost(req, resp);
   }
 
   @Override
@@ -62,13 +65,27 @@ public abstract class OAuth2Servlet extends HttpServlet {
     try {
       Response response = fork.ack(new TkRequestWrap(req));
 
+      Status status = response.status();
+      resp.setStatus(status.code);
+
+      // Handle redirects
+      if (status.code == HttpURLConnection.HTTP_MOVED_TEMP) {
+        resp.sendRedirect(status.redirectUrl);
+
+        return;
+      }
+
       Map<String, String> header = response.header();
       for (String key : header.keySet()) {
         resp.setHeader(key, header.get(key));
       }
 
       ServletOutputStream out = resp.getOutputStream();
-      ByteStreams.copy(response.body(), out);
+
+      try (InputStream inputStream = response.body()) {
+        ByteStreams.copy(inputStream, out);
+      }
+
       out.flush();
 
     } catch (HttpException e) {
@@ -76,6 +93,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
     }
   }
 
+  protected abstract UserIdFinder userIdFinder();
 
   protected abstract ClientAuthorizationRepository clientAuthorizationRepository();
 

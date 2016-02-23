@@ -19,6 +19,11 @@ public class RsWrap implements Response {
   }
 
   @Override
+  public Status status() {
+    return origin.status();
+  }
+
+  @Override
   public final Map<String, String> header() throws IOException {
     return origin.header();
   }

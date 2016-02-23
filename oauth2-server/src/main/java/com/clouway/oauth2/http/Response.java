@@ -12,6 +12,13 @@ import java.util.Map;
 public interface Response {
 
   /**
+   * A redirect URL address used to delegate.
+   *
+   * @return the redirect url if specified
+   */
+  Status status();
+
+  /**
    * HTTP response header.
    *
    * @return map of HTTP header pairs

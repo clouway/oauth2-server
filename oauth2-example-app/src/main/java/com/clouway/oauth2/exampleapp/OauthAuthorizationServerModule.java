@@ -13,6 +13,7 @@ import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.user.UserIdFinder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
@@ -28,12 +29,19 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     private final ClientAuthorizationRepository clientAuthorizationRepository;
     private final ClientRepository clientRepository;
     private final TokenRepository tokenRepository;
+    private final UserIdFinder userIdFinder;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, TokenRepository tokenRepository) {
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, TokenRepository tokenRepository, UserIdFinder userIdFinder) {
       this.clientAuthorizationRepository = clientAuthorizationRepository;
       this.clientRepository = clientRepository;
       this.tokenRepository = tokenRepository;
+      this.userIdFinder = userIdFinder;
+    }
+
+    @Override
+    protected UserIdFinder userIdFinder() {
+      return userIdFinder;
     }
 
     @Override
@@ -109,7 +117,6 @@ public class OauthAuthorizationServerModule extends AbstractModule {
       @Override
       protected void configureSitebricks() {
         at(url + "/register").serve(RegistrationEndpoint.class);
-        at(url + "/authorize").serve(AuthorizationEndpoint.class);
         at(url + "/login").show(LoginEndpoint.class);
         at(url + "/verify/:token").serve(VerificationEndpoint.class);
         at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);

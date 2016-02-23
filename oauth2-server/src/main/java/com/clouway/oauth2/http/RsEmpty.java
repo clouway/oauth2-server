@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.Map;
 
 /**
@@ -13,6 +14,11 @@ import java.util.Map;
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public class RsEmpty implements Response {
+
+  @Override
+  public Status status() {
+    return new Status(HttpURLConnection.HTTP_OK, "");
+  }
 
   @Override
   public Map<String, String> header() throws IOException {

@@ -3,6 +3,7 @@ package com.clouway.oauth2.http;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -14,6 +15,11 @@ public class RsText implements Response {
 
   public RsText(String body) {
     this.body = body;
+  }
+
+  @Override
+  public Status status() {
+    return new Status(HttpURLConnection.HTTP_OK);
   }
 
   @Override

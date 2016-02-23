@@ -3,6 +3,7 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.token.TokenGenerator;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 
@@ -14,6 +15,11 @@ import java.util.Map;
  */
 class InMemoryClientAuthorizationRepository implements ClientAuthorizationRepository {
   private final Map<String, Authorization> authorizations = Maps.newHashMap();
+  private final TokenGenerator tokenGenerator;
+
+  public InMemoryClientAuthorizationRepository(TokenGenerator tokenGenerator) {
+    this.tokenGenerator = tokenGenerator;
+  }
 
   @Override
   public void register(Authorization authorization) {
@@ -37,6 +43,17 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
     authorization.usedOn(new Date());
 
     authorizations.put(authCode, authorization);
+
+    return Optional.of(authorization);
+  }
+
+  @Override
+  public Optional<Authorization> authorize(Client client, String userId, String responseType) {
+    String code = tokenGenerator.generate();
+    String redirectURI = client.redirectURI;
+
+    Authorization authorization = new Authorization(responseType, client.id, code, redirectURI, userId);
+    register(authorization);
 
     return Optional.of(authorization);
   }
