@@ -1,202 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head profile="http://dublincore.org/documents/2008/08/04/dc-html/">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="robots" content="index,follow" />
-    <meta name="creator" content="rfcmarkup version 1.115" />
-    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
-<meta name="DC.Relation.Replaces" content="draft-mortimore-oauth-assertions" />
-<meta name="DC.Identifier" content="urn:ietf:rfc:7521" />
-<meta name="DC.Date.Issued" content="May, 2015" />
-<meta name="DC.Creator" content="Goland, Yaron" />
-<meta name="DC.Creator" content="Campbell, Brian" />
-<meta name="DC.Creator" content="Jones, Michael" />
-<meta name="DC.Creator" content="Mortimore, Chuck" />
-<meta name="DC.Description.Abstract" content="This specification provides a framework for the use of assertions with
-OAuth 2.0 in the form of a new client authentication mechanism and a
-new authorization grant type. Mechanisms are specified for
-transporting assertions during interactions with a token endpoint;
-general processing rules are also specified.  The intent of this
-specification is to provide a common framework for OAuth 2.0 to
-interwork with other identity systems using assertions and to provide
-alternative client authentication mechanisms.  Note that this
-specification only defines abstract message flows and processing
-rules. In order to be implementable, companion specifications are
-necessary to provide the corresponding concrete instantiations." />
-<meta name="DC.Title" content="Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants" />
 
-    <link rel="icon" href="/images/rfc.png" type="image/png" />
-    <link rel="shortcut icon" href="/images/rfc.png" type="image/png" />
-    <title>RFC 7521 - Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants</title>
-    
-    
-    <style type="text/css">
-	@media only screen 
-	  and (min-width: 992px)
-	  and (max-width: 1199px) {
-	    body { font-size: 14pt; }
-            div.content { width: 96ex; margin: 0 auto; }
-        }
-	@media only screen 
-	  and (min-width: 768px)
-	  and (max-width: 991px) {
-            body { font-size: 14pt; }
-            div.content { width: 96ex; margin: 0 auto; }
-        }
-	@media only screen 
-	  and (min-width: 480px)
-	  and (max-width: 767px) {
-            body { font-size: 11pt; }
-            div.content { width: 96ex; margin: 0 auto; }
-        }
-	@media only screen 
-	  and (max-width: 479px) {
-            body { font-size: 8pt; }
-            div.content { width: 96ex; margin: 0 auto; }
-        }
-	@media only screen 
-	  and (min-device-width : 375px) 
-	  and (max-device-width : 667px) {
-            body { font-size: 9.5pt; }
-            div.content { width: 96ex; margin: 0 1px; }
-        }
-	@media only screen 
-	  and (min-device-width: 1200px) {
-            body { font-size: 10pt; margin: 0 4em; }
-            div.content { width: 96ex; margin: 0; }
-        }
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-	    font-weight: bold;
-            line-height: 0pt;
-            display: inline;
-            white-space: pre;
-            font-family: monospace;
-            font-size: 1em;
-	    font-weight: bold;
-        }
-        pre {
-            font-size: 1em;
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
-	.pre {
-	    white-space: pre;
-	    font-family: monospace;
-	}
-	.header{
-	    font-weight: bold;
-	}
-        .newpage {
-            page-break-before: always;
-        }
-        .invisible {
-            text-decoration: none;
-            color: white;
-        }
-        a.selflink {
-          color: black;
-          text-decoration: none;
-        }
-        @media print {
-            body {
-                font-family: monospace;
-                font-size: 10.5pt;
-            }
-            h1, h2, h3, h4, h5, h6 {
-                font-size: 1em;
-            }
-        
-            a:link, a:visited {
-                color: inherit;
-                text-decoration: none;
-            }
-            .noprint {
-                display: none;
-            }
-        }
-	@media screen {
-	    .grey, .grey a:link, .grey a:visited {
-		color: #777;
-	    }
-            .docinfo {
-                background-color: #EEE;
-            }
-            .top {
-                border-top: 7px solid #EEE;
-            }
-            .bgwhite  { background-color: white; }
-            .bgred    { background-color: #F44; }
-            .bggrey   { background-color: #666; }
-            .bgbrown  { background-color: #840; }            
-            .bgorange { background-color: #FA0; }
-            .bgyellow { background-color: #EE0; }
-            .bgmagenta{ background-color: #F4F; }
-            .bgblue   { background-color: #66F; }
-            .bgcyan   { background-color: #4DD; }
-            .bggreen  { background-color: #4F4; }
 
-            .legend   { font-size: 90%; }
-            .cplate   { font-size: 70%; border: solid grey 1px; }
-	}
-    </style>
-    <!--[if IE]>
-    <style>
-    body {
-       font-size: 13px;
-       margin: 10px 10px;
-    }
-    </style>
-    <![endif]-->
 
-    <script type="text/javascript"><!--
-    function addHeaderTags() {
-	var spans = document.getElementsByTagName("span");
-	for (var i=0; i < spans.length; i++) {
-	    var elem = spans[i];
-	    if (elem) {
-		var level = elem.getAttribute("class");
-                if (level == "h1" || level == "h2" || level == "h3" || level == "h4" || level == "h5" || level == "h6") {
-                    elem.innerHTML = "<"+level+">"+elem.innerHTML+"</"+level+">";		
-                }
-	    }
-	}
-    }
-    var legend_html = "Colour legend:<br />      <table>         <tr><td>Unknown:</td>                   <td><span class='cplate bgwhite'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Draft:</td>                     <td><span class='cplate bgred'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Informational:</td>             <td><span class='cplate bgorange'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Experimental:</td>              <td><span class='cplate bgyellow'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Best Common Practice:</td>      <td><span class='cplate bgmagenta'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Proposed Standard:</td>         <td><span class='cplate bgblue'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Draft Standard (old designation):</td> <td><span class='cplate bgcyan'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Internet Standard:</td>         <td><span class='cplate bggreen'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Historic:</td>                  <td><span class='cplate bggrey'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Obsolete:</td>                  <td><span class='cplate bgbrown'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>     </table>";
-    function showElem(id) {
-        var elem = document.getElementById(id);
-        elem.innerHTML = eval(id+"_html");
-        elem.style.visibility='visible';
-    }
-    function hideElem(id) {
-        var elem = document.getElementById(id);
-        elem.style.visibility='hidden';        
-        elem.innerHTML = "";
-    }
-    // -->
-    </script>
-</head>
-<body onload="addHeaderTags()">
-  <div class="content">
-   <div style="height: 13px;">
-      <div onmouseover="this.style.cursor='pointer';"
-         onclick="showElem('legend');"
-         onmouseout="hideElem('legend')"
-	 style="height: 6px; position: absolute;"
-         class="pre noprint docinfo bgblue"
-         title="Click for colour legend." >                                                                        </div>
-      <div id="legend"
-           class="docinfo noprint pre legend"
-           style="position:absolute; top: 4px; left: 4ex; visibility:hidden; background-color: white; padding: 4px 9px 5px 7px; border: solid #345 1px; "
-           onmouseover="showElem('legend');"
-           onmouseout="hideElem('legend');">
-      </div>
-   </div>
-<span class="pre noprint docinfo top">[<a href="../html/" title="Document search and retrieval page">Docs</a>] [<a href="/rfc/rfc7521.txt" title="Plaintext version of this document">txt</a>|<a href="/pdf/rfc7521" title="PDF version of this document">pdf</a>] [<a href="./draft-ietf-oauth-assertions" title="draft-ietf-oauth-assertions">draft-ietf-oauth-...</a>] [<a href="/rfcdiff?difftype=--hwdiff&amp;url2=rfc7521" title="Inline diff (wdiff)">Diff1</a>] [<a href="/rfcdiff?url2=rfc7521" title="Side-by-side diff">Diff2</a>]                 </span><br />
-<span class="pre noprint docinfo">                                                                        </span><br />
-<span class="pre noprint docinfo">                                                       PROPOSED STANDARD</span><br />
-<span class="pre noprint docinfo">                                                                        </span><br />
-<pre>
+
+
+
 Internet Engineering Task Force (IETF)                       B. Campbell
 Request for Comments: 7521                                 Ping Identity
 Category: Standards Track                                   C. Mortimore
@@ -207,8 +14,8 @@ ISSN: 2070-1721                                               Salesforce
                                                                 May 2015
 
 
-      <span class="h1">Assertion Framework for OAuth 2.0 Client Authentication and</span>
-                          <span class="h1">Authorization Grants</span>
+      Assertion Framework for OAuth 2.0 Client Authentication and
+                          Authorization Grants
 
 Abstract
 
@@ -235,11 +42,11 @@ Status of This Memo
    (IETF).  It represents the consensus of the IETF community.  It has
    received public review and has been approved for publication by the
    Internet Engineering Steering Group (IESG).  Further information on
-   Internet Standards is available in <a href="./rfc5741#section-2">Section&nbsp;2 of RFC 5741</a>.
+   Internet Standards is available in Section 2 of RFC 5741.
 
    Information about the current status of this document, any errata,
    and how to provide feedback on it may be obtained at
-   <a href="http://www.rfc-editor.org/info/rfc7521">http://www.rfc-editor.org/info/rfc7521</a>.
+   http://www.rfc-editor.org/info/rfc7521.
 
 
 
@@ -248,9 +55,9 @@ Status of This Memo
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 1]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-2" id="page-2" href="#page-2" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 1]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
 Copyright Notice
@@ -258,65 +65,65 @@ Copyright Notice
    Copyright (c) 2015 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
-   This document is subject to <a href="./bcp78">BCP 78</a> and the IETF Trust's Legal
+   This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (<a href="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</a>) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
-   include Simplified BSD License text as described in <a href="#section-4">Section 4</a>.e of
+   include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
 Table of Contents
 
-   <a href="#section-1">1</a>. Introduction ....................................................<a href="#page-3">3</a>
-   <a href="#section-2">2</a>. Notational Conventions ..........................................<a href="#page-4">4</a>
-   <a href="#section-3">3</a>. Framework .......................................................<a href="#page-4">4</a>
-   <a href="#section-4">4</a>. Transporting Assertions .........................................<a href="#page-7">7</a>
-      <a href="#section-4.1">4.1</a>. Using Assertions as Authorization Grants ...................<a href="#page-7">7</a>
-           <a href="#section-4.1.1">4.1.1</a>. Error Responses .....................................<a href="#page-8">8</a>
-      <a href="#section-4.2">4.2</a>. Using Assertions for Client Authentication .................<a href="#page-9">9</a>
-           <a href="#section-4.2.1">4.2.1</a>. Error Responses ....................................<a href="#page-10">10</a>
-   <a href="#section-5">5</a>. Assertion Content and Processing ...............................<a href="#page-10">10</a>
-      <a href="#section-5.1">5.1</a>. Assertion Metamodel .......................................<a href="#page-10">10</a>
-      <a href="#section-5.2">5.2</a>. General Assertion Format and Processing Rules .............<a href="#page-12">12</a>
-   <a href="#section-6">6</a>. Common Scenarios ...............................................<a href="#page-12">12</a>
-      <a href="#section-6.1">6.1</a>. Client Authentication .....................................<a href="#page-13">13</a>
-      <a href="#section-6.2">6.2</a>. Client Acting on Behalf of Itself .........................<a href="#page-13">13</a>
-      <a href="#section-6.3">6.3</a>. Client Acting on Behalf of a User .........................<a href="#page-13">13</a>
-           <a href="#section-6.3.1">6.3.1</a>. Client Acting on Behalf of an Anonymous User .......<a href="#page-14">14</a>
-   <a href="#section-7">7</a>. Interoperability Considerations ................................<a href="#page-14">14</a>
-   <a href="#section-8">8</a>. Security Considerations ........................................<a href="#page-15">15</a>
-      <a href="#section-8.1">8.1</a>. Forged Assertion ..........................................<a href="#page-15">15</a>
-      <a href="#section-8.2">8.2</a>. Stolen Assertion ..........................................<a href="#page-15">15</a>
-      <a href="#section-8.3">8.3</a>. Unauthorized Disclosure of Personal Information ...........<a href="#page-16">16</a>
-      <a href="#section-8.4">8.4</a>. Privacy Considerations ....................................<a href="#page-17">17</a>
-   <a href="#section-9">9</a>. IANA Considerations ............................................<a href="#page-17">17</a>
-      <a href="#section-9.1">9.1</a>. "assertion" Parameter Registration ........................<a href="#page-17">17</a>
-      <a href="#section-9.2">9.2</a>. "client_assertion" Parameter Registration .................<a href="#page-18">18</a>
-      <a href="#section-9.3">9.3</a>. "client_assertion_type" Parameter Registration ............<a href="#page-18">18</a>
-   <a href="#section-10">10</a>. References ....................................................<a href="#page-18">18</a>
-      <a href="#section-10.1">10.1</a>. Normative References .....................................<a href="#page-18">18</a>
-      <a href="#section-10.2">10.2</a>. Informative References ...................................<a href="#page-18">18</a>
-   Acknowledgements ..................................................<a href="#page-20">20</a>
-   Authors' Addresses ................................................<a href="#page-20">20</a>
+   1. Introduction ....................................................3
+   2. Notational Conventions ..........................................4
+   3. Framework .......................................................4
+   4. Transporting Assertions .........................................7
+      4.1. Using Assertions as Authorization Grants ...................7
+           4.1.1. Error Responses .....................................8
+      4.2. Using Assertions for Client Authentication .................9
+           4.2.1. Error Responses ....................................10
+   5. Assertion Content and Processing ...............................10
+      5.1. Assertion Metamodel .......................................10
+      5.2. General Assertion Format and Processing Rules .............12
+   6. Common Scenarios ...............................................12
+      6.1. Client Authentication .....................................13
+      6.2. Client Acting on Behalf of Itself .........................13
+      6.3. Client Acting on Behalf of a User .........................13
+           6.3.1. Client Acting on Behalf of an Anonymous User .......14
+   7. Interoperability Considerations ................................14
+   8. Security Considerations ........................................15
+      8.1. Forged Assertion ..........................................15
+      8.2. Stolen Assertion ..........................................15
+      8.3. Unauthorized Disclosure of Personal Information ...........16
+      8.4. Privacy Considerations ....................................17
+   9. IANA Considerations ............................................17
+      9.1. "assertion" Parameter Registration ........................17
+      9.2. "client_assertion" Parameter Registration .................18
+      9.3. "client_assertion_type" Parameter Registration ............18
+   10. References ....................................................18
+      10.1. Normative References .....................................18
+      10.2. Informative References ...................................18
+   Acknowledgements ..................................................20
+   Authors' Addresses ................................................20
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 2]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-3" id="page-3" href="#page-3" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 2]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
-<span class="h2"><a class="selflink" name="section-1" href="#section-1">1</a>.  Introduction</span>
+1.  Introduction
 
    An assertion is a package of information that facilitates the sharing
    of identity and security information across security domains.
-   <a href="#section-3">Section 3</a> provides a more detailed description of the concept of an
+   Section 3 provides a more detailed description of the concept of an
    assertion for the purpose of this specification.
 
-   OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] is an authorization framework that enables a
+   OAuth 2.0 [RFC6749] is an authorization framework that enables a
    third-party application to obtain limited access to a protected HTTP
    resource.  In OAuth, those third-party applications are called
    clients; they access protected resources by presenting an access
@@ -345,10 +152,10 @@ Table of Contents
    rules.  In order to be implementable, companion specifications are
    necessary to provide the corresponding concrete instantiations.  For
    instance, "Security Assertion Markup Language (SAML) 2.0 Profile for
-   OAuth 2.0 Client Authentication and Authorization Grants" [<a href="./rfc7522" title="&quot;Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants&quot;">RFC7522</a>]
+   OAuth 2.0 Client Authentication and Authorization Grants" [RFC7522]
    defines a concrete instantiation for Security Assertion Markup
    Language (SAML) 2.0 Assertions and "JSON Web Token (JWT) Profile for
-   OAuth 2.0 Client Authentication and Authorization Grants" [<a href="./rfc7523" title="&quot;JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants&quot;">RFC7523</a>]
+   OAuth 2.0 Client Authentication and Authorization Grants" [RFC7523]
    defines a concrete instantiation for JWTs.
 
    Note: The use of assertions for client authentication is orthogonal
@@ -360,9 +167,9 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 3]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-4" id="page-4" href="#page-4" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 3]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
    protocol request.  Assertion authorization grants may be used with or
@@ -372,17 +179,17 @@ Table of Contents
    authentication, are policy decisions at the discretion of the
    authorization server.
 
-<span class="h2"><a class="selflink" name="section-2" href="#section-2">2</a>.  Notational Conventions</span>
+2.  Notational Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>].
+   document are to be interpreted as described in [RFC2119].
 
    Throughout this document, values are quoted to indicate that they are
    to be taken literally.  When using these values in protocol messages,
    the quotes must not be used as part of the value.
 
-<span class="h2"><a class="selflink" name="section-3" href="#section-3">3</a>.  Framework</span>
+3.  Framework
 
    An assertion is a package of information that allows identity and
    security information to be shared across security domains.  An
@@ -416,9 +223,9 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 4]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-5" id="page-5" href="#page-5" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 4]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
    In the first pattern, depicted in Figure 1, the client obtains an
@@ -431,22 +238,22 @@ Table of Contents
    issuer; its role is to fulfill requests from clients, which present
    various credentials, and mint assertions as requested, fill them with
    appropriate information, and integrity-protect them with a signature
-   or message authentication code.  WS-Trust [<a href="#ref-OASIS.WS-Trust">OASIS.WS-Trust</a>] is one
+   or message authentication code.  WS-Trust [OASIS.WS-Trust] is one
    available standard for requesting security tokens (assertions).
 
      Relying
      Party                     Client                   Token Service
        |                          |                         |
        |                          |  1) Request Assertion   |
-       |                          |------------------------&gt;|
+       |                          |------------------------>|
        |                          |                         |
        |                          |  2) Assertion           |
-       |                          |&lt;------------------------|
+       |                          |<------------------------|
        |    3) Assertion          |                         |
-       |&lt;-------------------------|                         |
+       |<-------------------------|                         |
        |                          |                         |
        |    4) OK or Failure      |                         |
-       |-------------------------&gt;|                         |
+       |------------------------->|                         |
        |                          |                         |
        |                          |                         |
 
@@ -472,9 +279,9 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 5]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-6" id="page-6" href="#page-6" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 5]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
      Relying
@@ -485,12 +292,12 @@ Table of Contents
        |                          |--------------+
        |                          |              |
        |                          | 2) Assertion |
-       |                          |&lt;-------------+
+       |                          |<-------------+
        |    3) Assertion          |
-       |&lt;-------------------------|
+       |<-------------------------|
        |                          |
        |    4) OK or Failure      |
-       |-------------------------&gt;|
+       |------------------------->|
        |                          |
        |                          |
 
@@ -528,30 +335,30 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 6]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-7" id="page-7" href="#page-7" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 6]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
    additional mechanisms (to support proof-of-possession of the secret
    key), and possibly changes to the security model (e.g., to relax the
    requirement for an Audience).
 
-<span class="h2"><a class="selflink" name="section-4" href="#section-4">4</a>.  Transporting Assertions</span>
+4.  Transporting Assertions
 
    This section defines HTTP parameters for transporting assertions
    during interactions with a token endpoint of an OAuth authorization
    server.  Because requests to the token endpoint result in the
    transmission of clear-text credentials (in both the HTTP request and
    response), all requests to the token endpoint MUST use Transport
-   Layer Security (TLS), as mandated in <a href="#section-3.2">Section 3.2</a> of OAuth 2.0
-   [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].
+   Layer Security (TLS), as mandated in Section 3.2 of OAuth 2.0
+   [RFC6749].
 
-<span class="h3"><a class="selflink" name="section-4.1" href="#section-4.1">4.1</a>.  Using Assertions as Authorization Grants</span>
+4.1.  Using Assertions as Authorization Grants
 
    This section defines the use of assertions as authorization grants,
-   based on the definition provided in <a href="#section-4.5">Section 4.5</a> of OAuth 2.0
-   [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].  When using assertions as authorization grants, the client
+   based on the definition provided in Section 4.5 of OAuth 2.0
+   [RFC6749].  When using assertions as authorization grants, the client
    includes the assertion and related information using the following
    HTTP request parameters:
 
@@ -565,8 +372,8 @@ Table of Contents
       documents.
 
    scope
-      OPTIONAL.  The requested scope as described in <a href="#section-3.3">Section 3.3</a> of
-      OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].  When exchanging assertions for access
+      OPTIONAL.  The requested scope as described in Section 3.3 of
+      OAuth 2.0 [RFC6749].  When exchanging assertions for access
       tokens, the authorization for the token has been previously
       granted through some out-of-band mechanism.  As such, the
       requested scope MUST be equal to or less than the scope originally
@@ -575,7 +382,7 @@ Table of Contents
       than the scope originally granted to the authorized accessor.
 
    Authentication of the client is optional, as described in
-   <a href="#section-3.2.1">Section 3.2.1</a> of OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>], and consequently, the
+   Section 3.2.1 of OAuth 2.0 [RFC6749], and consequently, the
    "client_id" is only needed when a form of client authentication that
    relies on the parameter is used.
 
@@ -584,9 +391,9 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 7]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-8" id="page-8" href="#page-8" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 7]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
    The following example demonstrates an assertion being used as an
@@ -597,7 +404,7 @@ Table of Contents
      Host: server.example.com
      Content-Type: application/x-www-form-urlencoded
 
-     grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Asaml2-bearer&amp;
+     grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Asaml2-bearer&
      assertion=PHNhbWxwOl...[omitted for brevity]...ZT4
 
    An assertion used in this context is generally a short-lived
@@ -611,13 +418,13 @@ Table of Contents
    assertion, if it is still valid, or with a new assertion.
 
    An IETF URN for use as the "grant_type" value can be requested using
-   the template in [<a href="./rfc6755" title="&quot;An IETF URN Sub-Namespace for OAuth&quot;">RFC6755</a>].  A URN of the form
+   the template in [RFC6755].  A URN of the form
    urn:ietf:params:oauth:grant-type:* is suggested.
 
-<span class="h4"><a class="selflink" name="section-4.1.1" href="#section-4.1.1">4.1.1</a>.  Error Responses</span>
+4.1.1.  Error Responses
 
    If an assertion is not valid or has expired, the authorization server
-   constructs an error response as defined in OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].  The
+   constructs an error response as defined in OAuth 2.0 [RFC6749].  The
    value of the "error" parameter MUST be the "invalid_grant" error
    code.  The authorization server MAY include additional information
    regarding the reasons the assertion was considered invalid using the
@@ -640,15 +447,15 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 8]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-9" id="page-9" href="#page-9" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 8]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
-<span class="h3"><a class="selflink" name="section-4.2" href="#section-4.2">4.2</a>.  Using Assertions for Client Authentication</span>
+4.2.  Using Assertions for Client Authentication
 
    The following section defines the use of assertions as client
-   credentials as an extension of <a href="#section-2.3">Section 2.3</a> of OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].
+   credentials as an extension of Section 2.3 of OAuth 2.0 [RFC6749].
    When using assertions as client credentials, the client includes the
    assertion and related information using the following HTTP request
    parameters:
@@ -663,26 +470,26 @@ Table of Contents
       documents.
 
    client_id
-      OPTIONAL.  The client identifier as described in <a href="#section-2.2">Section 2.2</a> of
-      OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].  The "client_id" is unnecessary for client
+      OPTIONAL.  The client identifier as described in Section 2.2 of
+      OAuth 2.0 [RFC6749].  The "client_id" is unnecessary for client
       assertion authentication because the client is identified by the
       subject of the assertion.  If present, the value of the
       "client_id" parameter MUST identify the same client as is
       identified by the client assertion.
 
    The following example demonstrates a client authenticating using an
-   assertion during an access token request, as defined in <a href="#section-4.1.3">Section 4.1.3</a>
-   of OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] (with extra line breaks for display purposes
+   assertion during an access token request, as defined in Section 4.1.3
+   of OAuth 2.0 [RFC6749] (with extra line breaks for display purposes
    only):
 
      POST /token HTTP/1.1
      Host: server.example.com
      Content-Type: application/x-www-form-urlencoded
 
-     grant_type=authorization_code&amp;
-     code=n0esc3NRze7LTCu7iYzS6a5acc3f0ogp4&amp;
+     grant_type=authorization_code&
+     code=n0esc3NRze7LTCu7iYzS6a5acc3f0ogp4&
      client_assertion_type=urn%3Aietf%3Aparams%3Aoauth
-     %3Aclient-assertion-type%3Asaml2-bearer&amp;
+     %3Aclient-assertion-type%3Asaml2-bearer&
      client_assertion=PHNhbW...[omitted for brevity]...ZT
 
    Token endpoints can differentiate between assertion-based credentials
@@ -691,21 +498,21 @@ Table of Contents
    only be present when using assertions for client authentication.
 
    An IETF URN for use as the "client_assertion_type" value may be
-   requested using the template in [<a href="./rfc6755" title="&quot;An IETF URN Sub-Namespace for OAuth&quot;">RFC6755</a>].  A URN of the form
+   requested using the template in [RFC6755].  A URN of the form
    urn:ietf:params:oauth:client-assertion-type:* is suggested.
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                    [Page 9]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-10" id="page-10" href="#page-10" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                    [Page 9]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
-<span class="h4"><a class="selflink" name="section-4.2.1" href="#section-4.2.1">4.2.1</a>.  Error Responses</span>
+4.2.1.  Error Responses
 
    If an assertion is invalid for any reason or if more than one client
    authentication mechanism is used, the authorization server constructs
-   an error response as defined in OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].  The value of
+   an error response as defined in OAuth 2.0 [RFC6749].  The value of
    the "error" parameter MUST be the "invalid_client" error code.  The
    authorization server MAY include additional information regarding the
    reasons the client assertion was considered invalid using the
@@ -722,12 +529,12 @@ Table of Contents
        "error_description":"assertion has expired"
      }
 
-<span class="h2"><a class="selflink" name="section-5" href="#section-5">5</a>.  Assertion Content and Processing</span>
+5.  Assertion Content and Processing
 
    This section provides a general content and processing model for the
-   use of assertions in OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].
+   use of assertions in OAuth 2.0 [RFC6749].
 
-<span class="h3"><a class="selflink" name="section-5.1" href="#section-5.1">5.1</a>.  Assertion Metamodel</span>
+5.1.  Assertion Metamodel
 
    The following are entities and metadata involved in the issuance,
    exchange, and processing of assertions in OAuth 2.0.  These are
@@ -746,15 +553,15 @@ Table of Contents
       identify the STS in a manner recognized by the authorization
       server.  In the absence of an application profile specifying
       otherwise, compliant applications MUST compare Issuer values using
-      the Simple String Comparison method defined in <a href="./rfc3986#section-6.2.1">Section&nbsp;6.2.1 of
-      RFC 3986</a> [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>].
+      the Simple String Comparison method defined in Section 6.2.1 of
+      RFC 3986 [RFC3986].
 
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 10]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-11" id="page-11" href="#page-11" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 10]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
    Subject
@@ -773,12 +580,12 @@ Table of Contents
    Audience
       A value that identifies the party or parties intended to process
       the assertion.  The URL of the token endpoint, as defined in
-      <a href="#section-3.2">Section 3.2</a> of OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>], can be used to indicate that
+      Section 3.2 of OAuth 2.0 [RFC6749], can be used to indicate that
       the authorization server is a valid intended audience of the
       assertion.  In the absence of an application profile specifying
       otherwise, compliant applications MUST compare the Audience values
-      using the Simple String Comparison method defined in <a href="./rfc3986#section-6.2.1">Section&nbsp;6.2.1
-      of RFC 3986</a> [<a href="./rfc3986" title="&quot;Uniform Resource Identifier (URI): Generic Syntax&quot;">RFC3986</a>].
+      using the Simple String Comparison method defined in Section 6.2.1
+      of RFC 3986 [RFC3986].
 
    Issued At
       The time at which the assertion was issued.  While the
@@ -808,12 +615,12 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 11]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-12" id="page-12" href="#page-12" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 11]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
-<span class="h3"><a class="selflink" name="section-5.2" href="#section-5.2">5.2</a>.  General Assertion Format and Processing Rules</span>
+5.2.  General Assertion Format and Processing Rules
 
    The following are general format and processing rules for the use of
    assertions in OAuth:
@@ -853,10 +660,10 @@ Table of Contents
       code over the assertion are beyond the scope of this
       specification.
 
-<span class="h2"><a class="selflink" name="section-6" href="#section-6">6</a>.  Common Scenarios</span>
+6.  Common Scenarios
 
    The following provides additional guidance, beyond the format and
-   processing rules defined in Sections <a href="#section-4">4</a> and <a href="#section-5">5</a>, on assertion use for a
+   processing rules defined in Sections 4 and 5, on assertion use for a
    number of common use cases.
 
 
@@ -864,55 +671,55 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 12]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-13" id="page-13" href="#page-13" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 12]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
-<span class="h3"><a class="selflink" name="section-6.1" href="#section-6.1">6.1</a>.  Client Authentication</span>
+6.1.  Client Authentication
 
    A client uses an assertion to authenticate to the authorization
    server's token endpoint by using the "client_assertion_type" and
-   "client_assertion" parameters as defined in <a href="#section-4.2">Section 4.2</a>.  The Subject
+   "client_assertion" parameters as defined in Section 4.2.  The Subject
    of the assertion identifies the client.  If the assertion is self-
    issued by the client, the Issuer of the assertion also identifies the
    client.
 
-   The example in <a href="#section-4.2">Section 4.2</a> shows a client authenticating using an
+   The example in Section 4.2 shows a client authenticating using an
    assertion during an access token request.
 
-<span class="h3"><a class="selflink" name="section-6.2" href="#section-6.2">6.2</a>.  Client Acting on Behalf of Itself</span>
+6.2.  Client Acting on Behalf of Itself
 
    When a client is accessing resources on behalf of itself, it does so
    in a manner analogous to the Client Credentials Grant defined in
-   <a href="#section-4.4">Section 4.4</a> of OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].  This is a special case that
+   Section 4.4 of OAuth 2.0 [RFC6749].  This is a special case that
    combines both the authentication and authorization grant usage
    patterns.  In this case, the interactions with the authorization
    server should be treated as using an assertion for Client
-   Authentication according to <a href="#section-4.2">Section 4.2</a>, while using the "grant_type"
+   Authentication according to Section 4.2, while using the "grant_type"
    parameter with the value "client_credentials" to indicate that the
    client is requesting an access token using only its client
    credentials.
 
    The following example demonstrates an assertion being used for a
-   client credentials access token request, as defined in <a href="#section-4.4.2">Section 4.4.2</a>
-   of OAuth 2.0 [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>] (with extra line breaks for display purposes
+   client credentials access token request, as defined in Section 4.4.2
+   of OAuth 2.0 [RFC6749] (with extra line breaks for display purposes
    only):
 
      POST /token HTTP/1.1
      Host: server.example.com
      Content-Type: application/x-www-form-urlencoded
 
-     grant_type=client_credentials&amp;
+     grant_type=client_credentials&
      client_assertion_type=urn%3Aietf%3Aparams%3Aoauth
-     %3Aclient-assertion-type%3Asaml2-bearer&amp;
+     %3Aclient-assertion-type%3Asaml2-bearer&
      client_assertion=PHNhbW...[omitted for brevity]...ZT
 
-<span class="h3"><a class="selflink" name="section-6.3" href="#section-6.3">6.3</a>.  Client Acting on Behalf of a User</span>
+6.3.  Client Acting on Behalf of a User
 
    When a client is accessing resources on behalf of a user, it does so
    by using the "grant_type" and "assertion" parameters as defined in
-   <a href="#section-4.1">Section 4.1</a>.  The Subject identifies an authorized accessor for which
+   Section 4.1.  The Subject identifies an authorized accessor for which
    the access token is being requested (typically, the resource owner or
    an authorized delegate).
 
@@ -920,15 +727,15 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 13]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-14" id="page-14" href="#page-14" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 13]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
-   The example in <a href="#section-4.1">Section 4.1</a> shows a client making an access token
+   The example in Section 4.1 shows a client making an access token
    request using an assertion as an authorization grant.
 
-<span class="h4"><a class="selflink" name="section-6.3.1" href="#section-6.3.1">6.3.1</a>.  Client Acting on Behalf of an Anonymous User</span>
+6.3.1.  Client Acting on Behalf of an Anonymous User
 
    When a client is accessing resources on behalf of an anonymous user,
    a mutually agreed-upon Subject identifier indicating anonymity is
@@ -944,9 +751,9 @@ Table of Contents
    present.
 
    More information about anonymity, pseudonymity, and privacy
-   considerations in general can be found in [<a href="./rfc6973" title="&quot;Privacy Considerations for Internet Protocols&quot;">RFC6973</a>].
+   considerations in general can be found in [RFC6973].
 
-<span class="h2"><a class="selflink" name="section-7" href="#section-7">7</a>.  Interoperability Considerations</span>
+7.  Interoperability Considerations
 
    This specification defines a framework for using assertions with
    OAuth 2.0.  However, as an abstract framework in which the data
@@ -955,8 +762,8 @@ Table of Contents
    implementations.
 
    Two other specifications that profile this framework for specific
-   assertions have been developed: [<a href="./rfc7522" title="&quot;Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants&quot;">RFC7522</a>] uses SAML 2.0 Assertions
-   and [<a href="./rfc7523" title="&quot;JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants&quot;">RFC7523</a>] uses JSON Web Tokens (JWTs).  These two instantiations
+   assertions have been developed: [RFC7522] uses SAML 2.0 Assertions
+   and [RFC7523] uses JSON Web Tokens (JWTs).  These two instantiations
    of this framework specify additional details about the assertion
    encoding and processing rules for using those kinds of assertions
    with OAuth 2.0.
@@ -976,28 +783,28 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 14]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-15" id="page-15" href="#page-15" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 14]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
    among the participants on the kinds of values to be used for some
    abstract fields defined by this specification.  In some cases,
    additional profiles may be created that constrain or prescribe these
    values or specify how they are to be exchanged.  The "OAuth 2.0
-   Dynamic Client Registration Core Protocol" [<a href="#ref-OAUTH-DYN-REG">OAUTH-DYN-REG</a>] is one
+   Dynamic Client Registration Core Protocol" [OAUTH-DYN-REG] is one
    such profile that enables OAuth Clients to register metadata about
    themselves at an authorization server.
 
-<span class="h2"><a class="selflink" name="section-8" href="#section-8">8</a>.  Security Considerations</span>
+8.  Security Considerations
 
    This section discusses security considerations that apply when using
    assertions with OAuth 2.0 as described in this document.  As
-   discussed in <a href="#section-3">Section 3</a>, there are two different ways to obtain
+   discussed in Section 3, there are two different ways to obtain
    assertions: either as self-issued or obtained from a third-party
    token service.  While the actual interactions for obtaining an
    assertion are outside the scope of this document, the details are
-   important from a security perspective.  <a href="#section-3">Section 3</a> discusses the high-
+   important from a security perspective.  Section 3 discusses the high-
    level architectural aspects.  Many of the security considerations
    discussed in this section are applicable to both the OAuth exchange
    as well as the client obtaining the assertion.
@@ -1006,7 +813,7 @@ Table of Contents
    presenting an assertion for client authentication and for the
    authorization grant.
 
-<span class="h3"><a class="selflink" name="section-8.1" href="#section-8.1">8.1</a>.  Forged Assertion</span>
+8.1.  Forged Assertion
 
    Threat:
       An adversary could forge or alter an assertion in order to obtain
@@ -1020,7 +827,7 @@ Table of Contents
       employed.  This includes the issuer digitally signing the
       assertion or computing a MAC over the assertion.
 
-<span class="h3"><a class="selflink" name="section-8.2" href="#section-8.2">8.2</a>.  Stolen Assertion</span>
+8.2.  Stolen Assertion
 
    Threat:
       An adversary may be able obtain an assertion (e.g., by
@@ -1032,9 +839,9 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 15]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-16" id="page-16" href="#page-16" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 15]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
    Countermeasures:
@@ -1054,7 +861,7 @@ Table of Contents
       the authorization server from maintaining an infinite state table
       of processed Assertion IDs.
 
-<span class="h3"><a class="selflink" name="section-8.3" href="#section-8.3">8.3</a>.  Unauthorized Disclosure of Personal Information</span>
+8.3.  Unauthorized Disclosure of Personal Information
 
    Threat:
       The ability for other entities to obtain information about an
@@ -1088,9 +895,9 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 16]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-17" id="page-17" href="#page-17" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 16]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
       For the cases where a third-party token service creates assertions
@@ -1102,9 +909,9 @@ Table of Contents
       protection safeguards need to be taken into consideration.
 
       Further guidance on privacy friendly protocol design can be found
-      in [<a href="./rfc6973" title="&quot;Privacy Considerations for Internet Protocols&quot;">RFC6973</a>].
+      in [RFC6973].
 
-<span class="h3"><a class="selflink" name="section-8.4" href="#section-8.4">8.4</a>.  Privacy Considerations</span>
+8.4.  Privacy Considerations
 
    An assertion may contain privacy-sensitive information and, to
    prevent disclosure of such information to unintended parties, should
@@ -1117,15 +924,15 @@ Table of Contents
    necessary to complete the exchange and include only such information
    in the assertion.  In some cases, the Subject identifier can be a
    value representing an anonymous or pseudonymous user, as described in
-   <a href="#section-6.3.1">Section 6.3.1</a>.
+   Section 6.3.1.
 
-<span class="h2"><a class="selflink" name="section-9" href="#section-9">9</a>.  IANA Considerations</span>
+9.  IANA Considerations
 
    This section registers three values, as listed in the subsections
-   below, in the IANA "OAuth Parameters" registry established by <a href="./rfc6749">RFC</a>
-   <a href="./rfc6749">6749</a> [<a href="./rfc6749" title="&quot;The OAuth 2.0 Authorization Framework&quot;">RFC6749</a>].
+   below, in the IANA "OAuth Parameters" registry established by RFC
+   6749 [RFC6749].
 
-<span class="h3"><a class="selflink" name="section-9.1" href="#section-9.1">9.1</a>.  "assertion" Parameter Registration</span>
+9.1.  "assertion" Parameter Registration
 
    o  Name: assertion
 
@@ -1133,7 +940,7 @@ Table of Contents
 
    o  Change Controller: IESG
 
-   o  Specification Document(s): <a href="./rfc7521">RFC 7521</a>
+   o  Specification Document(s): RFC 7521
 
 
 
@@ -1144,12 +951,12 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 17]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-18" id="page-18" href="#page-18" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 17]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
-<span class="h3"><a class="selflink" name="section-9.2" href="#section-9.2">9.2</a>.  "client_assertion" Parameter Registration</span>
+9.2.  "client_assertion" Parameter Registration
 
    o  Name: client_assertion
 
@@ -1157,9 +964,9 @@ Table of Contents
 
    o  Change Controller: IESG
 
-   o  Specification Document(s): <a href="./rfc7521">RFC 7521</a>
+   o  Specification Document(s): RFC 7521
 
-<span class="h3"><a class="selflink" name="section-9.3" href="#section-9.3">9.3</a>.  "client_assertion_type" Parameter Registration</span>
+9.3.  "client_assertion_type" Parameter Registration
 
    o  Name: client_assertion_type
 
@@ -1167,69 +974,69 @@ Table of Contents
 
    o  Change Controller: IESG
 
-   o  Specification Document(s): <a href="./rfc7521">RFC 7521</a>
+   o  Specification Document(s): RFC 7521
 
-<span class="h2"><a class="selflink" name="section-10" href="#section-10">10</a>.  References</span>
+10.  References
 
-<span class="h3"><a class="selflink" name="section-10.1" href="#section-10.1">10.1</a>.  Normative References</span>
+10.1.  Normative References
 
-   [<a name="ref-RFC2119" id="ref-RFC2119">RFC2119</a>]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", <a href="./bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>,
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
-              &lt;<a href="http://www.rfc-editor.org/info/rfc2119">http://www.rfc-editor.org/info/rfc2119</a>&gt;.
+              <http://www.rfc-editor.org/info/rfc2119>.
 
-   [<a name="ref-RFC3986" id="ref-RFC3986">RFC3986</a>]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
-              <a href="./rfc3986">RFC 3986</a>, DOI 10.17487/RFC3986, January 2005,
-              &lt;<a href="http://www.rfc-editor.org/info/rfc3986">http://www.rfc-editor.org/info/rfc3986</a>&gt;.
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <http://www.rfc-editor.org/info/rfc3986>.
 
-   [<a name="ref-RFC6749" id="ref-RFC6749">RFC6749</a>]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
-              <a href="./rfc6749">RFC 6749</a>, DOI 10.17487/RFC6749, October 2012,
-              &lt;<a href="http://www.rfc-editor.org/info/rfc6749">http://www.rfc-editor.org/info/rfc6749</a>&gt;.
+   [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
+              RFC 6749, DOI 10.17487/RFC6749, October 2012,
+              <http://www.rfc-editor.org/info/rfc6749>.
 
-<span class="h3"><a class="selflink" name="section-10.2" href="#section-10.2">10.2</a>.  Informative References</span>
+10.2.  Informative References
 
-   [<a name="ref-OASIS.WS-Trust" id="ref-OASIS.WS-Trust">OASIS.WS-Trust</a>]
+   [OASIS.WS-Trust]
               Nadalin, A., Ed., Goodner, M., Ed., Gudgin, M., Ed.,
               Barbir, A., Ed., and H. Granqvist, Ed., "WS-Trust",
-              February 2009, &lt;<a href="http://docs.oasis-open.org/ws-sx/ws-trust/v1.4/ws-trust.html">http://docs.oasis-open.org/ws-sx/</a>
-              <a href="http://docs.oasis-open.org/ws-sx/ws-trust/v1.4/ws-trust.html">ws-trust/v1.4/ws-trust.html</a>&gt;.
+              February 2009, <http://docs.oasis-open.org/ws-sx/
+              ws-trust/v1.4/ws-trust.html>.
 
 
 
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 18]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-19" id="page-19" href="#page-19" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 18]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
-   [<a name="ref-OAUTH-DYN-REG" id="ref-OAUTH-DYN-REG">OAUTH-DYN-REG</a>]
+   [OAUTH-DYN-REG]
               Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and
               P. Hunt, "OAuth 2.0 Dynamic Client Registration Protocol",
-              Work in Progress, <a href="./draft-ietf-oauth-dyn-reg-29">draft-ietf-oauth-dyn-reg-29</a>, May 2015.
+              Work in Progress, draft-ietf-oauth-dyn-reg-29, May 2015.
 
-   [<a name="ref-RFC6755" id="ref-RFC6755">RFC6755</a>]  Campbell, B. and H. Tschofenig, "An IETF URN Sub-Namespace
-              for OAuth", <a href="./rfc6755">RFC 6755</a>, DOI 10.17487/RFC6755, October 2012,
-              &lt;<a href="http://www.rfc-editor.org/info/rfc6755">http://www.rfc-editor.org/info/rfc6755</a>&gt;.
+   [RFC6755]  Campbell, B. and H. Tschofenig, "An IETF URN Sub-Namespace
+              for OAuth", RFC 6755, DOI 10.17487/RFC6755, October 2012,
+              <http://www.rfc-editor.org/info/rfc6755>.
 
-   [<a name="ref-RFC6973" id="ref-RFC6973">RFC6973</a>]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
+   [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
               Morris, J., Hansen, M., and R. Smith, "Privacy
-              Considerations for Internet Protocols", <a href="./rfc6973">RFC 6973</a>,
+              Considerations for Internet Protocols", RFC 6973,
               DOI 10.17487/RFC6973, July 2013,
-              &lt;<a href="http://www.rfc-editor.org/info/rfc6973">http://www.rfc-editor.org/info/rfc6973</a>&gt;.
+              <http://www.rfc-editor.org/info/rfc6973>.
 
-   [<a name="ref-RFC7522" id="ref-RFC7522">RFC7522</a>]  Campbell, B., Mortimore, C., and M. Jones, "Security
+   [RFC7522]  Campbell, B., Mortimore, C., and M. Jones, "Security
               Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0
-              Client Authentication and Authorization Grants", <a href="./rfc7522">RFC 7522</a>,
+              Client Authentication and Authorization Grants", RFC 7522,
               DOI 10.17487/RFC7522, May 2015,
-              &lt;<a href="http://www.rfc-editor.org/info/rfc7522">http://www.rfc-editor.org/info/rfc7522</a>&gt;.
+              <http://www.rfc-editor.org/info/rfc7522>.
 
-   [<a name="ref-RFC7523" id="ref-RFC7523">RFC7523</a>]  Jones, M., Campbell, B., and C. Mortimore, "JSON Web Token
+   [RFC7523]  Jones, M., Campbell, B., and C. Mortimore, "JSON Web Token
               (JWT) Profile for OAuth 2.0 Client Authentication and
-              Authorization Grants", <a href="./rfc7523">RFC 7523</a>, DOI 10.17487/RFC7523, May
-              2015, &lt;<a href="http://www.rfc-editor.org/info/rfc7523">http://www.rfc-editor.org/info/rfc7523</a>&gt;.
+              Authorization Grants", RFC 7523, DOI 10.17487/RFC7523, May
+              2015, <http://www.rfc-editor.org/info/rfc7523>.
 
 
 
@@ -1256,9 +1063,9 @@ Table of Contents
 
 
 
-<span class="grey">Campbell, et al.             Standards Track                   [Page 19]</span></pre>
-<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-20" id="page-20" href="#page-20" class="invisible"> </a>
-<span class="grey"><a href="./rfc7521">RFC 7521</a>                OAuth Assertion Framework               May 2015</span>
+Campbell, et al.             Standards Track                   [Page 19]
+
+RFC 7521                OAuth Assertion Framework               May 2015
 
 
 Acknowledgements
@@ -1286,7 +1093,7 @@ Authors' Addresses
    Microsoft
 
    EMail: mbj@microsoft.com
-   URI:   <a href="http://self-issued.info/">http://self-issued.info/</a>
+   URI:   http://self-issued.info/
 
 
    Yaron Y. Goland
@@ -1313,11 +1120,4 @@ Authors' Addresses
 
 
 Campbell, et al.             Standards Track                   [Page 20]
-
-</pre><br />
-    <span class="noprint"><small><small>Html markup produced by rfcmarkup 1.115, available from
-      <a href="https://tools.ietf.org/tools/rfcmarkup/">https://tools.ietf.org/tools/rfcmarkup/</a>
-    </small></small></span>
-  </div>
-</body>
-</html>
+
