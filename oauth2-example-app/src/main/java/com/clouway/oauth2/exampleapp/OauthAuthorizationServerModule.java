@@ -11,7 +11,6 @@ import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.OAuth2Servlet;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.exampleapp.security.OAuthSecurityFilter;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.TokenRepository;
 import com.clouway.oauth2.user.UserIdFinder;
@@ -127,7 +126,6 @@ public class OauthAuthorizationServerModule extends AbstractModule {
       protected void configureSitebricks() {
         at(url + "/register").serve(RegistrationEndpoint.class);
         at(url + "/login").show(LoginEndpoint.class);
-        at(url + "/verify/:token").serve(VerificationEndpoint.class);
         at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);
       }
     });
