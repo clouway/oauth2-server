@@ -55,16 +55,6 @@ class InMemoryTokenRepository implements TokenRepository {
   }
 
   @Override
-  public Optional<Token> findByRefreshTokenCode(String value) {
-    for (Token token : tokens.values()) {
-      if (value.equals(token.refreshToken)) {
-        return Optional.of(token);
-      }
-    }
-    return Optional.absent();
-  }
-
-  @Override
   public Optional<Token> refreshToken(String refreshToken) {
     for (Token token : tokens.values()) {
       if (refreshToken.equals(token.refreshToken)) {

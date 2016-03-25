@@ -26,14 +26,6 @@ public interface TokenRepository {
   Optional<Token> getNotExpiredToken(String token);
 
   /**
-   * Finds token that is associated by the provided refresh token.
-   *
-   * @param value the value of the refresh token.
-   * @return the found token or absent value if token is not found
-   */
-  Optional<Token> findByRefreshTokenCode(String value);
-
-  /**
    * Refreshes token using the access token.
    *
    * @param token   the access token

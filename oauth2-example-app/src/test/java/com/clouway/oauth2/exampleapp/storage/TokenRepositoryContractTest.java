@@ -12,7 +12,7 @@ import static com.clouway.oauth2.Duration.hours;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
@@ -46,14 +46,14 @@ public abstract class TokenRepositoryContractTest {
 
 
   @Test
-  public void findByRefreshToken() throws Exception {
+  public void refreshToken() throws Exception {
     final Token notExpiredToken = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", "refresh", "userId", timeToLive.seconds, currentDate);
 
     repository = createRepo(new Date());
 
     repository.register(notExpiredToken);
 
-    Optional<Token> tokenOptional = repository.findByRefreshTokenCode(notExpiredToken.refreshToken);
+    Optional<Token> tokenOptional = repository.refreshToken(notExpiredToken.refreshToken);
 
     assertThat(tokenOptional.get().value, is(equalTo(notExpiredToken.value)));
     assertThat(tokenOptional.get().type, is(equalTo(notExpiredToken.type)));
@@ -63,17 +63,9 @@ public abstract class TokenRepositoryContractTest {
   }
 
   @Test
-  public void notExistingToken() throws Exception {
+  public void tryToRefreshNonExistingToken() throws Exception {
     repository = createRepo(new Date());
-    Optional<Token> tokenOptional = repository.getNotExpiredToken("token.value");
-
-    assertFalse(tokenOptional.isPresent());
-  }
-
-  @Test
-  public void notExistingRefreshTokenToken() throws Exception {
-    repository = createRepo(new Date());
-    Optional<Token> tokenOptional = repository.findByRefreshTokenCode("refreshToken.value");
+    Optional<Token> tokenOptional = repository.refreshToken("refreshToken.value");
 
     assertFalse(tokenOptional.isPresent());
   }
@@ -107,7 +99,7 @@ public abstract class TokenRepositoryContractTest {
 
     repository.register(token);
 
-    Optional<Token> tokenOptional = repository.findByRefreshTokenCode(token.refreshToken);
+    Optional<Token> tokenOptional = repository.refreshToken(token.refreshToken);
 
     assertThat(tokenOptional.get().value, is(equalTo(token.value)));
     assertThat(tokenOptional.get().type, is(equalTo(token.type)));
