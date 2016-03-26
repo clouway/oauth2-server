@@ -20,6 +20,7 @@
   <modules>
     <module>oauth2-server</module>
     <module>oauth2-example-app</module>
+    <module>oauth2-server-testing</module>
   </modules>
 
   <properties>

@@ -11,13 +11,6 @@ import com.google.common.base.Optional;
 public interface TokenRepository {
 
   /**
-   * Register is registering a new token in the repository.
-   *
-   * @param token the token to be registered in the repository.
-   */
-  void register(Token token);
-
-  /**
    * Find token which is not expired till the provided time.
    *
    * @param token then token for which is looked

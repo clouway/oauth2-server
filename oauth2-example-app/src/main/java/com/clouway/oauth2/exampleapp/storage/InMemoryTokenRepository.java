@@ -28,12 +28,6 @@ class InMemoryTokenRepository implements TokenRepository {
   }
 
   @Override
-  public void register(Token token) {
-    tokens.put(token.value, token);
-
-  }
-
-  @Override
   public Optional<Token> getNotExpiredToken(String tokenValue) {
     if (tokens.containsKey(tokenValue)) {
       Token token = tokens.get(tokenValue);
