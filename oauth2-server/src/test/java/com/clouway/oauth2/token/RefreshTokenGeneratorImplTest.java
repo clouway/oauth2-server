@@ -1,6 +1,5 @@
 package com.clouway.oauth2.token;
 
-import com.google.inject.Provider;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -10,31 +9,27 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class RefreshTokenGeneratorImplTest {
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
+  @Mock
+  TokenGenerator tokenGenerator;
+
   private RefreshTokenGenerator generator;
-  @Mock
-  private TokenGenerator tokenGenerator;
-  @Mock
-  private Provider<Boolean> generateNewRefreshToken;
 
   @Before
   public void setUp() throws Exception {
-    generator = new RefreshTokenGeneratorImpl(tokenGenerator, generateNewRefreshToken);
+    generator = new RefreshTokenGeneratorImpl(tokenGenerator, true);
 
   }
 
   @Test
   public void generateEveryTimeNewTokenEventExistingIsPassed() throws Exception {
-
     context.checking(new Expectations() {{
-      oneOf(generateNewRefreshToken).get();
-      will(returnValue(true));
       oneOf(tokenGenerator).generate();
       will(returnValue("new token"));
     }});
@@ -47,11 +42,7 @@ public class RefreshTokenGeneratorImplTest {
 
   @Test
   public void useExistingToken() throws Exception {
-
-    context.checking(new Expectations() {{
-      oneOf(generateNewRefreshToken).get();
-      will(returnValue(false));
-    }});
+    generator = new RefreshTokenGeneratorImpl(tokenGenerator, false);
 
     String generatedToken = generator.generate("existing");
 

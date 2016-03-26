@@ -1,7 +1,6 @@
 package com.clouway.oauth2.client;
 
 import com.clouway.oauth2.token.TokenGenerator;
-import com.google.inject.Inject;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
@@ -11,7 +10,6 @@ class ClientRegistryImpl implements ClientRegistry {
   private TokenGenerator tokenGenerator;
   private ClientRepository repository;
 
-  @Inject
   public ClientRegistryImpl(TokenGenerator tokenGenerator, ClientRepository repository) {
     this.tokenGenerator = tokenGenerator;
     this.repository = repository;

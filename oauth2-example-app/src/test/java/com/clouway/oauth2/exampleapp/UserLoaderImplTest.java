@@ -1,7 +1,9 @@
-package com.clouway.oauth2.user;
+package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.user.User;
+import com.clouway.oauth2.user.UserRepository;
 import com.google.common.base.Optional;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -14,15 +16,14 @@ import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class UserLoaderImplTest {
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
   private final String token = "the otken csxc< csjf ks";
-  private final User user = new User("id","test@mail.com", "name");
+  private final User user = new User("id", "test@mail.com", "name");
 
   private UserLoader userLoader;
 

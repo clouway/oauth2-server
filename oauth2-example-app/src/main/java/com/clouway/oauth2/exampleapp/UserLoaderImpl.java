@@ -1,9 +1,10 @@
-package com.clouway.oauth2.user;
+package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.user.User;
+import com.clouway.oauth2.user.UserRepository;
 import com.google.common.base.Optional;
-import com.google.inject.Inject;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
@@ -13,7 +14,6 @@ class UserLoaderImpl implements UserLoader {
   private UserRepository repository;
   private TokenRepository tokenRepository;
 
-  @Inject
   public UserLoaderImpl(UserRepository repository, TokenRepository tokenRepository) {
     this.repository = repository;
     this.tokenRepository = tokenRepository;

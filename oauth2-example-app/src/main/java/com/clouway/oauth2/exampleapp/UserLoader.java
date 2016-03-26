@@ -1,12 +1,11 @@
-package com.clouway.oauth2.user;
+package com.clouway.oauth2.exampleapp;
 
+import com.clouway.oauth2.user.User;
 import com.google.common.base.Optional;
-import com.google.inject.ImplementedBy;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-@ImplementedBy(UserLoaderImpl.class)
 public interface UserLoader {
   Optional<User> load(String token);
 }
