@@ -1,18 +1,23 @@
 package com.clouway.oauth2.http;
 
-import javax.json.Json;
-import javax.json.JsonStructure;
-import javax.json.JsonWriter;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.stream.JsonWriter;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public class RsJson extends RsWrap {
 
-  public RsJson(JsonStructure json) {
+  public static final Gson GSON = new Gson();
+
+  public RsJson(JsonElement json) {
     this(new RsWithBody(RsJson.streaming(json)));
   }
 
@@ -23,13 +28,12 @@ public class RsJson extends RsWrap {
     );
   }
 
-  private static InputStream streaming(JsonStructure src) {
+  private static InputStream streaming(JsonElement src) {
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    final JsonWriter writer = Json.createWriter(baos);
-    try {
-      writer.write(src);
-    } finally {
-      writer.close();
+    try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(baos))) {
+      GSON.toJson(src, writer);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
     return new ByteArrayInputStream(baos.toByteArray());
   }

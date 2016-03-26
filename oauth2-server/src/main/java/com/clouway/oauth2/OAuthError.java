@@ -4,8 +4,8 @@ import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsJson;
 import com.clouway.oauth2.http.RsWithStatus;
 import com.clouway.oauth2.http.RsWrap;
+import com.google.gson.JsonObject;
 
-import javax.json.Json;
 import java.net.HttpURLConnection;
 
 /**
@@ -22,9 +22,13 @@ public class OAuthError extends RsWrap {
   }
 
   private OAuthError(String errorName) {
-    super(new RsWithStatus(HttpURLConnection.HTTP_BAD_REQUEST, new RsJson(Json.createObjectBuilder()
-            .add("error", errorName)
-            .build()
-    )));
+    super(new RsWithStatus(HttpURLConnection.HTTP_BAD_REQUEST, createJsonResponse(errorName)));
+
+  }
+
+  private static Response createJsonResponse(String errorName) {
+    JsonObject o = new JsonObject();
+    o.addProperty("error", errorName);
+    return new RsJson(o);
   }
 }

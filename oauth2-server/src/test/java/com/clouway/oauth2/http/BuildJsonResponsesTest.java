@@ -1,8 +1,8 @@
 package com.clouway.oauth2.http;
 
+import com.google.gson.JsonObject;
 import org.junit.Test;
 
-import javax.json.Json;
 import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,8 +17,19 @@ public class BuildJsonResponsesTest {
 
   @Test
   public void happyPath() throws IOException {
-    RsJson json = new RsJson(Json.createObjectBuilder().add("key1","value1").build());
-    assertThat(new RsPrint(json).print(),is(equalTo("Content-Type: application/json\r\n{\"key1\":\"value1\"}")));
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("key1", "value1");
+    RsJson json = new RsJson(jsonObject);
+    assertThat(new RsPrint(json).print(), is(equalTo("Content-Type: application/json\r\n{\"key1\":\"value1\"}")));
+  }
+
+  @Test
+  public void responseWithMultipleProperties() throws IOException {
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("::key1::", "::value1::");
+    jsonObject.addProperty("::key2::", "::value2::");
+    RsJson json = new RsJson(jsonObject);
+    assertThat(new RsPrint(json).print(), is(equalTo("Content-Type: application/json\r\n{\"::key1::\":\"::value1::\",\"::key2::\":\"::value2::\"}")));
   }
 
 }
