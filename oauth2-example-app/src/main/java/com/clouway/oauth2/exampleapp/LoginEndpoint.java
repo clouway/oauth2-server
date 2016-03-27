@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginEndpoint {
   private String username;
   private String password;
-  private String redirectUrl;
 
   private ResourceOwnerAuthentication authentication;
 
@@ -30,6 +29,7 @@ public class LoginEndpoint {
   @Post
   public String login(HttpServletRequest request, HttpServletResponse response) {
     Optional<Session> session = authentication.auth(username, password, request.getRemoteAddr());
+    String continueUrl = request.getParameter("continue");
 
     if (session.isPresent()) {
       // "SID" -this value should be configurable or in the
@@ -40,7 +40,7 @@ public class LoginEndpoint {
       response.addCookie(sid);
     }
 
-    return redirectUrl;
+    return continueUrl;
   }
 
   public void setUsername(String username) {
@@ -51,7 +51,4 @@ public class LoginEndpoint {
     this.password = password;
   }
 
-  public void setRedirectUrl(String redirectUrl) {
-    this.redirectUrl = redirectUrl;
-  }
 }

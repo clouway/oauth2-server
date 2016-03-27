@@ -47,9 +47,9 @@ public final class IdentityController implements Take {
 
     // Users should move back to the same path after authorization passes and all requested params
     if (!optUser.isPresent()) {
-      String redirectUrl = queryParams(request);
+      String continueTo = queryParams(request);
       // TODO (mgenov): configurable login page + param?
-      return new RsRedirect("/r/oauth/login?redirectUrl=" + redirectUrl);
+      return new RsRedirect("/r/oauth/login?continue=" + continueTo);
     }
 
     return identityActivity.execute(client, optUser.get(), request);

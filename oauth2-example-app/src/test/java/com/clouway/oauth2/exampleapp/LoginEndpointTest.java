@@ -26,10 +26,10 @@ public class LoginEndpointTest {
   private ResourceOwnerAuthentication authentication = context.mock(ResourceOwnerAuthentication.class);
   private FakeHttpServletResponse response = new FakeHttpServletResponse();
 
-
   private LoginEndpoint endpoint = new LoginEndpoint(authentication);
+
   @Mock
-  private HttpServletRequest request;
+  HttpServletRequest request;
 
   @Test
   public void happyPath() throws Exception {
@@ -39,11 +39,13 @@ public class LoginEndpointTest {
     context.checking(new Expectations() {{
       oneOf(request).getRemoteAddr();
       will(Expectations.returnValue(remoteAddress));
+      oneOf(request).getParameter("continue");
+      will(returnValue("/movies"));
       oneOf(authentication).auth("FeNoMeNa", "parola", remoteAddress);
       will(Expectations.returnValue(Optional.of(session)));
     }});
 
-    insertUserData("FeNoMeNa", "parola", "/movies");
+    pretendThatUserIsAuthorisedWith("FeNoMeNa", "parola");
 
     String redirectPage = endpoint.login(request,response);
 
@@ -56,11 +58,13 @@ public class LoginEndpointTest {
     context.checking(new Expectations() {{
       oneOf(request).getRemoteAddr();
       will(Expectations.returnValue(remoteAddress));
+      oneOf(request).getParameter("continue");
+      will(returnValue("/xxx"));
       oneOf(authentication).auth("Grigor", "dimitrov", remoteAddress);
       will(Expectations.returnValue(Optional.absent()));
     }});
 
-    insertUserData("Grigor", "dimitrov", "/xxx");
+    pretendThatUserIsAuthorisedWith("Grigor", "dimitrov");
 
     String redirectPage = endpoint.login(request, response);
 
@@ -68,9 +72,8 @@ public class LoginEndpointTest {
     assertThat(redirectPage, is("/xxx"));
   }
 
-  private void insertUserData(String username, String password, String redirectPage) {
+  private void pretendThatUserIsAuthorisedWith(String username, String password) {
     endpoint.setUsername(username);
     endpoint.setPassword(password);
-    endpoint.setRedirectUrl(redirectPage);
   }
 }

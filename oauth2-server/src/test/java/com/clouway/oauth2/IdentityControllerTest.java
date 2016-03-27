@@ -85,7 +85,7 @@ public class IdentityControllerTest {
     Status status = response.status();
 
     assertThat(status.code, is(equalTo(HttpURLConnection.HTTP_MOVED_TEMP)));
-    assertThat(status.redirectUrl, is(equalTo("/r/oauth/login?redirectUrl=%2F%3Fclient_id%3D%3A%3Aclient1%3A%3A")));
+    assertThat(status.redirectUrl, is(equalTo("/r/oauth/login?continue=%2F%3Fclient_id%3D%3A%3Aclient1%3A%3A")));
   }
 
   @Test

@@ -21,8 +21,8 @@ public class BearerTokenResponse extends RsWrap {
 
   private static JsonElement createToken(String accessToken, Long expiresInSeconds, String refreshToken) {
     JsonObject o = new JsonObject();
-    o.addProperty("access_type", accessToken);
-    o.addProperty("token_type", "bearer");
+    o.addProperty("access_token", accessToken);
+    o.addProperty("token_type", "Bearer");
     o.addProperty("expires_in", expiresInSeconds);
     o.addProperty("refresh_token", refreshToken);
     return o;

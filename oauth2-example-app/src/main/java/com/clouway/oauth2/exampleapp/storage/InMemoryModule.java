@@ -7,6 +7,8 @@ import com.clouway.oauth2.SessionSecurity;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.exampleapp.UserLoader;
+import com.clouway.oauth2.exampleapp.UserLoaderImpl;
 import com.clouway.oauth2.token.Sha1TokenGenerator;
 import com.clouway.oauth2.token.TokenRepository;
 import com.clouway.oauth2.user.UserIdFinder;
@@ -38,15 +40,21 @@ public class InMemoryModule extends AbstractModule {
     InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository(new Sha1TokenGenerator());
     bind(ClientAuthorizationRepository.class).toInstance(authorizationRepository);
 
-    bind(UserIdFinder.class).to(InMemoryUserRepository.class);
-    bind(UserRepository.class).to(InMemoryUserRepository.class);
+    InMemoryUserRepository userRepository = new InMemoryUserRepository();
 
+    bind(UserIdFinder.class).toInstance(userRepository);
+    bind(UserRepository.class).toInstance(userRepository);
   }
 
   @Provides
   @Singleton
   TokenRepository getTokenRepository() {
     return new InMemoryTokenRepository(new Sha1TokenGenerator(), new Date(), new Duration(900000000L));
+  }
+
+  @Provides
+  public UserLoader getUserLoader(UserRepository userRepository, TokenRepository tokenRepository) {
+    return new UserLoaderImpl(userRepository, tokenRepository);
   }
 
 }

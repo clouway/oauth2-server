@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-class UserLoaderImpl implements UserLoader {
+public class UserLoaderImpl implements UserLoader {
 
   private UserRepository repository;
   private TokenRepository tokenRepository;

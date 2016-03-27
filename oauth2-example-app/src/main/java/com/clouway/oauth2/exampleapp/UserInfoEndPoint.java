@@ -27,7 +27,7 @@ public class UserInfoEndPoint {
 
   @Post
   @Get
-  public Reply<?> generate(@Named("token") String token) {
+  public Reply<?> getUserInfo(@Named("token") String token) {
 
     Optional<User> userResult = userLoader.load(token);
 
