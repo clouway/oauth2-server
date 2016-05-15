@@ -10,6 +10,7 @@ import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.OAuth2Servlet;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.TokenRepository;
 import com.clouway.oauth2.user.UserIdFinder;
@@ -20,6 +21,13 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.google.sitebricks.SitebricksModule;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class OauthAuthorizationServerModule extends AbstractModule {
 
   @Singleton
@@ -29,13 +37,20 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     private final ClientRepository clientRepository;
     private final TokenRepository tokenRepository;
     private final UserIdFinder userIdFinder;
+    private final ServiceAccountRepository serviceAccountRepository;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, TokenRepository tokenRepository, UserIdFinder userIdFinder) {
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, TokenRepository tokenRepository, UserIdFinder userIdFinder, ServiceAccountRepository serviceAccountRepository) {
       this.clientAuthorizationRepository = clientAuthorizationRepository;
       this.clientRepository = clientRepository;
       this.tokenRepository = tokenRepository;
       this.userIdFinder = userIdFinder;
+      this.serviceAccountRepository = serviceAccountRepository;
+    }
+
+    @Override
+    protected ServiceAccountRepository serviceAccountRepository() {
+      return serviceAccountRepository;
     }
 
     @Override
@@ -114,6 +129,17 @@ public class OauthAuthorizationServerModule extends AbstractModule {
       @Override
       protected void configureServlets() {
         serve("/oauth2/*").with(OAuth2ServletBinding.class);
+        serve("/testapi").with(new HttpServlet() {
+          @Override
+          protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+            String token = req.getHeader("Authorization").split("\\s")[0];
+
+            PrintWriter writer = resp.getWriter();
+            writer.println("Hello !!!");
+            writer.flush();
+          }
+        });
       }
     });
 
@@ -124,7 +150,6 @@ public class OauthAuthorizationServerModule extends AbstractModule {
         at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);
       }
     });
-
 
   }
 

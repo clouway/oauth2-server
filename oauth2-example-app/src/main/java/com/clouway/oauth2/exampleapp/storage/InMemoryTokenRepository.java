@@ -67,7 +67,7 @@ class InMemoryTokenRepository implements TokenRepository {
   }
 
   @Override
-  public Token issueToken(String userId, Optional<String> refreshToken) {
+  public Token issueToken(String targetId, Optional<String> refreshToken) {
     String token = tokenGenerator.generate();
     String refreshTokenValue = "";
 
@@ -75,7 +75,7 @@ class InMemoryTokenRepository implements TokenRepository {
       refreshTokenValue = refreshToken.get();
     }
 
-    Token bearerToken = new Token(token, "bearer", refreshTokenValue, userId, timeToLive.seconds, currentDate);
+    Token bearerToken = new Token(token, "bearer", refreshTokenValue, targetId, timeToLive.seconds, currentDate);
 
     tokens.put(token, bearerToken);
 

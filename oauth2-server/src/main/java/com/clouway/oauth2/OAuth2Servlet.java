@@ -2,6 +2,7 @@ package com.clouway.oauth2;
 
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.http.FkParams;
 import com.clouway.oauth2.http.FkRegex;
 import com.clouway.oauth2.http.HttpException;
@@ -9,8 +10,14 @@ import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.Status;
 import com.clouway.oauth2.http.TkFork;
 import com.clouway.oauth2.http.TkRequestWrap;
+import com.clouway.oauth2.jws.RsaJwsSignature;
+import com.clouway.oauth2.jws.Signature;
+import com.clouway.oauth2.jws.SignatureFactory;
+import com.clouway.oauth2.jwt.Jwt.Header;
+import com.clouway.oauth2.jwt.JwtController;
 import com.clouway.oauth2.token.TokenRepository;
 import com.clouway.oauth2.user.UserIdFinder;
+import com.google.common.base.Optional;
 import com.google.common.io.ByteStreams;
 
 import javax.servlet.ServletConfig;
@@ -21,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
@@ -29,12 +35,18 @@ import java.util.Map;
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public abstract class OAuth2Servlet extends HttpServlet {
-
   private TkFork fork;
 
   @Override
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
+
+    final SignatureFactory constSignatureFactory = new SignatureFactory() {
+      @Override
+      public Optional<Signature> createSignature(byte[] signatureValue, Header header) {
+        return Optional.<Signature>of(new RsaJwsSignature(signatureValue));
+      }
+    };
 
     fork = new TkFork(
             new FkRegex(".*/authorize",
@@ -49,10 +61,15 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             new FkParams("grant_type", "refresh_token", new ClientController(
                                     clientRepository(),
                                     new RefreshTokenActivity(tokenRepository()))
+                            ),
+                            // JWT Support
+                            new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer", new JwtController(
+                                    constSignatureFactory,
+                                    tokenRepository(),
+                                    serviceAccountRepository())
                             )
                     ))
     );
-
   }
 
   @Override
@@ -93,6 +110,8 @@ public abstract class OAuth2Servlet extends HttpServlet {
     }
   }
 
+  protected abstract ServiceAccountRepository serviceAccountRepository();
+
   protected abstract UserIdFinder userIdFinder();
 
   protected abstract ClientAuthorizationRepository clientAuthorizationRepository();
@@ -100,4 +119,5 @@ public abstract class OAuth2Servlet extends HttpServlet {
   protected abstract ClientRepository clientRepository();
 
   protected abstract TokenRepository tokenRepository();
+
 }

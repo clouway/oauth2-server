@@ -13,6 +13,10 @@ import java.net.HttpURLConnection;
  */
 public class OAuthError extends RsWrap {
 
+  public static OAuthError invalidRequest() {
+    return new OAuthError("invalid_request");
+  }
+
   public static OAuthError unathorizedClient() {
     return new OAuthError("unauthorized_client");
   }

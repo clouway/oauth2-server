@@ -29,8 +29,8 @@ public interface TokenRepository {
   /**
    * Issues a new token for the provided user.
    *
-   * @param userId       the user of which token need to be issued
+   * @param targetId       the targetId for which token is issued
    * @param refreshToken the refresh token if there is such one  @return the newly issued token
    */
-  Token issueToken(String userId, Optional<String> refreshToken);
+  Token issueToken(String targetId, Optional<String> refreshToken);
 }
