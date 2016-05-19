@@ -71,11 +71,9 @@ public class JwtController implements Take {
       return OAuthError.invalidRequest();
     }
 
+    byte[] headerAndContentAsBytes = String.format("%s.%s", parts.get(0), parts.get(1)).getBytes();
 
-//    RsaJwsSignature signature = new RsaJwsSignature(signatureValue);
-
-
-    if (!optSignature.get().verify(String.format("%s.%s", parts.get(0), parts.get(1)).getBytes(), serviceAccount.privateKey())) {
+    if (!optSignature.get().verify(headerAndContentAsBytes, serviceAccount.privateKey())) {
       return OAuthError.invalidGrant();
     }
 
