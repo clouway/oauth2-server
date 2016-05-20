@@ -44,6 +44,12 @@ public abstract class OAuth2Servlet extends HttpServlet {
     final SignatureFactory constSignatureFactory = new SignatureFactory() {
       @Override
       public Optional<Signature> createSignature(byte[] signatureValue, Header header) {
+        // It's vulnerable multiple algorithms to be supported, so server need to reject
+        // any calls from not supported algorithms
+        // More infromation could be taken from: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
+        if (!"RS256".equals(header.alg)) {
+          return Optional.absent();
+        }
         return Optional.<Signature>of(new RsaJwsSignature(signatureValue));
       }
     };
