@@ -3,13 +3,7 @@ package com.clouway.oauth2;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.client.ServiceAccountRepository;
-import com.clouway.oauth2.http.FkParams;
-import com.clouway.oauth2.http.FkRegex;
-import com.clouway.oauth2.http.HttpException;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.Status;
-import com.clouway.oauth2.http.TkFork;
-import com.clouway.oauth2.http.TkRequestWrap;
+import com.clouway.oauth2.http.*;
 import com.clouway.oauth2.jws.RsaJwsSignature;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
@@ -60,20 +54,25 @@ public abstract class OAuth2Servlet extends HttpServlet {
             ),
             new FkRegex(".*/token",
                     new TkFork(
-                            new FkParams("grant_type", "authorization_code", new ClientController(
-                                    clientRepository(),
-                                    new IssueNewTokenActivity(tokenRepository(), clientAuthorizationRepository()))
-                            ),
-                            new FkParams("grant_type", "refresh_token", new ClientController(
-                                    clientRepository(),
-                                    new RefreshTokenActivity(tokenRepository()))
-                            ),
+                            new RequiresHeader("Authorization",
+                                    new FkParams("grant_type", "authorization_code",
+                                            new ClientController(
+                                                    clientRepository(), new IssueNewTokenActivity(tokenRepository(), clientAuthorizationRepository())
+                                            )
+                                    )),
+                            new RequiresHeader("Authorization",
+                                    new FkParams("grant_type", "refresh_token",
+                                            new ClientController(clientRepository(), new RefreshTokenActivity(tokenRepository()))
+                                    )),
                             // JWT Support
-                            new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer", new JwtController(
-                                    signatureFactory,
-                                    tokenRepository(),
-                                    serviceAccountRepository())
-                            )
+                            new RequiresParam("assertion",
+                                    new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                                            new JwtController(
+                                                    signatureFactory,
+                                                    tokenRepository(),
+                                                    serviceAccountRepository()
+                                            )
+                                    ))
                     ))
     );
   }
