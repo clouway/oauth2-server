@@ -41,7 +41,7 @@ public abstract class TokenRepositoryContractTest {
   public void refreshToken() throws Exception {
     repository = createRepo(currentDate, oneHour);
 
-    Token newlyIssuedToken = repository.issueToken("userId", Optional.<String>absent());
+    Token newlyIssuedToken = repository.issueToken("identityId", Optional.<String>absent());
 
     Optional<Token> tokenOptional = repository.refreshToken(newlyIssuedToken.refreshToken);
 
@@ -64,12 +64,12 @@ public abstract class TokenRepositoryContractTest {
   public void expiredToken() throws Exception {
     //created two hours ago
     final Date creationDate = new Date(System.currentTimeMillis() - hours(2).asMills());
-    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", "refresh", "userId", oneHour.seconds, creationDate);
+    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", "refresh", "identityId", oneHour.seconds, creationDate);
 
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
     repository = createRepo(currentDate, oneHour);
 
-    repository.issueToken("userId", Optional.<String>absent());
+    repository.issueToken("identityId", Optional.<String>absent());
 
     Optional<Token> tokenOptional = repository.getNotExpiredToken(token.value);
 

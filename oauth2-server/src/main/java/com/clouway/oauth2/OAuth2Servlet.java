@@ -41,7 +41,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
 
-    final SignatureFactory constSignatureFactory = new SignatureFactory() {
+    final SignatureFactory signatureFactory = new SignatureFactory() {
       @Override
       public Optional<Signature> createSignature(byte[] signatureValue, Header header) {
         // It's vulnerable multiple algorithms to be supported, so server need to reject
@@ -56,7 +56,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
     fork = new TkFork(
             new FkRegex(".*/authorize",
-                    new IdentityController(clientRepository(), userIdFinder(), new AuthorizationActivity(clientAuthorizationRepository()))
+                    new IdentityController(identityFinder(), new ClientAuthorizationActivity(clientRepository(), clientAuthorizationRepository()))
             ),
             new FkRegex(".*/token",
                     new TkFork(
@@ -70,7 +70,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             ),
                             // JWT Support
                             new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer", new JwtController(
-                                    constSignatureFactory,
+                                    signatureFactory,
                                     tokenRepository(),
                                     serviceAccountRepository())
                             )
@@ -118,7 +118,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
   protected abstract ServiceAccountRepository serviceAccountRepository();
 
-  protected abstract IdentityFinder userIdFinder();
+  protected abstract IdentityFinder identityFinder();
 
   protected abstract ClientAuthorizationRepository clientAuthorizationRepository();
 

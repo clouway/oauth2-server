@@ -1,7 +1,5 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.http.ParamRequest;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
@@ -20,8 +18,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -35,9 +31,6 @@ public class IdentityControllerTest {
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  ClientRepository clientRepository;
-
-  @Mock
   IdentityFinder identityFinder;
 
   @Mock
@@ -45,21 +38,17 @@ public class IdentityControllerTest {
 
   @Test
   public void happyPath() throws IOException {
-    IdentityController identityController = new IdentityController(clientRepository, identityFinder, identityActivity);
-    final Client client = aNewClient().build();
+    IdentityController identityController = new IdentityController(identityFinder, identityActivity);
+
     final Request request = new ParamRequest(ImmutableMap.of(
             "client_id", "::client_id::"
     ));
 
     context.checking(new Expectations() {{
       oneOf(identityFinder).find(request);
-      will(returnValue(Optional.of("::user_id::")));
+      will(returnValue(Optional.of("::identity_id::")));
 
-      oneOf(clientRepository).findById("::client_id::");
-      will(returnValue(Optional.of(client)));
-
-
-      oneOf(identityActivity).execute(client, "::user_id::", request);
+      oneOf(identityActivity).execute("::identity_id::", request);
       will(returnValue(new RsText("test response")));
     }});
 
@@ -69,14 +58,10 @@ public class IdentityControllerTest {
 
   @Test
   public void userWasNotAuthorized() throws IOException {
-    IdentityController identityController = new IdentityController(clientRepository, identityFinder, identityActivity);
+    IdentityController identityController = new IdentityController(identityFinder, identityActivity);
     final Request request = new ParamRequest(ImmutableMap.<String, String>of("client_id","::client1::"));
-    final Client anyExistingClient = aNewClient().build();
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("::client1::");
-      will(returnValue(Optional.of(anyExistingClient)));
-
       oneOf(identityFinder).find(request);
       will(returnValue(Optional.absent()));
     }});
@@ -86,23 +71,6 @@ public class IdentityControllerTest {
 
     assertThat(status.code, is(equalTo(HttpURLConnection.HTTP_MOVED_TEMP)));
     assertThat(status.redirectUrl, is(equalTo("/r/oauth/login?continue=%2F%3Fclient_id%3D%3A%3Aclient1%3A%3A")));
-  }
-
-  @Test
-  public void unknownClient() throws IOException {
-    IdentityController identityController = new IdentityController(clientRepository, identityFinder, identityActivity);
-    final Request request = new ParamRequest(ImmutableMap.of("client_id", "::client_id::"));
-
-    context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("::client_id::");
-      will(returnValue(Optional.absent()));
-    }});
-
-    Response response = identityController.ack(request);
-    Status status = response.status();
-
-    assertThat(status.code, is(equalTo(HttpURLConnection.HTTP_BAD_REQUEST)));
-    assertThat(new RsPrint(response).printBody(),containsString("unauthorized_client"));
   }
 
 }

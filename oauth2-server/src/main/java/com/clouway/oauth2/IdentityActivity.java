@@ -1,9 +1,7 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
-import com.google.common.base.Optional;
 
 /**
  * IdentityActivity is an activity which is executed for authorised users.
@@ -12,6 +10,6 @@ import com.google.common.base.Optional;
  */
 public interface IdentityActivity {
 
-  Response execute(Client client, String userId, Request request);
+  Response execute(String identityId, Request request);
 
 }

@@ -54,7 +54,7 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     }
 
     @Override
-    protected IdentityFinder userIdFinder() {
+    protected IdentityFinder identityFinder() {
       return identityFinder;
     }
 

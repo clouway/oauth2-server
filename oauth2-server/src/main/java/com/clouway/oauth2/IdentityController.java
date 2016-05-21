@@ -20,39 +20,28 @@ import java.net.URLEncoder;
  *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public final class IdentityController implements Take {
+final class IdentityController implements Take {
 
-  private final ClientRepository clientRepository;
   private final IdentityFinder identityFinder;
   private final IdentityActivity identityActivity;
 
-  public IdentityController(ClientRepository clientRepository, IdentityFinder identityFinder, IdentityActivity identityActivity) {
-    this.clientRepository = clientRepository;
+  IdentityController(IdentityFinder identityFinder, IdentityActivity identityActivity) {
     this.identityFinder = identityFinder;
     this.identityActivity = identityActivity;
   }
 
   @Override
   public Response ack(Request request) throws IOException {
-    String clientId = request.param("client_id");
 
-    Optional<Client> opt = clientRepository.findById(clientId);
-
-    if (!opt.isPresent()) {
-      return OAuthError.unathorizedClient();
-    }
-
-    Client client = opt.get();
-    Optional<String> optUser = identityFinder.find(request);
-
-    // Users should move back to the same path after authorization passes and all requested params
-    if (!optUser.isPresent()) {
+    Optional<String> optIdentity = identityFinder.find(request);
+    // Browser should be redirected to login page when Identity is not found
+    if (!optIdentity.isPresent()) {
       String continueTo = queryParams(request);
       // TODO (mgenov): configurable login page + param?
       return new RsRedirect("/r/oauth/login?continue=" + continueTo);
     }
 
-    return identityActivity.execute(client, optUser.get(), request);
+    return identityActivity.execute(optIdentity.get(), request);
   }
 
   private String queryParams(Request request) {

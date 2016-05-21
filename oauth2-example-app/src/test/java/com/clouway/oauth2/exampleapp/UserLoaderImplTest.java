@@ -42,8 +42,8 @@ public class UserLoaderImplTest {
 
     context.checking(new Expectations() {{
       oneOf(tokenRepository).getNotExpiredToken(token);
-      will(returnValue(Optional.of(new Token("v", "type", "refresh", "userId", 0l, new Date()))));
-      oneOf(repository).load("userId");
+      will(returnValue(Optional.of(new Token("v", "type", "refresh", "identityId", 0l, new Date()))));
+      oneOf(repository).load("identityId");
       will(returnValue(Optional.of(user)));
     }});
 
@@ -57,8 +57,8 @@ public class UserLoaderImplTest {
 
     context.checking(new Expectations() {{
       oneOf(tokenRepository).getNotExpiredToken(token);
-      will(returnValue(Optional.of(new Token("v", "type", "refresh", "userId", 0l, new Date()))));
-      oneOf(repository).load("userId");
+      will(returnValue(Optional.of(new Token("v", "type", "refresh", "identityId", 0l, new Date()))));
+      oneOf(repository).load("identityId");
       will(returnValue(Optional.absent()));
     }});
 

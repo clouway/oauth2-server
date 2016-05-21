@@ -48,11 +48,11 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
   }
 
   @Override
-  public Optional<Authorization> authorize(Client client, String userId, String responseType) {
+  public Optional<Authorization> authorize(Client client, String identityId, String responseType) {
     String code = tokenGenerator.generate();
     String redirectURI = client.redirectURI;
 
-    Authorization authorization = new Authorization(responseType, client.id, code, redirectURI, userId);
+    Authorization authorization = new Authorization(responseType, client.id, code, redirectURI, identityId);
     register(authorization);
 
     return Optional.of(authorization);

@@ -10,16 +10,16 @@ public class Authorization {
   public final String clientId;
   public final String code;
   public final String redirectURI;
-  public final String userId;
+  public final String identityId;
 
   private Date usageDate = null;
 
-  public Authorization(String responseType, String clientId, String code, String redirectURI, String userId) {
+  public Authorization(String responseType, String clientId, String code, String redirectURI, String identityId) {
     this.responseType = responseType;
     this.clientId = clientId;
     this.code = code;
     this.redirectURI = redirectURI;
-    this.userId = userId;
+    this.identityId = identityId;
   }
 
   @Override
@@ -34,7 +34,7 @@ public class Authorization {
     if (redirectURI != null ? !redirectURI.equals(that.redirectURI) : that.redirectURI != null) return false;
     if (responseType != null ? !responseType.equals(that.responseType) : that.responseType != null) return false;
     if (usageDate != null ? !usageDate.equals(that.usageDate) : that.usageDate != null) return false;
-    if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+    if (identityId != null ? !identityId.equals(that.identityId) : that.identityId != null) return false;
 
     return true;
   }
@@ -45,7 +45,7 @@ public class Authorization {
     result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
     result = 31 * result + (code != null ? code.hashCode() : 0);
     result = 31 * result + (redirectURI != null ? redirectURI.hashCode() : 0);
-    result = 31 * result + (userId != null ? userId.hashCode() : 0);
+    result = 31 * result + (identityId != null ? identityId.hashCode() : 0);
     result = 31 * result + (usageDate != null ? usageDate.hashCode() : 0);
     return result;
   }
