@@ -12,7 +12,7 @@ import com.clouway.oauth2.exampleapp.UserLoader;
 import com.clouway.oauth2.exampleapp.UserLoaderImpl;
 import com.clouway.oauth2.token.Sha1TokenGenerator;
 import com.clouway.oauth2.token.TokenRepository;
-import com.clouway.oauth2.user.UserIdFinder;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.clouway.oauth2.user.UserRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -72,7 +72,7 @@ public class InMemoryModule extends AbstractModule {
 
     InMemoryUserRepository userRepository = new InMemoryUserRepository();
 
-    bind(UserIdFinder.class).toInstance(userRepository);
+    bind(IdentityFinder.class).toInstance(userRepository);
     bind(UserRepository.class).toInstance(userRepository);
   }
 

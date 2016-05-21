@@ -8,7 +8,7 @@ import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsPrint;
 import com.clouway.oauth2.http.RsText;
 import com.clouway.oauth2.http.Status;
-import com.clouway.oauth2.user.UserIdFinder;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -38,21 +38,21 @@ public class IdentityControllerTest {
   ClientRepository clientRepository;
 
   @Mock
-  UserIdFinder userIdFinder;
+  IdentityFinder identityFinder;
 
   @Mock
   IdentityActivity identityActivity;
 
   @Test
   public void happyPath() throws IOException {
-    IdentityController identityController = new IdentityController(clientRepository, userIdFinder, identityActivity);
+    IdentityController identityController = new IdentityController(clientRepository, identityFinder, identityActivity);
     final Client client = aNewClient().build();
     final Request request = new ParamRequest(ImmutableMap.of(
             "client_id", "::client_id::"
     ));
 
     context.checking(new Expectations() {{
-      oneOf(userIdFinder).find(request);
+      oneOf(identityFinder).find(request);
       will(returnValue(Optional.of("::user_id::")));
 
       oneOf(clientRepository).findById("::client_id::");
@@ -69,7 +69,7 @@ public class IdentityControllerTest {
 
   @Test
   public void userWasNotAuthorized() throws IOException {
-    IdentityController identityController = new IdentityController(clientRepository, userIdFinder, identityActivity);
+    IdentityController identityController = new IdentityController(clientRepository, identityFinder, identityActivity);
     final Request request = new ParamRequest(ImmutableMap.<String, String>of("client_id","::client1::"));
     final Client anyExistingClient = aNewClient().build();
 
@@ -77,7 +77,7 @@ public class IdentityControllerTest {
       oneOf(clientRepository).findById("::client1::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(userIdFinder).find(request);
+      oneOf(identityFinder).find(request);
       will(returnValue(Optional.absent()));
     }});
 
@@ -90,7 +90,7 @@ public class IdentityControllerTest {
 
   @Test
   public void unknownClient() throws IOException {
-    IdentityController identityController = new IdentityController(clientRepository, userIdFinder, identityActivity);
+    IdentityController identityController = new IdentityController(clientRepository, identityFinder, identityActivity);
     final Request request = new ParamRequest(ImmutableMap.of("client_id", "::client_id::"));
 
     context.checking(new Expectations() {{

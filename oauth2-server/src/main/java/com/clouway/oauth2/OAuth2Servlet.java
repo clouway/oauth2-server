@@ -16,7 +16,7 @@ import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.jwt.Jwt.Header;
 import com.clouway.oauth2.jwt.JwtController;
 import com.clouway.oauth2.token.TokenRepository;
-import com.clouway.oauth2.user.UserIdFinder;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.io.ByteStreams;
 
@@ -118,7 +118,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
   protected abstract ServiceAccountRepository serviceAccountRepository();
 
-  protected abstract UserIdFinder userIdFinder();
+  protected abstract IdentityFinder userIdFinder();
 
   protected abstract ClientAuthorizationRepository clientAuthorizationRepository();
 

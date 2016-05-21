@@ -13,7 +13,7 @@ import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.TokenRepository;
-import com.clouway.oauth2.user.UserIdFinder;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
@@ -36,15 +36,15 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     private final ClientAuthorizationRepository clientAuthorizationRepository;
     private final ClientRepository clientRepository;
     private final TokenRepository tokenRepository;
-    private final UserIdFinder userIdFinder;
+    private final IdentityFinder identityFinder;
     private final ServiceAccountRepository serviceAccountRepository;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, TokenRepository tokenRepository, UserIdFinder userIdFinder, ServiceAccountRepository serviceAccountRepository) {
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, TokenRepository tokenRepository, IdentityFinder identityFinder, ServiceAccountRepository serviceAccountRepository) {
       this.clientAuthorizationRepository = clientAuthorizationRepository;
       this.clientRepository = clientRepository;
       this.tokenRepository = tokenRepository;
-      this.userIdFinder = userIdFinder;
+      this.identityFinder = identityFinder;
       this.serviceAccountRepository = serviceAccountRepository;
     }
 
@@ -54,8 +54,8 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     }
 
     @Override
-    protected UserIdFinder userIdFinder() {
-      return userIdFinder;
+    protected IdentityFinder userIdFinder() {
+      return identityFinder;
     }
 
     @Override

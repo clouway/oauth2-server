@@ -6,7 +6,7 @@ import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsRedirect;
 import com.clouway.oauth2.http.Take;
-import com.clouway.oauth2.user.UserIdFinder;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 
 import java.io.IOException;
@@ -23,12 +23,12 @@ import java.net.URLEncoder;
 public final class IdentityController implements Take {
 
   private final ClientRepository clientRepository;
-  private final UserIdFinder userIdFinder;
+  private final IdentityFinder identityFinder;
   private final IdentityActivity identityActivity;
 
-  public IdentityController(ClientRepository clientRepository, UserIdFinder userIdFinder, IdentityActivity identityActivity) {
+  public IdentityController(ClientRepository clientRepository, IdentityFinder identityFinder, IdentityActivity identityActivity) {
     this.clientRepository = clientRepository;
-    this.userIdFinder = userIdFinder;
+    this.identityFinder = identityFinder;
     this.identityActivity = identityActivity;
   }
 
@@ -43,7 +43,7 @@ public final class IdentityController implements Take {
     }
 
     Client client = opt.get();
-    Optional<String> optUser = userIdFinder.find(request);
+    Optional<String> optUser = identityFinder.find(request);
 
     // Users should move back to the same path after authorization passes and all requested params
     if (!optUser.isPresent()) {
