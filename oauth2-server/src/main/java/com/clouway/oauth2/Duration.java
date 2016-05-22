@@ -14,11 +14,11 @@ public class Duration {
   }
 
   public static Duration minutes(Integer minutes) {
-    return new Duration(minutes * 60l);
+    return new Duration(minutes * 60L);
   }
 
   public static Duration hours(Integer hours) {
-    return new Duration(hours * 60 * 60l);
+    return new Duration(hours * 60 * 60L);
   }
 
   public static Duration seconds(Long seconds) {

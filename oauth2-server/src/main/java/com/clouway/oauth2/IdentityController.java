@@ -1,7 +1,5 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsRedirect;

@@ -59,7 +59,7 @@ public class IdentityControllerTest {
   @Test
   public void userWasNotAuthorized() throws IOException {
     IdentityController identityController = new IdentityController(identityFinder, identityActivity);
-    final Request request = new ParamRequest(ImmutableMap.<String, String>of("client_id","::client1::"));
+    final Request request = new ParamRequest(ImmutableMap.of("client_id","::client1::"));
 
     context.checking(new Expectations() {{
       oneOf(identityFinder).find(request);

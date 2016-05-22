@@ -1,6 +1,5 @@
 package com.clouway.oauth2.token;
 
-import com.clouway.oauth2.Duration;
 import com.google.common.base.Optional;
 
 /**
@@ -21,7 +20,7 @@ public interface TokenRepository {
   /**
    * Refreshes token using the access token.
    *
-   * @param token   the access token
+   * @param token the access token
    * @return the refreshed token
    */
   Optional<Token> refreshToken(String token);
@@ -29,7 +28,7 @@ public interface TokenRepository {
   /**
    * Issues a new token for the provided user.
    *
-   * @param targetId       the targetId for which token is issued
+   * @param targetId     the targetId for which token is issued
    * @param refreshToken the refresh token if there is such one  @return the newly issued token
    */
   Token issueToken(String targetId, Optional<String> refreshToken);

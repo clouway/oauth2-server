@@ -16,8 +16,7 @@ public interface SignatureFactory {
   /**
    * Finds signature that should be applied for the provided header.
    *
-   *
-   * @param signatureValue
+   * @param signatureValue as byte array
    * @param header the header to be used
    * @return the
    */

@@ -13,16 +13,16 @@ import static org.junit.Assert.assertThat;
 public class DurationEqualityTest {
   @Test
   public void areEqual() {
-    Duration duration1 = new Duration(1000l);
-    Duration duration2 = new Duration(1000l);
+    Duration duration1 = new Duration(1000L);
+    Duration duration2 = new Duration(1000L);
 
     assertThat(duration1, is(duration2));
   }
 
   @Test
   public void areNotEqual() {
-    Duration duration1 = new Duration(1000l);
-    Duration duration2 = new Duration(2000l);
+    Duration duration1 = new Duration(1000L);
+    Duration duration2 = new Duration(2000L);
 
     assertThat(duration1, is(not(duration2)));
   }

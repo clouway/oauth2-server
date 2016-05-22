@@ -8,7 +8,7 @@ import com.clouway.oauth2.http.Response;
  *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public interface IdentityActivity {
+interface IdentityActivity {
 
   Response execute(String identityId, Request request);
 

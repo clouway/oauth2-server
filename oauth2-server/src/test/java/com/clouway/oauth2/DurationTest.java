@@ -15,7 +15,7 @@ public class DurationTest {
   @Test
   public void minutesCalculation() throws Exception {
     Duration expectedDuration = minutes(60);
-    Duration actualDuration = new Duration(3600l);
+    Duration actualDuration = new Duration(3600L);
 
     assertThat(expectedDuration, is(actualDuration));
   }
@@ -23,7 +23,7 @@ public class DurationTest {
   @Test
   public void hoursCalculation() throws Exception {
     Duration expectedDuration = hours(24);
-    Duration actualDuration = new Duration(86400l);
+    Duration actualDuration = new Duration(86400L);
 
     assertThat(expectedDuration, is(actualDuration));
   }

@@ -27,6 +27,7 @@ public class ArgumentCaptor<T> extends BaseMatcher<T> {
     return instance;
   }
 
+  @SuppressWarnings("unchecked")
   public boolean matches(Object o) {
     try {
       instance = (T) o;

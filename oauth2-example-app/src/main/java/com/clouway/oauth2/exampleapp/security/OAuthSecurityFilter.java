@@ -1,7 +1,7 @@
 package com.clouway.oauth2.exampleapp.security;
 
 import com.clouway.oauth2.Session;
-import com.clouway.oauth2.SessionSecurity;
+import com.clouway.oauth2.exampleapp.SessionSecurity;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

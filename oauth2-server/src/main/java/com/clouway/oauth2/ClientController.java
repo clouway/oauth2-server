@@ -14,12 +14,12 @@ import static com.google.common.io.BaseEncoding.base64;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class ClientController implements Take {
+class ClientController implements Take {
 
   private final ClientRepository clientRepository;
   private final ClientActivity clientActivity;
 
-  public ClientController(ClientRepository clientRepository, ClientActivity clientActivity) {
+  ClientController(ClientRepository clientRepository, ClientActivity clientActivity) {
     this.clientRepository = clientRepository;
     this.clientActivity = clientActivity;
   }

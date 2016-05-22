@@ -4,7 +4,7 @@ import com.clouway.oauth2.ResourceOwner;
 import com.clouway.oauth2.ResourceOwnerAuthentication;
 import com.clouway.oauth2.ResourceOwnerStore;
 import com.clouway.oauth2.Session;
-import com.clouway.oauth2.SessionSecurity;
+import com.clouway.oauth2.exampleapp.SessionSecurity;
 import com.clouway.oauth2.token.TokenGenerator;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;

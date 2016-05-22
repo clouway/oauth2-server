@@ -1,7 +1,7 @@
 package com.clouway.oauth2.exampleapp.security;
 
 import com.clouway.oauth2.Session;
-import com.clouway.oauth2.SessionSecurity;
+import com.clouway.oauth2.exampleapp.SessionSecurity;
 import com.clouway.oauth2.exampleapp.FakeHttpServletRequest;
 import com.clouway.oauth2.exampleapp.FakeHttpServletResponse;
 import com.google.common.collect.Sets;
