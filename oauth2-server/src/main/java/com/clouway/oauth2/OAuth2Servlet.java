@@ -1,16 +1,11 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
-import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.http.*;
 import com.clouway.oauth2.jws.RsaJwsSignature;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.jwt.Jwt.Header;
 import com.clouway.oauth2.jwt.JwtController;
-import com.clouway.oauth2.token.TokenRepository;
-import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.io.ByteStreams;
 
@@ -32,8 +27,8 @@ public abstract class OAuth2Servlet extends HttpServlet {
   private TkFork fork;
 
   @Override
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
+  public void init(ServletConfig servletConfig) throws ServletException {
+    super.init(servletConfig);
 
     final SignatureFactory signatureFactory = new SignatureFactory() {
       @Override
@@ -48,29 +43,31 @@ public abstract class OAuth2Servlet extends HttpServlet {
       }
     };
 
+    OAuth2Config config = config();
+
     fork = new TkFork(
             new FkRegex(".*/authorize",
-                    new IdentityController(identityFinder(), new ClientAuthorizationActivity(clientRepository(), clientAuthorizationRepository()))
+                    new IdentityController(config.identityFinder(), new ClientAuthorizationActivity(config.clientRepository(), config.clientAuthorizationRepository()))
             ),
             new FkRegex(".*/token",
                     new TkFork(
                             new RequiresHeader("Authorization",
                                     new FkParams("grant_type", "authorization_code",
                                             new ClientController(
-                                                    clientRepository(), new IssueNewTokenActivity(tokenRepository(), clientAuthorizationRepository())
+                                                    config.clientRepository(), new IssueNewTokenActivity(config.tokens(), config.clientAuthorizationRepository())
                                             )
                                     )),
                             new RequiresHeader("Authorization",
                                     new FkParams("grant_type", "refresh_token",
-                                            new ClientController(clientRepository(), new RefreshTokenActivity(tokenRepository()))
+                                            new ClientController(config.clientRepository(), new RefreshTokenActivity(config.tokens()))
                                     )),
                             // JWT Support
                             new RequiresParam("assertion",
                                     new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
                                             new JwtController(
                                                     signatureFactory,
-                                                    tokenRepository(),
-                                                    serviceAccountRepository()
+                                                    config.tokens(),
+                                                    config.serviceAccountRepository()
                                             )
                                     ))
                     ))
@@ -115,14 +112,6 @@ public abstract class OAuth2Servlet extends HttpServlet {
     }
   }
 
-  protected abstract ServiceAccountRepository serviceAccountRepository();
-
-  protected abstract IdentityFinder identityFinder();
-
-  protected abstract ClientAuthorizationRepository clientAuthorizationRepository();
-
-  protected abstract ClientRepository clientRepository();
-
-  protected abstract TokenRepository tokenRepository();
+  protected abstract OAuth2Config config();
 
 }

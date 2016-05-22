@@ -11,7 +11,7 @@ import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.exampleapp.UserLoader;
 import com.clouway.oauth2.exampleapp.UserLoaderImpl;
 import com.clouway.oauth2.token.Sha1TokenGenerator;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.clouway.oauth2.user.UserRepository;
 import com.google.inject.AbstractModule;
@@ -78,13 +78,13 @@ public class InMemoryModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public TokenRepository getTokenRepository() {
-    return new InMemoryTokenRepository(new Sha1TokenGenerator(), new Date(), new Duration(900000000L));
+  public Tokens getTokenRepository() {
+    return new InMemoryTokens(new Sha1TokenGenerator(), new Date(), new Duration(900000000L));
   }
 
   @Provides
-  public UserLoader getUserLoader(UserRepository userRepository, TokenRepository tokenRepository) {
-    return new UserLoaderImpl(userRepository, tokenRepository);
+  public UserLoader getUserLoader(UserRepository userRepository, Tokens tokens) {
+    return new UserLoaderImpl(userRepository, tokens);
   }
 
 }

@@ -3,7 +3,7 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenGenerator;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -14,14 +14,14 @@ import java.util.Map;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-class InMemoryTokenRepository implements TokenRepository {
+class InMemoryTokens implements Tokens {
   private final Map<String, Token> tokens = Maps.newHashMap();
   private final TokenGenerator tokenGenerator;
   private Date currentDate;
   private Duration timeToLive;
 
   @Inject
-  public InMemoryTokenRepository(TokenGenerator tokenGenerator, Date currentDate, Duration timeToLive) {
+  public InMemoryTokens(TokenGenerator tokenGenerator, Date currentDate, Duration timeToLive) {
     this.tokenGenerator = tokenGenerator;
     this.currentDate = currentDate;
     this.timeToLive = timeToLive;

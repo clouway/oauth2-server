@@ -1,7 +1,7 @@
 package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.User;
 import com.clouway.oauth2.user.UserRepository;
 import com.google.common.base.Optional;
@@ -12,17 +12,17 @@ import com.google.common.base.Optional;
 public class UserLoaderImpl implements UserLoader {
 
   private UserRepository repository;
-  private TokenRepository tokenRepository;
+  private Tokens tokens;
 
-  public UserLoaderImpl(UserRepository repository, TokenRepository tokenRepository) {
+  public UserLoaderImpl(UserRepository repository, Tokens tokens) {
     this.repository = repository;
-    this.tokenRepository = tokenRepository;
+    this.tokens = tokens;
   }
 
   @Override
   public Optional<User> load(String tokenValue) {
 
-    Optional<Token> token = tokenRepository.getNotExpiredToken(tokenValue);
+    Optional<Token> token = tokens.getNotExpiredToken(tokenValue);
     if (!token.isPresent()) {
       return Optional.absent();
     }

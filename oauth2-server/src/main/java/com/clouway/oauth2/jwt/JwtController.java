@@ -10,7 +10,7 @@ import com.clouway.oauth2.http.Take;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -27,12 +27,12 @@ public class JwtController implements Take {
   private final Gson gson = new Gson();
 
   private final SignatureFactory signatureFactory;
-  private final TokenRepository tokenRepository;
+  private final Tokens tokens;
   private final ServiceAccountRepository repository;
 
-  public JwtController(SignatureFactory signatureFactory, TokenRepository tokenRepository, ServiceAccountRepository repository) {
+  public JwtController(SignatureFactory signatureFactory, Tokens tokens, ServiceAccountRepository repository) {
     this.signatureFactory = signatureFactory;
-    this.tokenRepository = tokenRepository;
+    this.tokens = tokens;
     this.repository = repository;
   }
 
@@ -77,7 +77,7 @@ public class JwtController implements Take {
       return OAuthError.invalidGrant();
     }
 
-    Token token = tokenRepository.issueToken(serviceAccount.clientId(), Optional.<String>absent());
+    Token token = tokens.issueToken(serviceAccount.clientId(), Optional.<String>absent());
 
     return new BearerTokenResponse(token.value, token.expiresInSeconds, token.refreshToken);
   }

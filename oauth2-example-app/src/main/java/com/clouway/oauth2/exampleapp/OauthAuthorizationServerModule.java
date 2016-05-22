@@ -1,18 +1,13 @@
-/*
- * Created by IntelliJ IDEA.
- * User: mlesikov
- * Date: 7/22/14
- * Time: 2:00 PM
- */
 package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.Duration;
+import com.clouway.oauth2.OAuth2Config;
 import com.clouway.oauth2.OAuth2Servlet;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -35,42 +30,28 @@ public class OauthAuthorizationServerModule extends AbstractModule {
 
     private final ClientAuthorizationRepository clientAuthorizationRepository;
     private final ClientRepository clientRepository;
-    private final TokenRepository tokenRepository;
+    private final Tokens tokens;
     private final IdentityFinder identityFinder;
     private final ServiceAccountRepository serviceAccountRepository;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, TokenRepository tokenRepository, IdentityFinder identityFinder, ServiceAccountRepository serviceAccountRepository) {
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, Tokens tokens, IdentityFinder identityFinder, ServiceAccountRepository serviceAccountRepository) {
       this.clientAuthorizationRepository = clientAuthorizationRepository;
       this.clientRepository = clientRepository;
-      this.tokenRepository = tokenRepository;
+      this.tokens = tokens;
       this.identityFinder = identityFinder;
       this.serviceAccountRepository = serviceAccountRepository;
     }
 
     @Override
-    protected ServiceAccountRepository serviceAccountRepository() {
-      return serviceAccountRepository;
-    }
-
-    @Override
-    protected IdentityFinder identityFinder() {
-      return identityFinder;
-    }
-
-    @Override
-    protected ClientAuthorizationRepository clientAuthorizationRepository() {
-      return clientAuthorizationRepository;
-    }
-
-    @Override
-    protected ClientRepository clientRepository() {
-      return clientRepository;
-    }
-
-    @Override
-    protected TokenRepository tokenRepository() {
-      return tokenRepository;
+    protected OAuth2Config config() {
+      return OAuth2Config.newConfig()
+              .clientAuthorizationRepository(clientAuthorizationRepository)
+              .clientRepository(clientRepository)
+              .tokens(tokens)
+              .identityFinder(identityFinder)
+              .serviceAccountRepository(serviceAccountRepository)
+              .build();
     }
   }
 

@@ -9,7 +9,7 @@ import com.clouway.oauth2.http.RsPrint;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -41,7 +41,7 @@ public class HandleJwtTokenRequestsTest {
   ServiceAccountRepository repository;
 
   @Mock
-  TokenRepository tokenRepository;
+  Tokens tokens;
 
   @Mock
   SignatureFactory signatureFactory;
@@ -50,7 +50,7 @@ public class HandleJwtTokenRequestsTest {
 
   @Before
   public void setUp() {
-    controller = new JwtController(signatureFactory, tokenRepository, repository);
+    controller = new JwtController(signatureFactory, tokens, repository);
   }
 
   @Test
@@ -82,7 +82,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verify(with(signatureAsBytes), with(matching("::private_key::")));
       will(returnValue(true));
 
-      oneOf(tokenRepository).issueToken("::client_id::", Optional.<String>absent());
+      oneOf(tokens).issueToken("::client_id::", Optional.<String>absent());
       will(returnValue(new Token("::token_value::", "bearer", "::refresh_token::", "::client_id::", 1000L, new Date())));
     }});
 

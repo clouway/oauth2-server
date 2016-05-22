@@ -1,7 +1,7 @@
 package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.User;
 import com.clouway.oauth2.user.UserRepository;
 import com.google.common.base.Optional;
@@ -30,18 +30,18 @@ public class UserLoaderImplTest {
   @Mock
   UserRepository repository;
   @Mock
-  TokenRepository tokenRepository;
+  Tokens tokens;
 
   @Before
   public void setUp() throws Exception {
-    userLoader = new UserLoaderImpl(repository, tokenRepository);
+    userLoader = new UserLoaderImpl(repository, tokens);
   }
 
   @Test
   public void load() throws Exception {
 
     context.checking(new Expectations() {{
-      oneOf(tokenRepository).getNotExpiredToken(token);
+      oneOf(tokens).getNotExpiredToken(token);
       will(returnValue(Optional.of(new Token("v", "type", "refresh", "identityId", 0L, new Date()))));
       oneOf(repository).load("identityId");
       will(returnValue(Optional.of(user)));
@@ -56,7 +56,7 @@ public class UserLoaderImplTest {
   public void noUserFound() throws Exception {
 
     context.checking(new Expectations() {{
-      oneOf(tokenRepository).getNotExpiredToken(token);
+      oneOf(tokens).getNotExpiredToken(token);
       will(returnValue(Optional.of(new Token("v", "type", "refresh", "identityId", 0L, new Date()))));
       oneOf(repository).load("identityId");
       will(returnValue(Optional.absent()));
@@ -71,7 +71,7 @@ public class UserLoaderImplTest {
   public void noNotExpiredTokenFound() throws Exception {
 
     context.checking(new Expectations() {{
-      oneOf(tokenRepository).getNotExpiredToken(token);
+      oneOf(tokens).getNotExpiredToken(token);
       will(returnValue(Optional.absent()));
     }});
 

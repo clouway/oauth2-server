@@ -4,25 +4,25 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class RefreshTokenActivity implements ClientActivity {
+class RefreshTokenActivity implements ClientActivity {
 
-  private final TokenRepository tokenRepository;
+  private final Tokens tokens;
 
-  public RefreshTokenActivity(TokenRepository tokenRepository) {
-    this.tokenRepository = tokenRepository;
+  RefreshTokenActivity(Tokens tokens) {
+    this.tokens = tokens;
   }
 
   @Override
   public Response execute(Client client, Request request) {
     String refreshToken = request.param("refresh_token");
 
-    Optional<Token> opt = tokenRepository.refreshToken(refreshToken);
+    Optional<Token> opt = tokens.refreshToken(refreshToken);
 
     if (!opt.isPresent()) {
       return OAuthError.invalidGrant();

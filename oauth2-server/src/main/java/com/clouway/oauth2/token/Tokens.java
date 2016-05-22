@@ -3,11 +3,11 @@ package com.clouway.oauth2.token;
 import com.google.common.base.Optional;
 
 /**
- * TokenRepository is a repository for all generated security tokens.
+ * Tokens is responsible for issuing and retriving of issued tokens.
  *
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public interface TokenRepository {
+public interface Tokens {
 
   /**
    * Find token which is not expired till the provided time.

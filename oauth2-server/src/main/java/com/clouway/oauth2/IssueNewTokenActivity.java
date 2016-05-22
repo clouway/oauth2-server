@@ -6,7 +6,7 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 
 /**
@@ -16,12 +16,12 @@ import com.google.common.base.Optional;
  */
 public class IssueNewTokenActivity implements ClientActivity {
 
-  private final TokenRepository tokenRepository;
+  private final Tokens tokens;
   private final ClientAuthorizationRepository clientAuthorizationRepository;
 
-  public IssueNewTokenActivity(TokenRepository tokenRepository,
+  public IssueNewTokenActivity(Tokens tokens,
                                ClientAuthorizationRepository clientAuthorizationRepository) {
-    this.tokenRepository = tokenRepository;
+    this.tokens = tokens;
     this.clientAuthorizationRepository = clientAuthorizationRepository;
   }
 
@@ -38,7 +38,7 @@ public class IssueNewTokenActivity implements ClientActivity {
 
     Authorization authorization = opt.get();
 
-    Token newToken = tokenRepository.issueToken(authorization.identityId, Optional.<String>absent());
+    Token newToken = tokens.issueToken(authorization.identityId, Optional.<String>absent());
 
     return new BearerTokenResponse(newToken.value, newToken.expiresInSeconds, newToken.refreshToken);
   }

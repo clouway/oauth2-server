@@ -5,7 +5,7 @@ import com.clouway.oauth2.http.ParamRequest;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsPrint;
 import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -30,15 +30,15 @@ public class RefreshTokenForClientTest {
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  TokenRepository tokenRepository;
+  Tokens tokens;
 
   @Test
   public void happyPath() throws IOException {
-    RefreshTokenActivity action = new RefreshTokenActivity(tokenRepository);
+    RefreshTokenActivity action = new RefreshTokenActivity(tokens);
     Client client = aNewClient().withId("client1").withSecret("secret1").build();
 
     context.checking(new Expectations() {{
-      oneOf(tokenRepository).refreshToken("::refresh_token::");
+      oneOf(tokens).refreshToken("::refresh_token::");
       will(returnValue(Optional.of(new Token("::token1::", "berier", "::refresh_token::", "", 600L, new Date()))));
     }});
 
@@ -53,11 +53,11 @@ public class RefreshTokenForClientTest {
 
   @Test
   public void refreshTokenWasExpired() throws IOException {
-    RefreshTokenActivity action = new RefreshTokenActivity(tokenRepository);
+    RefreshTokenActivity action = new RefreshTokenActivity(tokens);
     Client client = aNewClient().withId("client1").withSecret("secret1").build();
 
     context.checking(new Expectations() {{
-      oneOf(tokenRepository).refreshToken("::refresh_token::");
+      oneOf(tokens).refreshToken("::refresh_token::");
       will(returnValue(Optional.absent()));
     }});
 

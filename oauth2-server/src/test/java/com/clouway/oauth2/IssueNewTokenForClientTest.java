@@ -7,7 +7,7 @@ import com.clouway.oauth2.http.ParamRequest;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsPrint;
 import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenRepository;
+import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -32,21 +32,21 @@ public class IssueNewTokenForClientTest {
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  TokenRepository tokenRepository;
+  Tokens tokens;
 
   @Mock
   ClientAuthorizationRepository clientAuthorizationRepository;
 
   @Test
   public void happyPath() throws IOException {
-    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokenRepository, clientAuthorizationRepository);
+    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
     final Client client = aNewClient().build();
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).authorize(client, "::auth_code::");
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
-      oneOf(tokenRepository).issueToken("::user_id::", Optional.<String>absent());
+      oneOf(tokens).issueToken("::user_id::", Optional.<String>absent());
       will(returnValue(new Token("::token::", "berer", "", "::user_id", 10L, new Date())));
     }});
 
@@ -59,7 +59,7 @@ public class IssueNewTokenForClientTest {
 
   @Test
   public void clientWasNotAuthorized() throws IOException {
-    final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokenRepository, clientAuthorizationRepository);
+    final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
     final Client client = aNewClient().build();
 
     context.checking(new Expectations() {{

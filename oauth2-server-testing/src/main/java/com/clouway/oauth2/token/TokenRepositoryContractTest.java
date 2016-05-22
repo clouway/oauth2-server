@@ -19,7 +19,7 @@ public abstract class TokenRepositoryContractTest {
 
   private static final Duration oneHour = hours(1);
 
-  private TokenRepository repository;
+  private Tokens repository;
   private final Date currentDate = new Date();
 
   @Test
@@ -91,7 +91,7 @@ public abstract class TokenRepositoryContractTest {
     assertThat(tokenOptional.get().refreshToken, is(equalTo(token.refreshToken)));
   }
 
-  protected abstract TokenRepository createRepo(Date currentDate, Duration duration);
+  protected abstract Tokens createRepo(Date currentDate, Duration duration);
 
 }
 
