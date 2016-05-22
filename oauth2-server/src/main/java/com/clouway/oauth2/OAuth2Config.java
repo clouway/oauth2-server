@@ -26,12 +26,12 @@ public final class OAuth2Config {
     private ServiceAccountRepository serviceAccountRepository;
     private ClientAuthorizationRepository clientAuthorizationRepository;
     private ClientRepository clientRepository;
+    private String loginPageUrl;
 
     public Builder tokens(Tokens tokens) {
       this.tokens = tokens;
       return this;
     }
-
     public Builder identityFinder(IdentityFinder identityFinder) {
       this.identityFinder = identityFinder;
       return this;
@@ -52,6 +52,11 @@ public final class OAuth2Config {
       return this;
     }
 
+    public Builder loginPageUrl(String url) {
+      this.loginPageUrl = url;
+      return this;
+    }
+
     public OAuth2Config build() {
       return new OAuth2Config(this);
     }
@@ -59,17 +64,20 @@ public final class OAuth2Config {
   }
 
   private final IdentityFinder identityFinder;
+
   private final ClientRepository clientRepository;
+
   private final Tokens tokens;
   private final ClientAuthorizationRepository clientAuthorizationRepository;
   private final ServiceAccountRepository serviceAccountRepository;
-
+  private final String loginPageUrl;
   private OAuth2Config(Builder builder) {
     this.tokens = builder.tokens;
     this.identityFinder = builder.identityFinder;
     this.clientRepository = builder.clientRepository;
     this.clientAuthorizationRepository = builder.clientAuthorizationRepository;
     this.serviceAccountRepository = builder.serviceAccountRepository;
+    this.loginPageUrl = builder.loginPageUrl;
   }
 
   public ClientAuthorizationRepository clientAuthorizationRepository() {
@@ -90,6 +98,10 @@ public final class OAuth2Config {
 
   public ClientRepository clientRepository() {
     return this.clientRepository;
+  }
+
+  public String loginPageUrl() {
+    return this.loginPageUrl;
   }
 
 }

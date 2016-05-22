@@ -38,7 +38,7 @@ public class IdentityControllerTest {
 
   @Test
   public void happyPath() throws IOException {
-    IdentityController identityController = new IdentityController(identityFinder, identityActivity);
+    IdentityController identityController = new IdentityController(identityFinder, identityActivity, "");
 
     final Request request = new ParamRequest(ImmutableMap.of(
             "client_id", "::client_id::"
@@ -58,7 +58,7 @@ public class IdentityControllerTest {
 
   @Test
   public void userWasNotAuthorized() throws IOException {
-    IdentityController identityController = new IdentityController(identityFinder, identityActivity);
+    IdentityController identityController = new IdentityController(identityFinder, identityActivity, "/r/oauth/login?continue=");
     final Request request = new ParamRequest(ImmutableMap.of("client_id","::client1::"));
 
     context.checking(new Expectations() {{

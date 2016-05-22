@@ -22,10 +22,12 @@ final class IdentityController implements Take {
 
   private final IdentityFinder identityFinder;
   private final IdentityActivity identityActivity;
+  private final String loginPageUrl;
 
-  IdentityController(IdentityFinder identityFinder, IdentityActivity identityActivity) {
+  IdentityController(IdentityFinder identityFinder, IdentityActivity identityActivity, String loginPageUrl) {
     this.identityFinder = identityFinder;
     this.identityActivity = identityActivity;
+    this.loginPageUrl = loginPageUrl;
   }
 
   @Override
@@ -35,8 +37,7 @@ final class IdentityController implements Take {
     // Browser should be redirected to login page when Identity is not found
     if (!optIdentity.isPresent()) {
       String continueTo = queryParams(request);
-      // TODO (mgenov): configurable login page + param?
-      return new RsRedirect("/r/oauth/login?continue=" + continueTo);
+      return new RsRedirect(loginPageUrl + continueTo);
     }
 
     return identityActivity.execute(optIdentity.get(), request);

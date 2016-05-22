@@ -47,7 +47,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
     fork = new TkFork(
             new FkRegex(".*/authorize",
-                    new IdentityController(config.identityFinder(), new ClientAuthorizationActivity(config.clientRepository(), config.clientAuthorizationRepository()))
+                    new IdentityController(config.identityFinder(), new ClientAuthorizationActivity(config.clientRepository(), config.clientAuthorizationRepository()), config.loginPageUrl())
             ),
             new FkRegex(".*/token",
                     new TkFork(

@@ -46,6 +46,7 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     @Override
     protected OAuth2Config config() {
       return OAuth2Config.newConfig()
+              .loginPageUrl("/r/oauth/login?continue=")
               .clientAuthorizationRepository(clientAuthorizationRepository)
               .clientRepository(clientRepository)
               .tokens(tokens)
