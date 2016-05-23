@@ -40,7 +40,7 @@
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/clouway/oauth2-java-backend/issues</url>
+    <url>https://github.com/clouway/oauth2-server/issues</url>
   </issueManagement>
 
   <licenses>
@@ -107,6 +107,12 @@
 
     </plugins>
   </build>
+
+  <scm>
+    <connection>scm:git:git@github.com:clouway/oauth2-server.git</connection>
+    <developerConnection>scm:git:git@github.com:clouway/oauth2-server.git</developerConnection>
+    <url>https://github.com/clouway/oauth2-server</url>
+  </scm>
 
   <distributionManagement>
     <snapshotRepository>
