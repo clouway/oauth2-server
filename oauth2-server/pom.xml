@@ -21,18 +21,12 @@
       <version>18.0</version>
     </dependency>
 
-    <!-- Logging Dependencies -->
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>0.9.30</version>
-    </dependency>
-
     <!-- HTTP Dependencies -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>3.0.1</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
