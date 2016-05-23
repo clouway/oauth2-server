@@ -51,26 +51,29 @@ public abstract class OAuth2Servlet extends HttpServlet {
             ),
             new FkRegex(".*/token",
                     new TkFork(
-                            new RequiresHeader("Authorization",
-                                    new FkParams("grant_type", "authorization_code",
+                            new FkParams("grant_type", "authorization_code",
+                                    new RequiresHeader("Authorization",
                                             new ClientController(
-                                                    config.clientRepository(), new IssueNewTokenActivity(config.tokens(), config.clientAuthorizationRepository())
+                                                    config.clientRepository(),
+                                                    new IssueNewTokenActivity(config.tokens(), config.clientAuthorizationRepository())
                                             )
                                     )),
-                            new RequiresHeader("Authorization",
-                                    new FkParams("grant_type", "refresh_token",
-                                            new ClientController(config.clientRepository(), new RefreshTokenActivity(config.tokens()))
+                            new FkParams("grant_type", "refresh_token",
+                                    new RequiresHeader("Authorization",
+                                            new ClientController(
+                                                    config.clientRepository(),
+                                                    new RefreshTokenActivity(config.tokens())
+                                            )
                                     )),
                             // JWT Support
-                            new RequiresParam("assertion",
-                                    new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                                            new JwtController(
-                                                    signatureFactory,
-                                                    config.tokens(),
-                                                    config.serviceAccountRepository()
-                                            )
+                            new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer", new RequiresParam("assertion",
+                                    new JwtController(
+                                            signatureFactory,
+                                            config.tokens(),
+                                            config.serviceAccountRepository()
                                     ))
-                    ))
+                            ))
+            )
     );
   }
 
