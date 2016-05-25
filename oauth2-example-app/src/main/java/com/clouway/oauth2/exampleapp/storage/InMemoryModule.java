@@ -13,7 +13,7 @@ import com.clouway.oauth2.exampleapp.UserLoaderImpl;
 import com.clouway.oauth2.token.Sha1TokenGenerator;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.user.UserRepository;
+import com.clouway.oauth2.exampleapp.UserRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;

@@ -3,7 +3,7 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.user.User;
 import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.user.UserRepository;
+import com.clouway.oauth2.exampleapp.UserRepository;
 import com.google.common.base.Optional;
 
 /**

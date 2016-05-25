@@ -3,7 +3,6 @@ package com.clouway.oauth2.exampleapp;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.User;
-import com.clouway.oauth2.user.UserRepository;
 import com.google.common.base.Optional;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
