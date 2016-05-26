@@ -22,11 +22,6 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
   }
 
   @Override
-  public void register(Authorization authorization) {
-    authorizations.put(authorization.code, authorization);
-  }
-
-  @Override
   public Optional<Authorization> authorize(Client client, String authCode) {
 
     Authorization authorization = authorizations.get(authCode);
@@ -56,5 +51,9 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
     register(authorization);
 
     return Optional.of(authorization);
+  }
+
+  private void register(Authorization authorization) {
+    authorizations.put(authorization.code, authorization);
   }
 }
