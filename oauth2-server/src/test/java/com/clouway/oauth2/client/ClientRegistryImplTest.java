@@ -45,7 +45,7 @@ public class ClientRegistryImplTest {
       oneOf(tokenGenerator).generate();
       will(returnValue(secret));
 
-      oneOf(repository).save(with(clientCaptor));
+      oneOf(repository).register(with(clientCaptor));
     }});
 
     RegistrationResponse response = register.register(request);

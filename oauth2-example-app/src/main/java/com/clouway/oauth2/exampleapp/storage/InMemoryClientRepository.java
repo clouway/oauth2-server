@@ -23,7 +23,7 @@ class InMemoryClientRepository implements ClientRepository, ServiceAccountReposi
   }
 
   @Override
-  public void save(Client client) {
+  public void register(Client client) {
     clients.put(client.id, client);
   }
 

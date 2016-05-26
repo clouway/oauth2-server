@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
  */
 public interface ClientRepository {
 
-  void save(Client client);
+  void register(Client client);
 
   Optional<Client> findById(String id);
 }

@@ -22,7 +22,7 @@ class ClientRegistryImpl implements ClientRegistry {
 
     Client client = new Client(id, secret, request.name, request.url, request.description, request.redirectURI);
 
-    repository.save(client);
+    repository.register(client);
 
     return new RegistrationResponse(id, secret);
   }
