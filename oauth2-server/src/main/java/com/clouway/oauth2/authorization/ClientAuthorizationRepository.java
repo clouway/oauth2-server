@@ -8,7 +8,7 @@ import com.google.common.base.Optional;
  */
 public interface ClientAuthorizationRepository {
 
-  Optional<Authorization> authorize(Client client, String authCode);
+  Optional<Authorization> findAuthorization(Client client, String authCode);
 
   Optional<Authorization> authorize(Client client, String userId, String responseType);
 }

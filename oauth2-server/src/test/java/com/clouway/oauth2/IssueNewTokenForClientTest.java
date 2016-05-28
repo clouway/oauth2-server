@@ -43,7 +43,7 @@ public class IssueNewTokenForClientTest {
     final Client client = aNewClient().build();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).authorize(client, "::auth_code::");
+      oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code::");
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
       oneOf(tokens).issueToken("::user_id::", Optional.<String>absent());
@@ -63,7 +63,7 @@ public class IssueNewTokenForClientTest {
     final Client client = aNewClient().build();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).authorize(client, "::auth_code1::");
+      oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code1::");
       will(returnValue(Optional.absent()));
     }});
 

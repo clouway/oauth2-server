@@ -29,7 +29,7 @@ public class IssueNewTokenActivity implements ClientActivity {
   public Response execute(Client client, Request request) {
     String authCode = request.param("code");
 
-    Optional<Authorization> opt = clientAuthorizationRepository.authorize(client, authCode);
+    Optional<Authorization> opt = clientAuthorizationRepository.findAuthorization(client, authCode);
 
     if (!opt.isPresent()) {
       return OAuthError.invalidGrant();

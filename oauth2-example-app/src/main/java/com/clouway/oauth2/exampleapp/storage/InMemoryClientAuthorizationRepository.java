@@ -22,7 +22,7 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
   }
 
   @Override
-  public Optional<Authorization> authorize(Client client, String authCode) {
+  public Optional<Authorization> findAuthorization(Client client, String authCode) {
 
     Authorization authorization = authorizations.get(authCode);
     // No authorization was found for that code ?

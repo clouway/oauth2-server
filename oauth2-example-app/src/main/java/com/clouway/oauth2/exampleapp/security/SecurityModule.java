@@ -26,7 +26,7 @@ public class SecurityModule extends AbstractModule {
   @Provides
   @Singleton
   public SecuredResources provideSecuredResources() {
-    return new SecuredResources(Sets.newHashSet("/oauth2/authorize"));
+    return new SecuredResources(Sets.newHashSet("/oauth2/auth"));
   }
 
   @Provides
