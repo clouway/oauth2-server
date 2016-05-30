@@ -77,7 +77,7 @@ public class JwtController implements Take {
       return OAuthError.invalidGrant();
     }
 
-    Token token = tokens.issueToken(serviceAccount.clientId(), Optional.<String>absent());
+    Token token = tokens.issueToken(serviceAccount.clientId());
 
     return new BearerTokenResponse(token.value, token.expiresInSeconds, token.refreshToken);
   }

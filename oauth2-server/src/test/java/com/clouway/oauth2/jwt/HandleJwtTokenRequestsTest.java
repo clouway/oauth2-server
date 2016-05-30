@@ -9,6 +9,7 @@ import com.clouway.oauth2.http.RsPrint;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -24,7 +25,7 @@ import java.util.Date;
 
 import static com.clouway.oauth2.util.Matchers.matching;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -82,8 +83,8 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verify(with(signatureAsBytes), with(matching("::private_key::")));
       will(returnValue(true));
 
-      oneOf(tokens).issueToken("::client_id::", Optional.<String>absent());
-      will(returnValue(new Token("::token_value::", "bearer", "::refresh_token::", "::client_id::", 1000L, new Date())));
+      oneOf(tokens).issueToken("::client_id::");
+      will(returnValue(new Token("::token_value::", TokenType.BEARER, "::refresh_token::", "::client_id::", 1000L, new Date())));
     }});
 
     Response response = controller.ack(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)));

@@ -26,7 +26,7 @@ public abstract class TokenRepositoryContractTest {
   public void happyPath() throws Exception {
     repository = createRepo(currentDate, oneHour);
 
-    Token issuedToken = repository.issueToken("::user1::", Optional.<String>absent());
+    Token issuedToken = repository.issueToken("::user1::");
 
     Optional<Token> tokenOptional = repository.getNotExpiredToken(issuedToken.value);
 
@@ -41,7 +41,7 @@ public abstract class TokenRepositoryContractTest {
   public void refreshToken() throws Exception {
     repository = createRepo(currentDate, oneHour);
 
-    Token newlyIssuedToken = repository.issueToken("identityId", Optional.<String>absent());
+    Token newlyIssuedToken = repository.issueToken("identityId");
 
     Optional<Token> tokenOptional = repository.refreshToken(newlyIssuedToken.refreshToken);
 
@@ -64,12 +64,12 @@ public abstract class TokenRepositoryContractTest {
   public void expiredToken() throws Exception {
     //created two hours ago
     final Date creationDate = new Date(System.currentTimeMillis() - hours(2).asMills());
-    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", "bearer", "refresh", "identityId", oneHour.seconds, creationDate);
+    final Token token = new Token("9c5084d190264d0de737a8049ed630fd", TokenType.BEARER, "refresh", "identityId", oneHour.seconds, creationDate);
 
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
     repository = createRepo(currentDate, oneHour);
 
-    repository.issueToken("identityId", Optional.<String>absent());
+    repository.issueToken("identityId");
 
     Optional<Token> tokenOptional = repository.getNotExpiredToken(token.value);
 
@@ -82,7 +82,7 @@ public abstract class TokenRepositoryContractTest {
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
 
     repository = createRepo(currentDate, oneHour);
-    Token token = repository.issueToken("::user2::", Optional.<String>absent());
+    Token token = repository.issueToken("::user2::");
 
     Optional<Token> tokenOptional = repository.refreshToken(token.refreshToken);
 

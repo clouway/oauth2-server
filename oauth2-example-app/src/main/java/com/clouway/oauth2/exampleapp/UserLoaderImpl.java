@@ -26,7 +26,7 @@ public class UserLoaderImpl implements UserLoader {
       return Optional.absent();
     }
 
-    Optional<User> user = repository.load(token.get().userId);
+    Optional<User> user = repository.load(token.get().identityId);
     if (!token.isPresent()) {
       return Optional.absent();
     }

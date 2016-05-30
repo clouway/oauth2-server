@@ -28,8 +28,7 @@ public interface Tokens {
   /**
    * Issues a new token for the provided user.
    *
-   * @param targetId     the targetId for which token is issued
-   * @param refreshToken the refresh token if there is such one  @return the newly issued token
+   * @param identityId     the identityId for which token is issued
    */
-  Token issueToken(String targetId, Optional<String> refreshToken);
+  Token issueToken(String identityId);
 }

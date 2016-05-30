@@ -1,0 +1,41 @@
+package com.clouway.oauth2.token;
+
+import org.junit.Test;
+
+import java.util.Date;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
+
+/**
+ * @author Ivan Stefanov <ivan.stefanov@clouway.com>
+ */
+public class TokenEqualityTest {
+
+  @Test
+  public void areEqual() {
+    Date creationDate = new Date();
+    Token token1 = new Token("value", TokenType.BEARER, "refreshToken", "identityId", 1L, creationDate);
+    Token token2 = new Token("value", TokenType.BEARER, "refreshToken", "identityId", 1L, creationDate);
+
+    assertThat(token1, is(token2));
+  }
+
+  @Test
+  public void areNotEqual() {
+    Date creationDate = new Date();
+    Token token1 = new Token("value1", TokenType.BEARER, "refreshToken", "identityId", 1L, creationDate);
+    Token token2 = new Token("value2", TokenType.REFRESH_TOKEN, "refreshToken", "identityId", 1L, creationDate);
+
+    assertThat(token1, is(not(token2)));
+  }
+
+  @Test
+  public void areNotEqualWhenDifferentExpirationTimes() {
+    Token token1 = new Token("value", TokenType.REFRESH_TOKEN, "refreshToken", "identityId", 1L, new Date(1408532291030L));
+    Token token2 = new Token("value", TokenType.REFRESH_TOKEN, "refreshToken", "identityId", 1L, new Date(1408532291031L));
+
+    assertThat(token1, is(not(token2)));
+  }
+}

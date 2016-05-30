@@ -16,7 +16,7 @@ class ClientRegistryImpl implements ClientRegistry {
   }
 
   @Override
-  public RegistrationResponse register(RegistrationRequest request) {
+  public RegistrationResponse register(RegistrationRequest request) throws ClientAlreadyExistsException {
     String id = tokenGenerator.generate();
     String secret = tokenGenerator.generate();
 

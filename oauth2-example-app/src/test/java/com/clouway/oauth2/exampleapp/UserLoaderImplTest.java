@@ -1,6 +1,7 @@
 package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.User;
 import com.google.common.base.Optional;
@@ -41,7 +42,7 @@ public class UserLoaderImplTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).getNotExpiredToken(token);
-      will(returnValue(Optional.of(new Token("v", "type", "refresh", "identityId", 0L, new Date()))));
+      will(returnValue(Optional.of(new Token("v", TokenType.BEARER, "refresh", "identityId", 0L, new Date()))));
       oneOf(repository).load("identityId");
       will(returnValue(Optional.of(user)));
     }});
@@ -56,7 +57,7 @@ public class UserLoaderImplTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).getNotExpiredToken(token);
-      will(returnValue(Optional.of(new Token("v", "type", "refresh", "identityId", 0L, new Date()))));
+      will(returnValue(Optional.of(new Token("v", TokenType.BEARER, "refresh", "identityId", 0L, new Date()))));
       oneOf(repository).load("identityId");
       will(returnValue(Optional.absent()));
     }});

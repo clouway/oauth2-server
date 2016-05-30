@@ -3,6 +3,7 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenGenerator;
+import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -37,7 +38,7 @@ class InMemoryTokens implements Tokens {
         //remove the current token
         tokens.remove(tokenValue);
         // new instance
-        Token updatedToken = new Token(token.value, token.type, token.refreshToken, token.userId, timeToLive.seconds, currentDate);
+        Token updatedToken = new Token(token.value, token.type, token.refreshToken, token.identityId, timeToLive.seconds, currentDate);
         //add the new token
         tokens.put(tokenValue, updatedToken);
 
@@ -54,8 +55,10 @@ class InMemoryTokens implements Tokens {
       if (refreshToken.equals(token.refreshToken)) {
 
         tokens.remove(token.value);
-        String newRefreshToken = tokenGenerator.generate();
-        Token updatedToken = issueToken(token.userId, Optional.of(newRefreshToken));
+
+        String newTokenValue = tokenGenerator.generate();
+
+        Token updatedToken = new Token(newTokenValue, TokenType.BEARER, token.refreshToken, token.identityId, timeToLive.seconds, currentDate);
 
         //add the new token
         tokens.put(updatedToken.value, updatedToken);
@@ -67,15 +70,11 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Token issueToken(String identityId, Optional<String> refreshToken) {
+  public Token issueToken(String identityId) {
     String token = tokenGenerator.generate();
-    String refreshTokenValue = "";
+    String refreshTokenValue = tokenGenerator.generate();
 
-    if (refreshToken.isPresent()) {
-      refreshTokenValue = refreshToken.get();
-    }
-
-    Token bearerToken = new Token(token, "bearer", refreshTokenValue, identityId, timeToLive.seconds, currentDate);
+    Token bearerToken = new Token(token, TokenType.BEARER, refreshTokenValue, identityId, timeToLive.seconds, currentDate);
 
     tokens.put(token, bearerToken);
 

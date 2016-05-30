@@ -38,7 +38,7 @@ public class IssueNewTokenActivity implements ClientActivity {
 
     Authorization authorization = opt.get();
 
-    Token newToken = tokens.issueToken(authorization.identityId, Optional.<String>absent());
+    Token newToken = tokens.issueToken(authorization.identityId);
 
     return new BearerTokenResponse(newToken.value, newToken.expiresInSeconds, newToken.refreshToken);
   }

@@ -5,24 +5,22 @@ import java.util.Date;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public class Token {
+public final class Token {
   public final String value;
-  public final String type;
-  public String refreshToken;
-  public final String userId;
+  public final TokenType type;
+  public final String refreshToken;
+  public final String identityId;
   public final Long expiresInSeconds;
   public final Date creationDate;
 
-
-  public Token(String value, String type, String refreshToken, String userId, Long expiresInSeconds, Date creationDate) {
+  public Token(String value, TokenType type, String refreshToken, String identityId, Long expiresInSeconds, Date creationDate) {
     this.value = value;
     this.type = type;
     this.refreshToken = refreshToken;
-    this.userId = userId;
+    this.identityId = identityId;
     this.expiresInSeconds = expiresInSeconds;
     this.creationDate = creationDate;
   }
-
 
   public boolean isExpiredOn(Date date){
     Date expirationDate = new Date(creationDate.getTime() + expiresInSeconds * 1000);

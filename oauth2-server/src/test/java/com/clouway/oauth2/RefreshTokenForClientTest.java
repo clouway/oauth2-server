@@ -5,6 +5,7 @@ import com.clouway.oauth2.http.ParamRequest;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsPrint;
 import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -39,7 +40,7 @@ public class RefreshTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::");
-      will(returnValue(Optional.of(new Token("::token1::", "berier", "::refresh_token::", "", 600L, new Date()))));
+      will(returnValue(Optional.of(new Token("::token1::", TokenType.BEARER, "::refresh_token::", "", 600L, new Date()))));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")));

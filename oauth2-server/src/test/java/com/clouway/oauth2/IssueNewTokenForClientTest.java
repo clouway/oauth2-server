@@ -7,6 +7,7 @@ import com.clouway.oauth2.http.ParamRequest;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsPrint;
 import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -21,7 +22,7 @@ import java.util.Date;
 
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -46,8 +47,8 @@ public class IssueNewTokenForClientTest {
       oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code::");
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
-      oneOf(tokens).issueToken("::user_id::", Optional.<String>absent());
-      will(returnValue(new Token("::token::", "berer", "", "::user_id", 10L, new Date())));
+      oneOf(tokens).issueToken("::user_id::");
+      will(returnValue(new Token("::token::", TokenType.BEARER, "", "::user_id", 10L, new Date())));
     }});
 
 

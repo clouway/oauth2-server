@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
  */
 public interface ClientRepository {
 
-  void register(Client client);
+  void register(Client client) throws ClientAlreadyExistsException;
 
   Optional<Client> findById(String id);
 }
