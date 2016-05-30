@@ -8,7 +8,6 @@ import java.util.Date;
 
 import static com.clouway.oauth2.Duration.hours;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -24,26 +23,29 @@ public abstract class TokenRepositoryContractTest {
 
   @Test
   public void happyPath() throws Exception {
-    repository = createRepo(currentDate, oneHour);
+    repository = createRepo(oneHour);
 
-    Token issuedToken = repository.issueToken("::user1::");
+    Date anyInstantTime = new Date();
+    Token issuedToken = repository.issueToken("::user1::", anyInstantTime);
 
-    Optional<Token> tokenOptional = repository.getNotExpiredToken(issuedToken.value);
+    Optional<Token> tokenOptional = repository.getNotExpiredToken(issuedToken.value, new Date(anyInstantTime.getTime() + 1000));
 
     assertThat(tokenOptional.get().value, is(equalTo(issuedToken.value)));
     assertThat(tokenOptional.get().type, is(equalTo(issuedToken.type)));
     assertThat(tokenOptional.get().refreshToken, is(equalTo(issuedToken.refreshToken)));
-    assertThat(tokenOptional.get().creationDate, is(equalTo(currentDate)));
+    assertThat(tokenOptional.get().creationDate, is(equalTo(anyInstantTime)));
     assertThat(tokenOptional.get().expiresInSeconds, is(equalTo(3600L)));
   }
 
   @Test
   public void refreshToken() throws Exception {
-    repository = createRepo(currentDate, oneHour);
+    repository = createRepo(oneHour);
 
-    Token newlyIssuedToken = repository.issueToken("identityId");
+    Date anyInstantTime = new Date();
 
-    Optional<Token> tokenOptional = repository.refreshToken(newlyIssuedToken.refreshToken);
+    Token newlyIssuedToken = repository.issueToken("identityId", anyInstantTime);
+
+    Optional<Token> tokenOptional = repository.refreshToken(newlyIssuedToken.refreshToken, new Date(anyInstantTime.getTime() + 1000));
 
     assertThat(tokenOptional.get().value, is(equalTo(newlyIssuedToken.value)));
     assertThat(tokenOptional.get().type, is(equalTo(newlyIssuedToken.type)));
@@ -54,8 +56,8 @@ public abstract class TokenRepositoryContractTest {
 
   @Test
   public void tryToRefreshNonExistingToken() throws Exception {
-    repository = createRepo(new Date(), oneHour);
-    Optional<Token> tokenOptional = repository.refreshToken("refreshToken.value");
+    repository = createRepo(oneHour);
+    Optional<Token> tokenOptional = repository.refreshToken("refreshToken.value", new Date());
 
     assertFalse(tokenOptional.isPresent());
   }
@@ -67,11 +69,11 @@ public abstract class TokenRepositoryContractTest {
     final Token token = new Token("9c5084d190264d0de737a8049ed630fd", TokenType.BEARER, "refresh", "identityId", oneHour.seconds, creationDate);
 
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
-    repository = createRepo(currentDate, oneHour);
+    repository = createRepo(oneHour);
 
-    repository.issueToken("identityId");
+    repository.issueToken("identityId", creationDate);
 
-    Optional<Token> tokenOptional = repository.getNotExpiredToken(token.value);
+    Optional<Token> tokenOptional = repository.getNotExpiredToken(token.value, new Date());
 
     assertFalse(tokenOptional.isPresent());
   }
@@ -81,17 +83,17 @@ public abstract class TokenRepositoryContractTest {
     //created two hours ago
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
 
-    repository = createRepo(currentDate, oneHour);
-    Token token = repository.issueToken("::user2::");
+    repository = createRepo(oneHour);
+    Token token = repository.issueToken("::user2::", currentDate);
 
-    Optional<Token> tokenOptional = repository.refreshToken(token.refreshToken);
+    Optional<Token> tokenOptional = repository.refreshToken(token.refreshToken, currentDate);
 
     assertThat(tokenOptional.get().value, is(equalTo(token.value)));
     assertThat(tokenOptional.get().type, is(equalTo(token.type)));
     assertThat(tokenOptional.get().refreshToken, is(equalTo(token.refreshToken)));
   }
 
-  protected abstract Tokens createRepo(Date currentDate, Duration duration);
+  protected abstract Tokens createRepo(Duration duration);
 
 }
 

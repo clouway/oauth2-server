@@ -18,27 +18,25 @@ import java.util.Map;
 class InMemoryTokens implements Tokens {
   private final Map<String, Token> tokens = Maps.newHashMap();
   private final TokenGenerator tokenGenerator;
-  private Date currentDate;
   private Duration timeToLive;
 
   @Inject
-  public InMemoryTokens(TokenGenerator tokenGenerator, Date currentDate, Duration timeToLive) {
+  public InMemoryTokens(TokenGenerator tokenGenerator, Duration timeToLive) {
     this.tokenGenerator = tokenGenerator;
-    this.currentDate = currentDate;
     this.timeToLive = timeToLive;
   }
 
   @Override
-  public Optional<Token> getNotExpiredToken(String tokenValue) {
+  public Optional<Token> getNotExpiredToken(String tokenValue, Date instant) {
     if (tokens.containsKey(tokenValue)) {
       Token token = tokens.get(tokenValue);
 
-      if (!token.isExpiredOn(currentDate)) {
+      if (!token.isExpiredOn(instant)) {
         //update token expirationDate time
         //remove the current token
         tokens.remove(tokenValue);
         // new instance
-        Token updatedToken = new Token(token.value, token.type, token.refreshToken, token.identityId, timeToLive.seconds, currentDate);
+        Token updatedToken = new Token(token.value, token.type, token.refreshToken, token.identityId, timeToLive.seconds, instant);
         //add the new token
         tokens.put(tokenValue, updatedToken);
 
@@ -50,7 +48,7 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Optional<Token> refreshToken(String refreshToken) {
+  public Optional<Token> refreshToken(String refreshToken, Date instant) {
     for (Token token : tokens.values()) {
       if (refreshToken.equals(token.refreshToken)) {
 
@@ -58,7 +56,7 @@ class InMemoryTokens implements Tokens {
 
         String newTokenValue = tokenGenerator.generate();
 
-        Token updatedToken = new Token(newTokenValue, TokenType.BEARER, token.refreshToken, token.identityId, timeToLive.seconds, currentDate);
+        Token updatedToken = new Token(newTokenValue, TokenType.BEARER, token.refreshToken, token.identityId, timeToLive.seconds, instant);
 
         //add the new token
         tokens.put(updatedToken.value, updatedToken);
@@ -70,11 +68,11 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Token issueToken(String identityId) {
+  public Token issueToken(String identityId, Date instant) {
     String token = tokenGenerator.generate();
     String refreshTokenValue = tokenGenerator.generate();
 
-    Token bearerToken = new Token(token, TokenType.BEARER, refreshTokenValue, identityId, timeToLive.seconds, currentDate);
+    Token bearerToken = new Token(token, TokenType.BEARER, refreshTokenValue, identityId, timeToLive.seconds, instant);
 
     tokens.put(token, bearerToken);
 

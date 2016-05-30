@@ -1,12 +1,12 @@
 package com.clouway.oauth2.jwt;
 
 import com.clouway.oauth2.BearerTokenResponse;
+import com.clouway.oauth2.InstantaneousController;
 import com.clouway.oauth2.OAuthError;
 import com.clouway.oauth2.client.ServiceAccount;
 import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.Take;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.Token;
@@ -17,13 +17,13 @@ import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 
-import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class JwtController implements Take {
+public class JwtController extends InstantaneousController {
   private final Gson gson = new Gson();
 
   private final SignatureFactory signatureFactory;
@@ -37,7 +37,7 @@ public class JwtController implements Take {
   }
 
   @Override
-  public Response ack(Request request) throws IOException {
+  protected Response handleAsOf(Request request, Date instant) {
     String assertion = request.param("assertion");
 
     List<String> parts = Lists.newArrayList(Splitter.on(".").split(assertion));
@@ -77,7 +77,7 @@ public class JwtController implements Take {
       return OAuthError.invalidGrant();
     }
 
-    Token token = tokens.issueToken(serviceAccount.clientId());
+    Token token = tokens.issueToken(serviceAccount.clientId(), instant);
 
     return new BearerTokenResponse(token.value, token.expiresInSeconds, token.refreshToken);
   }

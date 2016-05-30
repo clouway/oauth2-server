@@ -13,7 +13,7 @@ import java.util.Date;
 public class InMemoryTokensTest extends TokenRepositoryContractTest {
 
   @Override
-  protected Tokens createRepo(Date currentDate, Duration duration) {
-    return new InMemoryTokens(new Sha1TokenGenerator(), currentDate, duration);
+  protected Tokens createRepo(Duration duration) {
+    return new InMemoryTokens(new Sha1TokenGenerator(), duration);
   }
 }

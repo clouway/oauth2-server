@@ -42,17 +42,18 @@ public class IssueNewTokenForClientTest {
   public void happyPath() throws IOException {
     IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
     final Client client = aNewClient().build();
+    final Date anyTime = new Date();
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code::");
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
-      oneOf(tokens).issueToken("::user_id::");
+      oneOf(tokens).issueToken("::user_id::", anyTime);
       will(returnValue(new Token("::token::", TokenType.BEARER, "", "::user_id", 10L, new Date())));
     }});
 
 
-    Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")));
+    Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
     String body = new RsPrint(response).printBody();
 
     assertThat(body, containsString("::token::"));
@@ -62,13 +63,14 @@ public class IssueNewTokenForClientTest {
   public void clientWasNotAuthorized() throws IOException {
     final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
     final Client client = aNewClient().build();
+    final Date anyTime = new Date();
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code1::");
       will(returnValue(Optional.absent()));
     }});
 
-    Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code1::", "redirect_uri", "::redirect_uri1::")));
+    Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code1::", "redirect_uri", "::redirect_uri1::")), anyTime);
     String body = new RsPrint(response).printBody();
 
     assertThat(body, containsString("invalid_grant"));

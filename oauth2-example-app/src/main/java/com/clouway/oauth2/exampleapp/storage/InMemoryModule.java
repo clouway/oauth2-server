@@ -3,22 +3,20 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.ResourceOwnerAuthentication;
 import com.clouway.oauth2.ResourceOwnerStore;
-import com.clouway.oauth2.exampleapp.SessionSecurity;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.client.ServiceAccountRepository;
+import com.clouway.oauth2.exampleapp.SessionSecurity;
 import com.clouway.oauth2.exampleapp.UserLoader;
 import com.clouway.oauth2.exampleapp.UserLoaderImpl;
+import com.clouway.oauth2.exampleapp.UserRepository;
 import com.clouway.oauth2.token.Sha1TokenGenerator;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.exampleapp.UserRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-
-import java.util.Date;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -79,7 +77,7 @@ public class InMemoryModule extends AbstractModule {
   @Provides
   @Singleton
   public Tokens getTokenRepository() {
-    return new InMemoryTokens(new Sha1TokenGenerator(), new Date(), new Duration(900000000L));
+    return new InMemoryTokens(new Sha1TokenGenerator(), new Duration(900000000L));
   }
 
   @Provides

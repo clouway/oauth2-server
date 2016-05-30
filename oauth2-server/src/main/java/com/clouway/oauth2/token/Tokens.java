@@ -2,6 +2,8 @@ package com.clouway.oauth2.token;
 
 import com.google.common.base.Optional;
 
+import java.util.Date;
+
 /**
  * Tokens is responsible for issuing and retriving of issued tokens.
  *
@@ -15,7 +17,7 @@ public interface Tokens {
    * @param token then token for which is looked
    * @return an optional token value or absent value if not present
    */
-  Optional<Token> getNotExpiredToken(String token);
+  Optional<Token> getNotExpiredToken(String token, Date when);
 
   /**
    * Refreshes token using the access token.
@@ -23,12 +25,13 @@ public interface Tokens {
    * @param token the access token
    * @return the refreshed token
    */
-  Optional<Token> refreshToken(String token);
+  Optional<Token> refreshToken(String token, Date when);
 
   /**
-   * Issues a new token for the provided user.
-   *
-   * @param identityId     the identityId for which token is issued
+   * Ussues a new token for the provided identity.
+   * @param identityId the identityId for which token was issued
+   * @param when the requested time on which it should be issued
+   * @return
    */
-  Token issueToken(String identityId);
+  Token issueToken(String identityId, Date when);
 }

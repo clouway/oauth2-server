@@ -72,6 +72,7 @@ public class HandleJwtTokenRequestsTest {
     };
 
     final Signature anySignatureThatWillVerifies = context.mock(Signature.class);
+    final Date anyInstantTime = new Date();
 
     context.checking(new Expectations() {{
       oneOf(repository).findServiceAccount(with(any(Jwt.ClaimSet.class)));
@@ -83,7 +84,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verify(with(signatureAsBytes), with(matching("::private_key::")));
       will(returnValue(true));
 
-      oneOf(tokens).issueToken("::client_id::");
+      oneOf(tokens).issueToken("::client_id::", anyInstantTime);
       will(returnValue(new Token("::token_value::", TokenType.BEARER, "::refresh_token::", "::client_id::", 1000L, new Date())));
     }});
 

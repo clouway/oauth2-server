@@ -5,6 +5,8 @@ import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.User;
 import com.google.common.base.Optional;
 
+import java.util.Date;
+
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
@@ -21,7 +23,7 @@ public class UserLoaderImpl implements UserLoader {
   @Override
   public Optional<User> load(String tokenValue) {
 
-    Optional<Token> token = tokens.getNotExpiredToken(tokenValue);
+    Optional<Token> token = tokens.getNotExpiredToken(tokenValue, new Date());
     if (!token.isPresent()) {
       return Optional.absent();
     }
