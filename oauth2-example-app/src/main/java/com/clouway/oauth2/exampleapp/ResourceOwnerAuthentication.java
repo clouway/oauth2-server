@@ -1,5 +1,6 @@
-package com.clouway.oauth2;
+package com.clouway.oauth2.exampleapp;
 
+import com.clouway.oauth2.Session;
 import com.google.common.base.Optional;
 
 /**

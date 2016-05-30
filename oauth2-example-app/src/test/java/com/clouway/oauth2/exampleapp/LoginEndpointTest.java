@@ -1,6 +1,5 @@
 package com.clouway.oauth2.exampleapp;
 
-import com.clouway.oauth2.ResourceOwnerAuthentication;
 import com.clouway.oauth2.Session;
 import com.google.common.base.Optional;
 import org.jmock.Expectations;

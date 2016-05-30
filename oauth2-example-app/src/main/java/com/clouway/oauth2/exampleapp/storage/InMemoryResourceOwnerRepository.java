@@ -1,7 +1,7 @@
 package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.ResourceOwner;
-import com.clouway.oauth2.ResourceOwnerAuthentication;
+import com.clouway.oauth2.exampleapp.ResourceOwnerAuthentication;
 import com.clouway.oauth2.ResourceOwnerStore;
 import com.clouway.oauth2.Session;
 import com.clouway.oauth2.exampleapp.SessionSecurity;
