@@ -88,7 +88,7 @@ public class HandleJwtTokenRequestsTest {
       will(returnValue(new Token("::token_value::", TokenType.BEARER, "::refresh_token::", "::client_id::", 1000L, new Date())));
     }});
 
-    Response response = controller.ack(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)));
+    Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)),anyInstantTime);
     String responseContent = new RsPrint(response).printBody();
     assertThat(responseContent, containsString("::token_value::"));
     assertThat(responseContent, containsString("::refresh_token::"));
@@ -97,13 +97,13 @@ public class HandleJwtTokenRequestsTest {
 
   @Test
   public void assertionIsEmpty() throws IOException {
-    Response response = controller.ack(newJwtRequest(""));
+    Response response = controller.handleAsOf(newJwtRequest(""), new Date());
     assertThat(new RsPrint(response).print(), containsString("invalid_request"));
   }
 
   @Test
   public void headerIsMissing() throws IOException {
-    Response response = controller.ack(newJwtRequest(String.format("%s.%s", body, signature)));
+    Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s", body, signature)), new Date());
     assertThat(new RsPrint(response).printBody(), containsString("invalid_request"));
   }
 
