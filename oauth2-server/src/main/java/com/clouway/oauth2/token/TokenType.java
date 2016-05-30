@@ -6,5 +6,5 @@ package com.clouway.oauth2.token;
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public enum TokenType {
-  BEARER, REFRESH_TOKEN
+  BEARER
 }
