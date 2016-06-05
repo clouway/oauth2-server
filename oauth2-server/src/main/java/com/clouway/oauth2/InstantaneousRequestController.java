@@ -10,12 +10,16 @@ import java.util.Date;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public abstract class InstantaneousController implements Take {
+public class InstantaneousRequestController implements Take{
+
+  private final InstantaneousRequest instantaneousRequest;
+
+  public InstantaneousRequestController(InstantaneousRequest request) {
+    this.instantaneousRequest = request;
+  }
 
   @Override
   public Response ack(Request request) throws IOException {
-    return handleAsOf(request, new Date());
+    return instantaneousRequest.handleAsOf(request, new Date());
   }
-
-  protected abstract Response handleAsOf(Request request, Date instant);
 }

@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Date;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -43,16 +44,17 @@ public class IdentityControllerTest {
     final Request request = new ParamRequest(ImmutableMap.of(
             "client_id", "::client_id::"
     ));
+    final Date anyInstantTime = new Date();
 
     context.checking(new Expectations() {{
-      oneOf(identityFinder).find(request);
+      oneOf(identityFinder).find(request, anyInstantTime);
       will(returnValue(Optional.of("::identity_id::")));
 
       oneOf(identityActivity).execute("::identity_id::", request);
       will(returnValue(new RsText("test response")));
     }});
 
-    Response response = identityController.ack(request);
+    Response response = identityController.handleAsOf(request, anyInstantTime);
     assertThat(new RsPrint(response).printBody(), is(equalTo("test response")));
   }
 
@@ -60,13 +62,14 @@ public class IdentityControllerTest {
   public void userWasNotAuthorized() throws IOException {
     IdentityController identityController = new IdentityController(identityFinder, identityActivity, "/r/oauth/login?continue=");
     final Request request = new ParamRequest(ImmutableMap.of("client_id","::client1::"));
+    final Date anyInstantTime = new Date();
 
     context.checking(new Expectations() {{
-      oneOf(identityFinder).find(request);
+      oneOf(identityFinder).find(request, anyInstantTime);
       will(returnValue(Optional.absent()));
     }});
 
-    Response response = identityController.ack(request);
+    Response response = identityController.handleAsOf(request, anyInstantTime);
     Status status = response.status();
 
     assertThat(status.code, is(equalTo(HttpURLConnection.HTTP_MOVED_TEMP)));

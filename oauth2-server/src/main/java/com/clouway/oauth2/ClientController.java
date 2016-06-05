@@ -13,7 +13,7 @@ import static com.google.common.io.BaseEncoding.base64;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-class ClientController extends InstantaneousController {
+class ClientController implements InstantaneousRequest {
 
   private final ClientRepository clientRepository;
   private final ClientActivity clientActivity;
@@ -24,7 +24,7 @@ class ClientController extends InstantaneousController {
   }
 
   @Override
-  protected Response handleAsOf(Request request, Date instant) {
+  public Response handleAsOf(Request request, Date instant) {
     String[] credentials = decodeCredentials(request).split(":");
 
     String clientId = credentials[0];

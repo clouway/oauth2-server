@@ -73,7 +73,7 @@ public class AuthorizeClientsTest {
       will(returnValue(Optional.absent()));
     }});
 
-    Response response = handler.ack(request);
+    Response response = handler.handleAsOf(request, new Date());
 
     String body = new RsPrint(response).printBody();
 
@@ -93,7 +93,7 @@ public class AuthorizeClientsTest {
       will(returnValue(Optional.of(anyRegisteredClient)));
     }});
 
-    Response response = handler.ack(request);
+    Response response = handler.handleAsOf(request, new Date());
 
     String body = new RsPrint(response).printBody();
 

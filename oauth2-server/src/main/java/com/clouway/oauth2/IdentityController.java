@@ -3,13 +3,12 @@ package com.clouway.oauth2;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsRedirect;
-import com.clouway.oauth2.http.Take;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 
 /**
  * IdentityController is responsible for determining the Identity of the caller. Sent request to this controller
@@ -18,7 +17,7 @@ import java.net.URLEncoder;
  *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-final class IdentityController implements Take {
+final class IdentityController implements InstantaneousRequest {
 
   private final IdentityFinder identityFinder;
   private final IdentityActivity identityActivity;
@@ -31,9 +30,8 @@ final class IdentityController implements Take {
   }
 
   @Override
-  public Response ack(Request request) throws IOException {
-
-    Optional<String> optIdentity = identityFinder.find(request);
+  public Response handleAsOf(Request request, Date instantTime) {
+    Optional<String> optIdentity = identityFinder.find(request, instantTime);
     // Browser should be redirected to login page when Identity is not found
     if (!optIdentity.isPresent()) {
       String continueTo = queryParams(request);

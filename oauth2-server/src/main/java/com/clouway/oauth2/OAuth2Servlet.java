@@ -47,31 +47,38 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
     fork = new TkFork(
             new FkRegex(".*/auth",
-                    new IdentityController(config.identityFinder(), new ClientAuthorizationActivity(config.clientRepository(), config.clientAuthorizationRepository()), config.loginPageUrl())
+                    new InstantaneousRequestController(
+                            new IdentityController(
+                                    config.identityFinder(),
+                                    new ClientAuthorizationActivity(config.clientRepository(), config.clientAuthorizationRepository()), config.loginPageUrl())
+                    )
             ),
             new FkRegex(".*/token",
                     new TkFork(
                             new FkParams("grant_type", "authorization_code",
                                     new RequiresHeader("Authorization",
-                                            new ClientController(
-                                                    config.clientRepository(),
-                                                    new IssueNewTokenActivity(config.tokens(), config.clientAuthorizationRepository())
-                                            )
+                                            new InstantaneousRequestController(
+                                                    new ClientController(
+                                                            config.clientRepository(),
+                                                            new IssueNewTokenActivity(config.tokens(), config.clientAuthorizationRepository())
+                                                    ))
                                     )),
                             new FkParams("grant_type", "refresh_token",
                                     new RequiresHeader("Authorization",
-                                            new ClientController(
+                                            new InstantaneousRequestController(new ClientController(
                                                     config.clientRepository(),
                                                     new RefreshTokenActivity(config.tokens())
+                                            )
                                             )
                                     )),
                             // JWT Support
                             new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer", new RequiresParam("assertion",
-                                    new JwtController(
-                                            signatureFactory,
-                                            config.tokens(),
-                                            config.serviceAccountRepository()
-                                    ))
+                                    new InstantaneousRequestController(
+                                            new JwtController(
+                                                    signatureFactory,
+                                                    config.tokens(),
+                                                    config.serviceAccountRepository()
+                                            )))
                             ))
             )
     );

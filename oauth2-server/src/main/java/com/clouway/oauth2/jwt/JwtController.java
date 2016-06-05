@@ -1,7 +1,7 @@
 package com.clouway.oauth2.jwt;
 
 import com.clouway.oauth2.BearerTokenResponse;
-import com.clouway.oauth2.InstantaneousController;
+import com.clouway.oauth2.InstantaneousRequest;
 import com.clouway.oauth2.OAuthError;
 import com.clouway.oauth2.client.ServiceAccount;
 import com.clouway.oauth2.client.ServiceAccountRepository;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class JwtController extends InstantaneousController {
+public class JwtController implements InstantaneousRequest {
   private final Gson gson = new Gson();
 
   private final SignatureFactory signatureFactory;
@@ -37,7 +37,7 @@ public class JwtController extends InstantaneousController {
   }
 
   @Override
-  protected Response handleAsOf(Request request, Date instant) {
+  public Response handleAsOf(Request request, Date instant) {
     String assertion = request.param("assertion");
 
     List<String> parts = Lists.newArrayList(Splitter.on(".").split(assertion));
