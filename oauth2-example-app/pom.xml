@@ -5,12 +5,12 @@
   <parent>
     <groupId>com.clouway.security</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-RC5-SNAPSHOT</version>
+    <version>1.0-RC5</version>
   </parent>
 
   <groupId>com.clouway.security</groupId>
   <artifactId>oauth2-example-app</artifactId>
-  <version>1.0-RC5-SNAPSHOT</version>
+  <version>1.0-RC5</version>
   <packaging>jar</packaging>
   <name>oauth2-example-app</name>
   <url>http://maven.apache.org</url>
@@ -19,13 +19,13 @@
     <dependency>
       <groupId>com.clouway.security</groupId>
       <artifactId>oauth2-server</artifactId>
-      <version>1.0-RC5-SNAPSHOT</version>
+      <version>1.0-RC5</version>
     </dependency>
 
     <dependency>
       <groupId>com.clouway.security</groupId>
       <artifactId>oauth2-server-testing</artifactId>
-      <version>1.0-RC5-SNAPSHOT</version>
+      <version>1.0-RC5</version>
     </dependency>
 
 
