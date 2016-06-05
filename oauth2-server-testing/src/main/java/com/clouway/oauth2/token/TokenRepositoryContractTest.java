@@ -19,7 +19,6 @@ public abstract class TokenRepositoryContractTest {
   private static final Duration oneHour = hours(1);
 
   private Tokens repository;
-  private final Date currentDate = new Date();
 
   @Test
   public void happyPath() throws Exception {
@@ -50,7 +49,7 @@ public abstract class TokenRepositoryContractTest {
     assertThat(tokenOptional.get().value, is(equalTo(newlyIssuedToken.value)));
     assertThat(tokenOptional.get().type, is(equalTo(newlyIssuedToken.type)));
     assertThat(tokenOptional.get().refreshToken, is(equalTo(newlyIssuedToken.refreshToken)));
-    assertThat(tokenOptional.get().creationDate, is(equalTo(currentDate)));
+    assertThat(tokenOptional.get().creationDate, is(equalTo(anyInstantTime)));
     assertThat(tokenOptional.get().expiresInSeconds, is(equalTo(oneHour.seconds)));
   }
 
