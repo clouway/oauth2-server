@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.clouway.security</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-RC8</version>
+    <version>1.0-RC9-SNAPSHOT</version>
   </parent>
   <groupId>com.clouway.security</groupId>
   <artifactId>oauth2-server</artifactId>
-  <version>1.0-RC8</version>
+  <version>1.0-RC9-SNAPSHOT</version>
   <name>oauth2-server</name>
   <url>http://github.com/clouway/oauth2-server</url>
 
