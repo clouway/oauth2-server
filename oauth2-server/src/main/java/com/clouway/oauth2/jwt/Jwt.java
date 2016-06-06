@@ -20,6 +20,11 @@ public final class Jwt {
 
     public final String alg;
 
+    @SuppressWarnings("unused")
+    Header() {
+      this(null);
+    }
+
     public Header(String alg) {
       this.alg = alg;
     }
@@ -71,6 +76,11 @@ public final class Jwt {
      * Prn is an old name of sub. Keep setting it to be compatible with legacy OAuth2 clients
      */
     public final String prn;
+
+    @SuppressWarnings("unused")
+    ClaimSet() {
+      this(null, null, null, null, null, null, null);
+    }
 
     public ClaimSet(String iss, String scope, String aud, Long exp, Long iat, String typ, String sub) {
       this.iss = iss;
