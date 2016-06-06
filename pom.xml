@@ -10,7 +10,7 @@
 
   <groupId>com.clouway.security</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0-RC10-SNAPSHOT</version>
+  <version>1.0-RC10</version>
   <packaging>pom</packaging>
 
   <name>oauth2-server (Parent)</name>
