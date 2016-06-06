@@ -23,7 +23,7 @@ public final class Token {
   }
 
   public boolean expiresAt(DateTime date) {
-    return date.after(date.plusSeconds(expiresInSeconds));
+    return date.after(creationDate.plusSeconds(expiresInSeconds));
   }
 
   @Override

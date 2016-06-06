@@ -13,22 +13,31 @@ public final class DateTime {
   }
 
   public DateTime(Long timeAsMillis) {
-      this.time = new Date(timeAsMillis);
-    }
+    this.time = new Date(timeAsMillis);
+  }
 
   public DateTime() {
     this.time = new Date();
+  }
+
+  public boolean after(DateTime date) {
+    return time.after(date.asDate());
+  }
+
+  public boolean before(DateTime date) {
+    return time.before(date.asDate());
   }
 
   public DateTime plusSeconds(long seconds) {
     return new DateTime(new Date(time.getTime() + 1000 * seconds));
   }
 
-  public Date asDate() {
-    return new Date(time.getTime());
+  @Override
+  public String toString() {
+    return "DateTime{" + time + '}';
   }
 
-  public boolean after(DateTime date) {
-    return time.after(date.asDate());
+  public Date asDate() {
+    return new Date(time.getTime());
   }
 }
