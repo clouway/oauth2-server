@@ -30,7 +30,7 @@ final class IdentityController implements InstantaneousRequest {
   }
 
   @Override
-  public Response handleAsOf(Request request, Date instantTime) {
+  public Response handleAsOf(Request request, DateTime instantTime) {
     Optional<String> optIdentity = identityFinder.find(request, instantTime);
     // Browser should be redirected to login page when Identity is not found
     if (!optIdentity.isPresent()) {

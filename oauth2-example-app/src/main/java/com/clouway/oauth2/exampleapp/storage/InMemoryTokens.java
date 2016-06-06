@@ -1,5 +1,6 @@
 package com.clouway.oauth2.exampleapp.storage;
 
+import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenGenerator;
@@ -9,7 +10,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -27,11 +27,11 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Optional<Token> getNotExpiredToken(String tokenValue, Date instant) {
+  public Optional<Token> getNotExpiredToken(String tokenValue, DateTime instant) {
     if (tokens.containsKey(tokenValue)) {
       Token token = tokens.get(tokenValue);
 
-      if (!token.isExpiredOn(instant)) {
+      if (!token.expiresAt(instant)) {
         //update token expirationDate time
         //remove the current token
         tokens.remove(tokenValue);
@@ -48,7 +48,7 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Optional<Token> refreshToken(String refreshToken, Date instant) {
+  public Optional<Token> refreshToken(String refreshToken, DateTime instant) {
     for (Token token : tokens.values()) {
       if (refreshToken.equals(token.refreshToken)) {
 
@@ -68,7 +68,7 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Token issueToken(String identityId, Date instant) {
+  public Token issueToken(String identityId, DateTime instant) {
     String token = tokenGenerator.generate();
     String refreshTokenValue = tokenGenerator.generate();
 

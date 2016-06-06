@@ -44,7 +44,7 @@ public class IdentityControllerTest {
     final Request request = new ParamRequest(ImmutableMap.of(
             "client_id", "::client_id::"
     ));
-    final Date anyInstantTime = new Date();
+    final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(identityFinder).find(request, anyInstantTime);
@@ -62,7 +62,7 @@ public class IdentityControllerTest {
   public void userWasNotAuthorized() throws IOException {
     IdentityController identityController = new IdentityController(identityFinder, identityActivity, "/r/oauth/login?continue=");
     final Request request = new ParamRequest(ImmutableMap.of("client_id","::client1::"));
-    final Date anyInstantTime = new Date();
+    final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(identityFinder).find(request, anyInstantTime);

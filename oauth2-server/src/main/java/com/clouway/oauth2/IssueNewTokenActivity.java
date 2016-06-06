@@ -9,8 +9,6 @@ import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 
-import java.util.Date;
-
 /**
  * IssueNewTokenActivity is representing the activity which is performed for issuing of new token.
  *
@@ -28,7 +26,7 @@ public class IssueNewTokenActivity implements ClientActivity {
   }
 
   @Override
-  public Response execute(Client client, Request request, Date instant) {
+  public Response execute(Client client, Request request, DateTime instant) {
     String authCode = request.param("code");
 
     Optional<Authorization> opt = clientAuthorizationRepository.findAuthorization(client, authCode);

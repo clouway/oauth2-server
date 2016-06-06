@@ -1,5 +1,6 @@
 package com.clouway.oauth2.jwt;
 
+import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.client.ServiceAccount;
 import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.http.ParamRequest;
@@ -21,7 +22,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Date;
 
 import static com.clouway.oauth2.util.Matchers.matching;
 import static org.hamcrest.Matchers.containsString;
@@ -72,7 +72,7 @@ public class HandleJwtTokenRequestsTest {
     };
 
     final Signature anySignatureThatWillVerifies = context.mock(Signature.class);
-    final Date anyInstantTime = new Date();
+    final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(repository).findServiceAccount(with(any(Jwt.ClaimSet.class)));
@@ -85,10 +85,10 @@ public class HandleJwtTokenRequestsTest {
       will(returnValue(true));
 
       oneOf(tokens).issueToken("::client_id::", anyInstantTime);
-      will(returnValue(new Token("::token_value::", TokenType.BEARER, "::refresh_token::", "::client_id::", 1000L, new Date())));
+      will(returnValue(new Token("::token_value::", TokenType.BEARER, "::refresh_token::", "::client_id::", 1000L, new DateTime())));
     }});
 
-    Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)),anyInstantTime);
+    Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)), anyInstantTime);
     String responseContent = new RsPrint(response).printBody();
     assertThat(responseContent, containsString("::token_value::"));
     assertThat(responseContent, containsString("::refresh_token::"));
@@ -97,13 +97,13 @@ public class HandleJwtTokenRequestsTest {
 
   @Test
   public void assertionIsEmpty() throws IOException {
-    Response response = controller.handleAsOf(newJwtRequest(""), new Date());
+    Response response = controller.handleAsOf(newJwtRequest(""), new DateTime());
     assertThat(new RsPrint(response).print(), containsString("invalid_request"));
   }
 
   @Test
   public void headerIsMissing() throws IOException {
-    Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s", body, signature)), new Date());
+    Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s", body, signature)), new DateTime());
     assertThat(new RsPrint(response).printBody(), containsString("invalid_request"));
   }
 

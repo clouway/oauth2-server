@@ -42,14 +42,14 @@ public class IssueNewTokenForClientTest {
   public void happyPath() throws IOException {
     IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
     final Client client = aNewClient().build();
-    final Date anyTime = new Date();
+    final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code::");
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
       oneOf(tokens).issueToken("::user_id::", anyTime);
-      will(returnValue(new Token("::token::", TokenType.BEARER, "", "::user_id", 10L, new Date())));
+      will(returnValue(new Token("::token::", TokenType.BEARER, "", "::user_id", 10L, new DateTime())));
     }});
 
 
@@ -63,7 +63,7 @@ public class IssueNewTokenForClientTest {
   public void clientWasNotAuthorized() throws IOException {
     final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
     final Client client = aNewClient().build();
-    final Date anyTime = new Date();
+    final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code1::");

@@ -21,7 +21,7 @@ class RefreshTokenActivity implements ClientActivity {
   }
 
   @Override
-  public Response execute(Client client, Request request, Date instant) {
+  public Response execute(Client client, Request request, DateTime instant) {
     String refreshToken = request.param("refresh_token");
 
     Optional<Token> opt = tokens.refreshToken(refreshToken, instant);

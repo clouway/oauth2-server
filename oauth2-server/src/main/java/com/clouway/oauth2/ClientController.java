@@ -24,7 +24,7 @@ class ClientController implements InstantaneousRequest {
   }
 
   @Override
-  public Response handleAsOf(Request request, Date instant) {
+  public Response handleAsOf(Request request, DateTime instant) {
     String[] credentials = decodeCredentials(request).split(":");
 
     String clientId = credentials[0];

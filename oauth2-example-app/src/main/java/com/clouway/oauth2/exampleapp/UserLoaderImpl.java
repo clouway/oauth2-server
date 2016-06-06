@@ -1,5 +1,6 @@
 package com.clouway.oauth2.exampleapp;
 
+import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.User;
@@ -23,7 +24,7 @@ public class UserLoaderImpl implements UserLoader {
   @Override
   public Optional<User> load(String tokenValue) {
 
-    Optional<Token> token = tokens.getNotExpiredToken(tokenValue, new Date());
+    Optional<Token> token = tokens.getNotExpiredToken(tokenValue, new DateTime());
     if (!token.isPresent()) {
       return Optional.absent();
     }

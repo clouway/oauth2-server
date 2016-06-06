@@ -1,5 +1,6 @@
 package com.clouway.oauth2.token;
 
+import com.clouway.oauth2.DateTime;
 import com.google.common.base.Optional;
 
 import java.util.Date;
@@ -17,15 +18,16 @@ public interface Tokens {
    * @param token then token for which is looked
    * @return an optional token value or absent value if not present
    */
-  Optional<Token> getNotExpiredToken(String token, Date when);
+  Optional<Token> getNotExpiredToken(String token, DateTime when);
 
   /**
    * Refreshes token using the access token.
    *
    * @param token the access token
+   * @param when token is going to be refreshed
    * @return the refreshed token
    */
-  Optional<Token> refreshToken(String token, Date when);
+  Optional<Token> refreshToken(String token, DateTime when);
 
   /**
    * Ussues a new token for the provided identity.
@@ -33,5 +35,5 @@ public interface Tokens {
    * @param when the requested time on which it should be issued
    * @return
    */
-  Token issueToken(String identityId, Date when);
+  Token issueToken(String identityId, DateTime when);
 }

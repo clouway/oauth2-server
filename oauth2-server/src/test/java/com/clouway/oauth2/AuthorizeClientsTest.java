@@ -47,7 +47,7 @@ public class AuthorizeClientsTest {
     final Client anyRegisteredClient = newClient("fe72722a40de846e03865cb3b582aed57841ac71", "857613db7b18232c72a5093ad19dbc6df74a139e");
 
     final Request request = clientAuthRequest("Basic ZmU3MjcyMmE0MGRlODQ2ZTAzODY1Y2IzYjU4MmFlZDU3ODQxYWM3MTo4NTc2MTNkYjdiMTgyMzJjNzJhNTA5M2FkMTlkYmM2ZGY3NGExMzll");
-    final Date anyInstantTime = new Date();
+    final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(clientRepository).findById("fe72722a40de846e03865cb3b582aed57841ac71");
@@ -73,7 +73,7 @@ public class AuthorizeClientsTest {
       will(returnValue(Optional.absent()));
     }});
 
-    Response response = handler.handleAsOf(request, new Date());
+    Response response = handler.handleAsOf(request, new DateTime());
 
     String body = new RsPrint(response).printBody();
 
@@ -93,7 +93,7 @@ public class AuthorizeClientsTest {
       will(returnValue(Optional.of(anyRegisteredClient)));
     }});
 
-    Response response = handler.handleAsOf(request, new Date());
+    Response response = handler.handleAsOf(request, new DateTime());
 
     String body = new RsPrint(response).printBody();
 

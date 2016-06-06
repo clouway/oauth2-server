@@ -37,11 +37,11 @@ public class RefreshTokenForClientTest {
   public void happyPath() throws IOException {
     RefreshTokenActivity action = new RefreshTokenActivity(tokens);
     Client client = aNewClient().withId("client1").withSecret("secret1").build();
-    final Date anyTime = new Date();
+    final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
-      will(returnValue(Optional.of(new Token("::token1::", TokenType.BEARER, "::refresh_token::", "", 600L, new Date()))));
+      will(returnValue(Optional.of(new Token("::token1::", TokenType.BEARER, "::refresh_token::", "", 600L, new DateTime()))));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")), anyTime);
@@ -57,7 +57,7 @@ public class RefreshTokenForClientTest {
   public void refreshTokenWasExpired() throws IOException {
     RefreshTokenActivity action = new RefreshTokenActivity(tokens);
     Client client = aNewClient().withId("client1").withSecret("secret1").build();
-    final Date anyTime = new Date();
+    final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);

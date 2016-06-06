@@ -1,5 +1,6 @@
 package com.clouway.oauth2.token;
 
+import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Duration;
 import com.google.common.base.Optional;
 import org.junit.Test;
@@ -9,7 +10,8 @@ import java.util.Date;
 import static com.clouway.oauth2.Duration.hours;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
@@ -24,10 +26,10 @@ public abstract class TokenRepositoryContractTest {
   public void happyPath() throws Exception {
     repository = createRepo(oneHour);
 
-    Date anyInstantTime = new Date();
+    DateTime anyInstantTime = new DateTime();
     Token issuedToken = repository.issueToken("::user1::", anyInstantTime);
 
-    Optional<Token> tokenOptional = repository.getNotExpiredToken(issuedToken.value, new Date(anyInstantTime.getTime() + 1000));
+    Optional<Token> tokenOptional = repository.getNotExpiredToken(issuedToken.value, anyInstantTime.plusSeconds(20));
 
     assertThat(tokenOptional.get().value, is(equalTo(issuedToken.value)));
     assertThat(tokenOptional.get().type, is(equalTo(issuedToken.type)));
@@ -40,11 +42,11 @@ public abstract class TokenRepositoryContractTest {
   public void refreshToken() throws Exception {
     repository = createRepo(oneHour);
 
-    Date anyInstantTime = new Date();
+    DateTime anyInstantTime = new DateTime();
 
     Token newlyIssuedToken = repository.issueToken("identityId", anyInstantTime);
 
-    Optional<Token> tokenOptional = repository.refreshToken(newlyIssuedToken.refreshToken, new Date(anyInstantTime.getTime() + 1000));
+    Optional<Token> tokenOptional = repository.refreshToken(newlyIssuedToken.refreshToken, anyInstantTime.plusSeconds(2));
 
     assertThat(tokenOptional.get().value, is(equalTo(newlyIssuedToken.value)));
     assertThat(tokenOptional.get().type, is(equalTo(newlyIssuedToken.type)));
@@ -56,7 +58,7 @@ public abstract class TokenRepositoryContractTest {
   @Test
   public void tryToRefreshNonExistingToken() throws Exception {
     repository = createRepo(oneHour);
-    Optional<Token> tokenOptional = repository.refreshToken("refreshToken.value", new Date());
+    Optional<Token> tokenOptional = repository.refreshToken("refreshToken.value", new DateTime());
 
     assertFalse(tokenOptional.isPresent());
   }
@@ -64,7 +66,7 @@ public abstract class TokenRepositoryContractTest {
   @Test
   public void expiredToken() throws Exception {
     //created two hours ago
-    final Date creationDate = new Date(System.currentTimeMillis() - hours(2).asMills());
+    final DateTime creationDate = new DateTime(System.currentTimeMillis() - hours(2).asMills());
     final Token token = new Token("9c5084d190264d0de737a8049ed630fd", TokenType.BEARER, "refresh", "identityId", oneHour.seconds, creationDate);
 
     Date currentDate = new Date(System.currentTimeMillis() + 9000000);
@@ -72,7 +74,7 @@ public abstract class TokenRepositoryContractTest {
 
     repository.issueToken("identityId", creationDate);
 
-    Optional<Token> tokenOptional = repository.getNotExpiredToken(token.value, new Date());
+    Optional<Token> tokenOptional = repository.getNotExpiredToken(token.value, new DateTime());
 
     assertFalse(tokenOptional.isPresent());
   }
@@ -80,7 +82,7 @@ public abstract class TokenRepositoryContractTest {
   @Test
   public void refreshExpiredToken() throws Exception {
     //created two hours ago
-    Date currentDate = new Date(System.currentTimeMillis() + 9000000);
+    DateTime currentDate = new DateTime(System.currentTimeMillis() + 9000000);
 
     repository = createRepo(oneHour);
     Token token = repository.issueToken("::user2::", currentDate);

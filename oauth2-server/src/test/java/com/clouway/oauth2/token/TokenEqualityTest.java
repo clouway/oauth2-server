@@ -1,5 +1,6 @@
 package com.clouway.oauth2.token;
 
+import com.clouway.oauth2.DateTime;
 import org.junit.Test;
 
 import java.util.Date;
@@ -15,7 +16,7 @@ public class TokenEqualityTest {
 
   @Test
   public void areEqual() {
-    Date creationDate = new Date();
+    DateTime creationDate = new DateTime();
     Token token1 = new Token("value", TokenType.BEARER, "refreshToken", "identityId", 1L, creationDate);
     Token token2 = new Token("value", TokenType.BEARER, "refreshToken", "identityId", 1L, creationDate);
 
@@ -24,7 +25,7 @@ public class TokenEqualityTest {
 
   @Test
   public void areNotEqual() {
-    Date creationDate = new Date();
+    DateTime creationDate = new DateTime();
     Token token1 = new Token("value1", TokenType.BEARER, "refreshToken", "identityId", 1L, creationDate);
     Token token2 = new Token("value2", TokenType.BEARER, "refreshToken", "identityId", 1L, creationDate);
 
@@ -33,8 +34,8 @@ public class TokenEqualityTest {
 
   @Test
   public void areNotEqualWhenDifferentExpirationTimes() {
-    Token token1 = new Token("value", TokenType.BEARER, "refreshToken", "identityId", 1L, new Date(1408532291030L));
-    Token token2 = new Token("value", TokenType.BEARER, "refreshToken", "identityId", 1L, new Date(1408532291031L));
+    Token token1 = new Token("value", TokenType.BEARER, "refreshToken", "identityId", 1L, new DateTime(new Date(1408532291030L)));
+    Token token2 = new Token("value", TokenType.BEARER, "refreshToken", "identityId", 1L, new DateTime(new Date(1408532291031L)));
 
     assertThat(token1, is(not(token2)));
   }

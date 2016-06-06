@@ -1,6 +1,6 @@
 package com.clouway.oauth2.token;
 
-import java.util.Date;
+import com.clouway.oauth2.DateTime;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -11,9 +11,9 @@ public final class Token {
   public final String refreshToken;
   public final String identityId;
   public final Long expiresInSeconds;
-  public final Date creationDate;
+  public final DateTime creationDate;
 
-  public Token(String value, TokenType type, String refreshToken, String identityId, Long expiresInSeconds, Date creationDate) {
+  public Token(String value, TokenType type, String refreshToken, String identityId, Long expiresInSeconds, DateTime creationDate) {
     this.value = value;
     this.type = type;
     this.refreshToken = refreshToken;
@@ -22,9 +22,8 @@ public final class Token {
     this.creationDate = creationDate;
   }
 
-  public boolean isExpiredOn(Date date){
-    Date expirationDate = new Date(creationDate.getTime() + expiresInSeconds * 1000);
-    return date.after(expirationDate);
+  public boolean expiresAt(DateTime date) {
+    return date.after(date.plusSeconds(expiresInSeconds));
   }
 
   @Override

@@ -1,6 +1,7 @@
 package com.clouway.oauth2.jwt;
 
 import com.clouway.oauth2.BearerTokenResponse;
+import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.InstantaneousRequest;
 import com.clouway.oauth2.OAuthError;
 import com.clouway.oauth2.client.ServiceAccount;
@@ -37,7 +38,7 @@ public class JwtController implements InstantaneousRequest {
   }
 
   @Override
-  public Response handleAsOf(Request request, Date instant) {
+  public Response handleAsOf(Request request, DateTime instant) {
     String assertion = request.param("assertion");
 
     List<String> parts = Lists.newArrayList(Splitter.on(".").split(assertion));
