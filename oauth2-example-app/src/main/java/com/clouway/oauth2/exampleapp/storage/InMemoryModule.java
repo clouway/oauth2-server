@@ -11,7 +11,7 @@ import com.clouway.oauth2.exampleapp.SessionSecurity;
 import com.clouway.oauth2.exampleapp.UserLoader;
 import com.clouway.oauth2.exampleapp.UserLoaderImpl;
 import com.clouway.oauth2.exampleapp.UserRepository;
-import com.clouway.oauth2.token.Sha1TokenGenerator;
+import com.clouway.oauth2.token.UrlSafeTokenGenerator;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.inject.AbstractModule;
@@ -25,7 +25,7 @@ public class InMemoryModule extends AbstractModule {
   @Override
   protected void configure() {
 
-    InMemoryResourceOwnerRepository resourceOwnerRepository = new InMemoryResourceOwnerRepository(new Sha1TokenGenerator());
+    InMemoryResourceOwnerRepository resourceOwnerRepository = new InMemoryResourceOwnerRepository(new UrlSafeTokenGenerator());
 
     bind(ResourceOwnerStore.class).toInstance(resourceOwnerRepository);
     bind(ResourceOwnerAuthentication.class).toInstance(resourceOwnerRepository);
@@ -65,7 +65,7 @@ public class InMemoryModule extends AbstractModule {
     bind(ServiceAccountRepository.class).toInstance(clientRepository);
     bind(ClientRepository.class).toInstance(clientRepository);
 
-    InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository(new Sha1TokenGenerator());
+    InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository(new UrlSafeTokenGenerator());
     bind(ClientAuthorizationRepository.class).toInstance(authorizationRepository);
 
     InMemoryUserRepository userRepository = new InMemoryUserRepository();
@@ -77,7 +77,7 @@ public class InMemoryModule extends AbstractModule {
   @Provides
   @Singleton
   public Tokens getTokenRepository() {
-    return new InMemoryTokens(new Sha1TokenGenerator(), new Duration(900000000L));
+    return new InMemoryTokens(new UrlSafeTokenGenerator(), new Duration(900000000L));
   }
 
   @Provides
