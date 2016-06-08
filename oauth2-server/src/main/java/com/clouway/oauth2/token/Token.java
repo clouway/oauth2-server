@@ -2,16 +2,22 @@ package com.clouway.oauth2.token;
 
 import com.clouway.oauth2.DateTime;
 
+import java.io.Serializable;
+
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public final class Token {
+public final class Token implements Serializable {
   public final String value;
   public final TokenType type;
   public final String refreshToken;
   public final String identityId;
   public final Long expiresInSeconds;
   public final DateTime creationDate;
+
+  public Token() {
+    this(null, null, null, null, null, null);
+  }
 
   public Token(String value, TokenType type, String refreshToken, String identityId, Long expiresInSeconds, DateTime creationDate) {
     this.value = value;
