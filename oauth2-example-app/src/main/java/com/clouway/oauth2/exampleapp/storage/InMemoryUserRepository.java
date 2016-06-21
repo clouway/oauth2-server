@@ -25,8 +25,8 @@ class InMemoryUserRepository implements IdentityFinder, UserRepository {
   }
 
   @Override
-  public Optional<Identity> findIdentity(Long identityId, DateTime instantTime) {
-    return Optional.of(new Identity(identityId, "testUser", "test User", "test@clouway.com", null));
+  public Optional<Identity> findIdentity(String identityId, DateTime instantTime) {
+    return Optional.of(new Identity(Long.valueOf(identityId), "testUser", "test User", "User Family","test@clouway.com", null));
   }
 
   @Override
