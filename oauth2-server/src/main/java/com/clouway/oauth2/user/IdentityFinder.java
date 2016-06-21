@@ -1,10 +1,9 @@
 package com.clouway.oauth2.user;
 
 import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.http.Request;
 import com.google.common.base.Optional;
-
-import java.util.Date;
 
 /**
  * IdentityFinder is finding the Identity of the request.
@@ -20,4 +19,6 @@ public interface IdentityFinder {
    * @return an optional value with the identity id if it's associated with the provided request or absent value if not
    */
   Optional<String> find(Request request, DateTime instantTime);
+
+  Optional<Identity> findIdentity(String identityId, DateTime instantTime);
 }

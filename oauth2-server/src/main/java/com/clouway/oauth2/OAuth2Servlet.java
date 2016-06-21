@@ -1,6 +1,14 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.*;
+import com.clouway.oauth2.http.FkParams;
+import com.clouway.oauth2.http.FkRegex;
+import com.clouway.oauth2.http.HttpException;
+import com.clouway.oauth2.http.RequiresHeader;
+import com.clouway.oauth2.http.RequiresParam;
+import com.clouway.oauth2.http.Response;
+import com.clouway.oauth2.http.Status;
+import com.clouway.oauth2.http.TkFork;
+import com.clouway.oauth2.http.TkRequestWrap;
 import com.clouway.oauth2.jws.RsaJwsSignature;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
@@ -60,15 +68,18 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                             new InstantaneousRequestController(
                                                     new ClientController(
                                                             config.clientRepository(),
-                                                            new IssueNewTokenActivity(config.tokens(), config.clientAuthorizationRepository())
+                                                            new IssueNewTokenActivity(
+                                                                    config.tokens(), config.clientAuthorizationRepository()
+                                                            )
                                                     ))
                                     )),
                             new FkParams("grant_type", "refresh_token",
                                     new RequiresHeader("Authorization",
-                                            new InstantaneousRequestController(new ClientController(
-                                                    config.clientRepository(),
-                                                    new RefreshTokenActivity(config.tokens())
-                                            )
+                                            new InstantaneousRequestController(
+                                                    new ClientController(
+                                                            config.clientRepository(),
+                                                            new RefreshTokenActivity(config.tokens())
+                                                    )
                                             )
                                     )),
                             // JWT Support
@@ -79,6 +90,12 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                     config.tokens(),
                                                     config.serviceAccountRepository()
                                             )))
+                            ))
+            ),
+            new FkRegex(".*/userInfo",
+                    new RequiresParam("access_token",
+                            new InstantaneousRequestController(
+                                    new UserInfoController(config.identityFinder(), config.tokens())
                             ))
             )
     );

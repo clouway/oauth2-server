@@ -1,6 +1,7 @@
 package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.exampleapp.UserRepository;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.user.IdentityFinder;
@@ -21,6 +22,11 @@ class InMemoryUserRepository implements IdentityFinder, UserRepository {
     }
 
     return Optional.absent();
+  }
+
+  @Override
+  public Optional<Identity> findIdentity(Long identityId, DateTime instantTime) {
+    return Optional.of(new Identity(identityId, "testUser", "test User", "test@clouway.com", null));
   }
 
   @Override

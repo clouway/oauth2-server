@@ -1,5 +1,9 @@
 package com.clouway.oauth2.http;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,5 +81,9 @@ public class RsPrint implements Response {
   @Override
   public InputStream body() throws IOException {
     return response.body();
+  }
+
+  public JsonObject asJson() throws IOException {
+    return new JsonParser().parse(printBody()).getAsJsonObject();
   }
 }
