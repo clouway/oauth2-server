@@ -4,20 +4,24 @@ package com.clouway.oauth2;
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public final class Identity {
-  private Long id;
+  private String id;
   private String name;
   private String givenName;
   private final String familyName;
   private String email;
   private String picture;
 
-  public Identity(Long id, String name, String givenName, String familyName, String email, String picture) {
+  public Identity(String id, String name, String givenName, String familyName, String email, String picture) {
     this.id = id;
     this.name = name;
     this.givenName = givenName;
     this.familyName = familyName;
     this.email = email;
     this.picture = picture;
+  }
+
+  public String id() {
+    return id;
   }
 
   public String name() {
@@ -36,7 +40,9 @@ public final class Identity {
     return familyName;
   }
 
-  public Long id() {
-    return id;
+  public String picture() {
+    return picture;
   }
+
+
 }

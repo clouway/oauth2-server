@@ -46,7 +46,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
       will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", 10L, anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);
-      will(returnValue(Optional.of(new Identity(985L, "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::"))));
+      will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::"))));
     }});
 
     Response response = new UserInfoController(identityFinder, tokens).handleAsOf(request, anyInstantTime);
