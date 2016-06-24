@@ -16,11 +16,11 @@ import static org.hamcrest.Matchers.is;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class RequestHandlerMatchingParamsTest {
+public class RequestHandlerMatchingParamTest {
 
   @Test
   public void requestWithoutParameters() throws IOException {
-    Optional<Response> opt = new RequestHandlerMatchingParams("param1", "value1", dummyHandler()).route(
+    Optional<Response> opt = new RequestHandlerMatchingParam("param1", "value1", dummyHandler()).route(
             new ByteRequest("/test1", Collections.<String, String>emptyMap(), "test".getBytes())
     );
     assertThat(opt.isPresent(), is(equalTo(false)));
@@ -29,14 +29,14 @@ public class RequestHandlerMatchingParamsTest {
 
   @Test
   public void paramIsMatching() throws IOException {
-    Optional<Response> opt = new RequestHandlerMatchingParams("param1", "value1", dummyHandler()).route(new ByteRequest("/test1", ImmutableMap.of("param1", "value1"), "test".getBytes()));
+    Optional<Response> opt = new RequestHandlerMatchingParam("param1", "value1", dummyHandler()).route(new ByteRequest("/test1", ImmutableMap.of("param1", "value1"), "test".getBytes()));
 
     assertThat(opt.isPresent(), is(equalTo(true)));
   }
 
   @Test
   public void paramNameIsNotMatching() throws IOException {
-    Optional<Response> opt = new RequestHandlerMatchingParams("==param1==", "value1", dummyHandler()).route(
+    Optional<Response> opt = new RequestHandlerMatchingParam("==param1==", "value1", dummyHandler()).route(
             new ByteRequest("/test1", ImmutableMap.of("==another-parameter==", "value1"), "test".getBytes())
     );
 
@@ -45,7 +45,7 @@ public class RequestHandlerMatchingParamsTest {
 
   @Test
   public void paramValueIsNotMatching() throws IOException {
-    Optional<Response> opt = new RequestHandlerMatchingParams("==param==", "==value==", dummyHandler()).route(
+    Optional<Response> opt = new RequestHandlerMatchingParam("==param==", "==value==", dummyHandler()).route(
             new ByteRequest("/test1", ImmutableMap.of("==param==", "==another-value=="), "test".getBytes())
     );
 
