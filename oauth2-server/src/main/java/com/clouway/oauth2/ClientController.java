@@ -34,14 +34,14 @@ class ClientController implements InstantaneousRequest {
 
     // Client was not authorized
     if (!opt.isPresent()) {
-      return OAuthError.unathorizedClient();
+      return OAuthError.unauthorizedClient();
     }
 
     Client client = opt.get();
 
     // Client secret did not match?
     if (!client.secret.equalsIgnoreCase(clientSecret)) {
-      return OAuthError.unathorizedClient();
+      return OAuthError.unauthorizedClient();
     }
 
     return clientActivity.execute(client, request, instant);
