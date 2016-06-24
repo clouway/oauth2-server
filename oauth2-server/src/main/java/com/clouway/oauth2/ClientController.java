@@ -30,14 +30,14 @@ class ClientController implements InstantaneousRequest {
     String clientId = credentials[0];
     String clientSecret = credentials[1];
 
-    Optional<Client> opt = clientRepository.findById(clientId);
+    Optional<Client> possibleResponse = clientRepository.findById(clientId);
 
     // Client was not authorized
-    if (!opt.isPresent()) {
+    if (!possibleResponse.isPresent()) {
       return OAuthError.unauthorizedClient();
     }
 
-    Client client = opt.get();
+    Client client = possibleResponse.get();
 
     // Client secret did not match?
     if (!client.secret.equalsIgnoreCase(clientSecret)) {
