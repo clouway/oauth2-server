@@ -2,6 +2,7 @@ package com.clouway.oauth2;
 
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.http.ParamRequest;
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsPrint;
@@ -16,10 +17,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Date;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -46,18 +46,21 @@ public class AuthorizeClientsTest {
   public void happyPath() throws IOException {
     final Client anyRegisteredClient = newClient("fe72722a40de846e03865cb3b582aed57841ac71", "857613db7b18232c72a5093ad19dbc6df74a139e");
 
-    final Request request = clientAuthRequest("Basic ZmU3MjcyMmE0MGRlODQ2ZTAzODY1Y2IzYjU4MmFlZDU3ODQxYWM3MTo4NTc2MTNkYjdiMTgyMzJjNzJhNTA5M2FkMTlkYmM2ZGY3NGExMzll");
+    final Request anyRequest = new ParamRequest(ImmutableMap.<String, String>of());
     final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
       oneOf(clientRepository).findById("fe72722a40de846e03865cb3b582aed57841ac71");
       will(returnValue(Optional.of(anyRegisteredClient)));
 
-      oneOf(clientActivity).execute(anyRegisteredClient, request, anyInstantTime);
+      oneOf(clientActivity).execute(anyRegisteredClient, anyRequest, anyInstantTime);
       will(returnValue(new RsText("::body::")));
     }});
 
-    Response response = handler.handleAsOf(request, anyInstantTime);
+    Response response = handler.handleAsOf(
+            anyRequest, new ClientCredentials("fe72722a40de846e03865cb3b582aed57841ac71", "857613db7b18232c72a5093ad19dbc6df74a139e"),
+            anyInstantTime
+    );
 
     String body = new RsPrint(response).printBody();
 
@@ -66,14 +69,14 @@ public class AuthorizeClientsTest {
 
   @Test
   public void clientWasNotFound() throws IOException {
-    final Request request = clientAuthRequest("Basic ZmU3MjcyMmE0MGRlODQ2ZTAzODY1Y2IzYjU4MmFlZDU3ODQxYWM3MTo4NTc2MTNkYjdiMTgyMzJjNzJhNTA5M2FkMTlkYmM2ZGY3NGExMzll");
+    final Request anyRequest = new ParamRequest(ImmutableMap.<String, String>of());
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("fe72722a40de846e03865cb3b582aed57841ac71");
+      oneOf(clientRepository).findById("::unknown client id::");
       will(returnValue(Optional.absent()));
     }});
 
-    Response response = handler.handleAsOf(request, new DateTime());
+    Response response = handler.handleAsOf(anyRequest, new ClientCredentials("::unknown client id::", "::any secret::"), new DateTime());
 
     String body = new RsPrint(response).printBody();
 
@@ -83,28 +86,24 @@ public class AuthorizeClientsTest {
   @Test
   public void clientSecretNotMatch() throws IOException {
     final Client anyRegisteredClient = newClient(
-            "fe72722a40de846e03865cb3b582aed57841ac71", "::dummy_secret::"
+            "::known client id::", "::client secrent::"
     );
 
-    final Request request = clientAuthRequest("Basic ZmU3MjcyMmE0MGRlODQ2ZTAzODY1Y2IzYjU4MmFlZDU3ODQxYWM3MTo4NTc2MTNkYjdiMTgyMzJjNzJhNTA5M2FkMTlkYmM2ZGY3NGExMzll");
+    final Request anyRequest = new ParamRequest(ImmutableMap.<String, String>of());
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("fe72722a40de846e03865cb3b582aed57841ac71");
+      oneOf(clientRepository).findById("::known client id::");
       will(returnValue(Optional.of(anyRegisteredClient)));
     }});
 
-    Response response = handler.handleAsOf(request, new DateTime());
+    Response response = handler.handleAsOf(
+            anyRequest, new ClientCredentials("::known client id::", "::client secret that will not match::"),
+            new DateTime()
+    );
 
     String body = new RsPrint(response).printBody();
 
     assertThat(body, containsString("unauthorized_client"));
-  }
-
-  private Request clientAuthRequest(String authorizationValue) {
-    return new ByteRequest(
-            ImmutableMap.<String, String>of(),
-            ImmutableMap.of("Authorization", authorizationValue)
-    );
   }
 
   private Client newClient(String clientId, String secret) {

@@ -1,8 +1,8 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.RequestHandlerMatchingParam;
 import com.clouway.oauth2.http.FkRegex;
 import com.clouway.oauth2.http.HttpException;
+import com.clouway.oauth2.http.RequestHandlerMatchingParam;
 import com.clouway.oauth2.http.RequiresHeader;
 import com.clouway.oauth2.http.RequiresParam;
 import com.clouway.oauth2.http.Response;
@@ -66,20 +66,24 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             new RequestHandlerMatchingParam("grant_type", "authorization_code",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
-                                                    new ClientController(
-                                                            config.clientRepository(),
-                                                            new IssueNewTokenActivity(
-                                                                    config.tokens(), config.clientAuthorizationRepository()
+                                                    new AuthorizationHeaderCredentialsRequest(
+                                                            new ClientController(
+                                                                    config.clientRepository(),
+                                                                    new IssueNewTokenActivity(
+                                                                            config.tokens(), config.clientAuthorizationRepository()
+                                                                    )
                                                             )
                                                     ))
                                     )),
                             new RequestHandlerMatchingParam("grant_type", "refresh_token",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
-                                                    new ClientController(
-                                                            config.clientRepository(),
-                                                            new RefreshTokenActivity(config.tokens())
-                                                    )
+                                                    new AuthorizationHeaderCredentialsRequest(
+                                                            new ClientController(
+                                                                    config.clientRepository(),
+                                                                    new RefreshTokenActivity(config.tokens())
+                                                            ))
+
                                             )
                                     )),
                             // JWT Support

@@ -9,6 +9,6 @@ import com.clouway.oauth2.http.Response;
  */
 public interface ClientRequest {
 
-  Response handleAsOf(ClientCredentials credentials, Request request, DateTime instant);
+  Response handleAsOf(Request request, ClientCredentials credentials, DateTime instant);
 
 }
