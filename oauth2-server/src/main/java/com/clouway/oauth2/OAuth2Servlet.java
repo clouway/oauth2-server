@@ -1,6 +1,6 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.FkParams;
+import com.clouway.oauth2.http.RequestHandlerMatchingParams;
 import com.clouway.oauth2.http.FkRegex;
 import com.clouway.oauth2.http.HttpException;
 import com.clouway.oauth2.http.RequiresHeader;
@@ -63,7 +63,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
             ),
             new FkRegex(".*/token",
                     new TkFork(
-                            new FkParams("grant_type", "authorization_code",
+                            new RequestHandlerMatchingParams("grant_type", "authorization_code",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
                                                     new ClientController(
@@ -73,7 +73,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                             )
                                                     ))
                                     )),
-                            new FkParams("grant_type", "refresh_token",
+                            new RequestHandlerMatchingParams("grant_type", "refresh_token",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
                                                     new ClientController(
@@ -83,7 +83,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                             )
                                     )),
                             // JWT Support
-                            new FkParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer", new RequiresParam("assertion",
+                            new RequestHandlerMatchingParams("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer", new RequiresParam("assertion",
                                     new InstantaneousRequestController(
                                             new JwtController(
                                                     signatureFactory,
