@@ -11,7 +11,7 @@ import static com.google.common.io.BaseEncoding.base64;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-class ClientController implements InstantaneousRequest {
+class ClientController implements InstantaneousRequest, ClientRequest {
 
   private final ClientRepository clientRepository;
   private final ClientActivity clientActivity;
@@ -25,6 +25,11 @@ class ClientController implements InstantaneousRequest {
   public Response handleAsOf(Request request, DateTime instant) {
     ClientCredentials credentials = decodeCredentials(request);
 
+    return handleAsOf(credentials, request, instant);
+  }
+
+  @Override
+  public Response handleAsOf(ClientCredentials credentials, Request request, DateTime instant) {
     Optional<Client> possibleResponse = clientRepository.findById(credentials.clientId());
 
     // Client was not authorized
