@@ -2,6 +2,7 @@ package com.clouway.oauth2;
 
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
+import com.clouway.oauth2.http.RsBadRequest;
 
 import static com.google.common.io.BaseEncoding.base64;
 
@@ -21,12 +22,16 @@ class AuthorizationHeaderCredentialsRequest implements InstantaneousRequest {
 
   @Override
   public Response handleAsOf(Request request, DateTime instantTime) {
-    ClientCredentials clientCredentials = decodeCredentials(request);
+    String authHeader = request.header("Authorization");
+    if (!authHeader.startsWith("Basic")) {
+      return new RsBadRequest();
+    }
+    ClientCredentials clientCredentials = decodeCredentials(authHeader);
     return clientRequest.handleAsOf(request, clientCredentials, instantTime);
   }
 
-  private ClientCredentials decodeCredentials(Request request) {
-    String[] credentials = decodeAuthorizationHeader(request).split(":");
+  private ClientCredentials decodeCredentials(String authHeader) {
+    String[] credentials = decodeAuthorizationHeader(authHeader).split(":");
 
     String clientId = credentials[0];
     String clientSecret = credentials[1];
@@ -34,8 +39,7 @@ class AuthorizationHeaderCredentialsRequest implements InstantaneousRequest {
     return new ClientCredentials(clientId, clientSecret);
   }
 
-  private String decodeAuthorizationHeader(Request request) {
-    String authHeader = request.header("Authorization");
+  private String decodeAuthorizationHeader(String authHeader) {
 
     String credentials = authHeader.substring(6);
 
