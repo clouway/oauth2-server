@@ -29,7 +29,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     Optional<Client> optClient = clientRepository.findById(clientId);
 
     if (!optClient.isPresent()) {
-      return OAuthError.unathorizedClient();
+      return OAuthError.unauthorizedClient();
     }
 
     Client client = optClient.get();

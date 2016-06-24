@@ -17,7 +17,7 @@ public class OAuthError extends RsWrap {
     return new OAuthError("invalid_request");
   }
 
-  public static OAuthError unathorizedClient() {
+  public static OAuthError unauthorizedClient() {
     return new OAuthError("unauthorized_client");
   }
 
