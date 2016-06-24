@@ -6,8 +6,6 @@ import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
 import com.google.common.base.Optional;
 
-import java.util.Date;
-
 import static com.google.common.io.BaseEncoding.base64;
 
 /**
@@ -25,12 +23,9 @@ class ClientController implements InstantaneousRequest {
 
   @Override
   public Response handleAsOf(Request request, DateTime instant) {
-    String[] credentials = decodeCredentials(request).split(":");
+    ClientCredentials credentials = decodeCredentials(request);
 
-    String clientId = credentials[0];
-    String clientSecret = credentials[1];
-
-    Optional<Client> possibleResponse = clientRepository.findById(clientId);
+    Optional<Client> possibleResponse = clientRepository.findById(credentials.clientId());
 
     // Client was not authorized
     if (!possibleResponse.isPresent()) {
@@ -39,15 +34,25 @@ class ClientController implements InstantaneousRequest {
 
     Client client = possibleResponse.get();
 
-    // Client secret did not match?
-    if (!client.secret.equalsIgnoreCase(clientSecret)) {
+    // Client credentials did not match?
+    if (!client.credentialsMatch(credentials)) {
       return OAuthError.unauthorizedClient();
     }
 
     return clientActivity.execute(client, request, instant);
   }
 
-  private String decodeCredentials(Request request) {
+  private ClientCredentials decodeCredentials(Request request) {
+    String[] credentials = decodeAuthorizationHeader(request).split(":");
+
+    String clientId = credentials[0];
+    String clientSecret = credentials[1];
+
+    return new ClientCredentials(clientId, clientSecret);
+  }
+
+
+  private String decodeAuthorizationHeader(Request request) {
     String authHeader = request.header("Authorization");
 
     String credentials = authHeader.substring(6);

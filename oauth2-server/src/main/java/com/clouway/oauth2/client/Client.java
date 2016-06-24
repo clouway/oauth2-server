@@ -1,5 +1,7 @@
 package com.clouway.oauth2.client;
 
+import com.clouway.oauth2.ClientCredentials;
+
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
@@ -18,6 +20,10 @@ public class Client {
     this.url = url;
     this.description = description;
     this.redirectURI = redirectURI;
+  }
+
+  public boolean credentialsMatch(ClientCredentials credentials) {
+    return secret.equalsIgnoreCase(credentials.clientSecret());
   }
 
   @Override
