@@ -6,13 +6,16 @@ import com.clouway.oauth2.http.Response;
 import static com.google.common.io.BaseEncoding.base64;
 
 /**
+ * AuthorizationHeaderCredentialsRequest is a request which is decoding Authorization header into ClientCredentials
+ * pair.
+ *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class AuthorizationHeaderCredentialsRequest implements InstantaneousRequest {
+class AuthorizationHeaderCredentialsRequest implements InstantaneousRequest {
 
   private final ClientRequest clientRequest;
 
-  public AuthorizationHeaderCredentialsRequest(ClientRequest clientRequest) {
+  AuthorizationHeaderCredentialsRequest(ClientRequest clientRequest) {
     this.clientRequest = clientRequest;
   }
 
