@@ -41,6 +41,10 @@ class AuthorizationHeaderCredentialsRequest implements InstantaneousRequest {
   }
 
   private ClientCredentials parseCredentials(String decodedHeader) {
+    if (!decodedHeader.contains(":")) {
+      throw new IllegalArgumentException("Creadentials are not separated with ':'");
+    }
+
     String[] credentials = decodedHeader.split(":");
 
     String clientId = credentials[0];

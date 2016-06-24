@@ -63,6 +63,16 @@ public class DecodeClientCredentialsFromAuthorizationHeaderTest {
     assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_BAD_REQUEST)));
   }
 
+  @Test
+  public void clientIdAndClientSecretAreNotCorrectlySeparated() {
+    final Request clientAuthRequest = clientAuthRequest(
+            //Basic testidtestsecret
+            "Basic dGVzdGlkdGVzdHNlY3JldA=="
+    );
+    Response response = handler.handleAsOf(clientAuthRequest, anyInstantTime());
+    assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_BAD_REQUEST)));
+  }
+
   private DateTime anyInstantTime() {
     return new DateTime();
   }
