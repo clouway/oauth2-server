@@ -26,12 +26,22 @@ class AuthorizationHeaderCredentialsRequest implements InstantaneousRequest {
     if (!authHeader.startsWith("Basic")) {
       return new RsBadRequest();
     }
-    ClientCredentials clientCredentials = decodeCredentials(authHeader);
-    return clientRequest.handleAsOf(request, clientCredentials, instantTime);
+    String credentialsString = trimLeadingBasicText(authHeader);
+
+    try {
+      String decoded = new String(base64().decode(credentialsString));
+
+      ClientCredentials clientCredentials = parseCredentials(decoded);
+      return clientRequest.handleAsOf(request, clientCredentials, instantTime);
+
+    } catch (IllegalArgumentException e) {
+      return new RsBadRequest();
+    }
+
   }
 
-  private ClientCredentials decodeCredentials(String authHeader) {
-    String[] credentials = decodeAuthorizationHeader(authHeader).split(":");
+  private ClientCredentials parseCredentials(String decodedHeader) {
+    String[] credentials = decodedHeader.split(":");
 
     String clientId = credentials[0];
     String clientSecret = credentials[1];
@@ -39,10 +49,7 @@ class AuthorizationHeaderCredentialsRequest implements InstantaneousRequest {
     return new ClientCredentials(clientId, clientSecret);
   }
 
-  private String decodeAuthorizationHeader(String authHeader) {
-
-    String credentials = authHeader.substring(6);
-
-    return new String(base64().decode(credentials));
+  private String trimLeadingBasicText(String authHeader) {
+    return authHeader.substring(6);
   }
 }

@@ -17,12 +17,14 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class ParseClientCredentialsFromAuthorizationHeaderTest {
+public class DecodeClientCredentialsFromAuthorizationHeaderTest {
 
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   private ClientRequest clientRequest = context.mock(ClientRequest.class);
+
+  AuthorizationHeaderCredentialsRequest handler = new AuthorizationHeaderCredentialsRequest(clientRequest);
 
   @Test
   public void happyPath() {
@@ -39,16 +41,25 @@ public class ParseClientCredentialsFromAuthorizationHeaderTest {
               ), anyInstantTime);
     }});
 
-    AuthorizationHeaderCredentialsRequest handler = new AuthorizationHeaderCredentialsRequest(clientRequest);
+
     handler.handleAsOf(clientAuthRequest, anyInstantTime);
   }
 
   @Test
   public void headerIsNotWithBasicAuthorization() {
     final Request clientAuthRequest = clientAuthRequest(
-            "ZmU3MjcyMmE0MGRlODQ2ZTAzODY1Y2IzYjU4MmFlZDU3ODQxYWM3MTo4NTc2MTNkYjdiMTgyMzJjNzJhNTA5M2FkMTlkYmM2ZGY3NGExMzll"
+            "::some header value::"
     );
-    Response response = new AuthorizationHeaderCredentialsRequest(clientRequest).handleAsOf(clientAuthRequest, anyInstantTime());
+    Response response = handler.handleAsOf(clientAuthRequest, anyInstantTime());
+    assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_BAD_REQUEST)));
+  }
+
+  @Test
+  public void basicHeaderIsNotValidHexValue() {
+    final Request clientAuthRequest = clientAuthRequest(
+            "Basic z"
+    );
+    Response response = handler.handleAsOf(clientAuthRequest, anyInstantTime());
     assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_BAD_REQUEST)));
   }
 
