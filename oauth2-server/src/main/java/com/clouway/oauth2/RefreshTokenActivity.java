@@ -24,13 +24,13 @@ class RefreshTokenActivity implements ClientActivity {
   public Response execute(Client client, Request request, DateTime instant) {
     String refreshToken = request.param("refresh_token");
 
-    Optional<Token> opt = tokens.refreshToken(refreshToken, instant);
+    Optional<Token> possibleResponse = tokens.refreshToken(refreshToken, instant);
 
-    if (!opt.isPresent()) {
+    if (!possibleResponse.isPresent()) {
       return OAuthError.invalidGrant();
     }
 
-    Token token = opt.get();
+    Token token = possibleResponse.get();
 
     return new BearerTokenResponse(token.value, token.expiresInSeconds, token.refreshToken);
   }

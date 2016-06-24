@@ -27,20 +27,20 @@ public class UserInfoController implements InstantaneousRequest {
   public Response handleAsOf(Request request, DateTime instantTime) {
     String accessToken = request.param("access_token");
 
-    Optional<Token> opt = tokens.getNotExpiredToken(accessToken, instantTime);
+    Optional<Token> possibleTokenResponse = tokens.getNotExpiredToken(accessToken, instantTime);
 
-    if (!opt.isPresent()) {
+    if (!possibleTokenResponse.isPresent()) {
       return new RsBadRequest();
     }
 
-    Token token = opt.get();
+    Token token = possibleTokenResponse.get();
 
-    Optional<Identity> optId = identityFinder.findIdentity(token.identityId, instantTime);
-    if (!optId.isPresent()) {
+    Optional<Identity> possibleIdentityResponse = identityFinder.findIdentity(token.identityId, instantTime);
+    if (!possibleIdentityResponse.isPresent()) {
       return new RsBadRequest();
     }
 
-    Identity identity = optId.get();
+    Identity identity = possibleIdentityResponse.get();
 
     JsonObject o = new JsonObject();
 

@@ -26,26 +26,26 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String responseType = request.param("response_type");
     String clientId = request.param("client_id");
 
-    Optional<Client> optClient = clientRepository.findById(clientId);
+    Optional<Client> possibleClientResponse = clientRepository.findById(clientId);
 
-    if (!optClient.isPresent()) {
+    if (!possibleClientResponse.isPresent()) {
       return OAuthError.unauthorizedClient();
     }
 
-    Client client = optClient.get();
+    Client client = possibleClientResponse.get();
 
-    Optional<Authorization> opt = clientAuthorizationRepository.authorize(client, userId, responseType);
+    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(client, userId, responseType);
 
     // RFC-6749 - Section: 4.2.2.1
     // The authorization server redirects the user-agent by
     // sending the following HTTP response:
     // HTTP/1.1 302 Found
     // Location: https://client.example.com/cb#error=access_denied&state=xyz
-    if (!opt.isPresent()) {
+    if (!possibleAuthorizationResponse.isPresent()) {
       return new RsRedirect(client.redirectURI + "?error=access_denied");
     }
 
-    Authorization authorization = opt.get();
+    Authorization authorization = possibleAuthorizationResponse.get();
     return new RsRedirect(String.format("%s?code=%s", client.redirectURI, authorization.code));
   }
 }

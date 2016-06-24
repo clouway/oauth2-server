@@ -56,13 +56,13 @@ public class JwtController implements InstantaneousRequest {
     Jwt.Header header = gson.fromJson(headerValue, Jwt.Header.class);
     Jwt.ClaimSet claimSet = gson.fromJson(content, Jwt.ClaimSet.class);
 
-    Optional<ServiceAccount> opt = repository.findServiceAccount(claimSet);
+    Optional<ServiceAccount> possibleResponse = repository.findServiceAccount(claimSet);
 
-    if (!opt.isPresent()) {
+    if (!possibleResponse.isPresent()) {
       return OAuthError.invalidGrant();
     }
 
-    ServiceAccount serviceAccount = opt.get();
+    ServiceAccount serviceAccount = possibleResponse.get();
 
     Optional<Signature> optSignature = signatureFactory.createSignature(signatureValue, header);
 

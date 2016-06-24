@@ -19,9 +19,9 @@ public class TkFork implements Take {
   @Override
   public Response ack(Request request) throws IOException {
     for (Fork each : forks) {
-      Optional<Response> opt = each.route(request);
-      if (opt.isPresent()) {
-        return opt.get();
+      Optional<Response> possibleResponse = each.route(request);
+      if (possibleResponse.isPresent()) {
+        return possibleResponse.get();
       }
     }
 

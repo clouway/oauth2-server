@@ -18,35 +18,35 @@ public class FkRegexTest {
 
   @Test
   public void matchingPath() throws IOException {
-    Optional<Response> opt = new FkRegex("/abc/aaa", new Take() {
+    Optional<Response> possibleResponse = new FkRegex("/abc/aaa", new Take() {
       @Override
       public Response ack(Request request) {
         return new RsText("test message");
       }
     }).route(new ByteRequest("/abc/aaa", ImmutableMap.<String, String>of(), "test".getBytes()));
-    assertThat(opt.isPresent(), is(equalTo(true)));
+    assertThat(possibleResponse.isPresent(), is(equalTo(true)));
   }
 
   @Test
   public void partialMatching() throws IOException {
-    Optional<Response> opt = new FkRegex(".*/aaa", new Take() {
+    Optional<Response> possibleResponse = new FkRegex(".*/aaa", new Take() {
       @Override
       public Response ack(Request request) {
         return new RsText("test message");
       }
     }).route(new ByteRequest("/abc/aaa", ImmutableMap.<String, String>of(), "test".getBytes()));
-    assertThat(opt.isPresent(), is(equalTo(true)));
+    assertThat(possibleResponse.isPresent(), is(equalTo(true)));
   }
 
   @Test
   public void notMatchingPath() throws IOException {
-    Optional<Response> opt = new FkRegex("/abc/aaa", new Take() {
+    Optional<Response> possibleResponse = new FkRegex("/abc/aaa", new Take() {
       @Override
       public Response ack(Request request) {
         return new RsText("test message");
       }
     }).route(new ByteRequest("/aaa/abc", ImmutableMap.<String, String>of(), "test".getBytes()));
-    assertThat(opt.isPresent(), is(equalTo(false)));
+    assertThat(possibleResponse.isPresent(), is(equalTo(false)));
   }
 
 }
