@@ -18,7 +18,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Date;
 
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
@@ -49,9 +48,8 @@ public class IssueNewTokenForClientTest {
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
       oneOf(tokens).issueToken("::user_id::", anyTime);
-      will(returnValue(new Token("::token::", TokenType.BEARER, "", "::user_id", 10L, new DateTime())));
+      will(returnValue(new Token("::token::", TokenType.BEARER, "", "::user_id", 10L, anyTime)));
     }});
-
 
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
     String body = new RsPrint(response).printBody();
