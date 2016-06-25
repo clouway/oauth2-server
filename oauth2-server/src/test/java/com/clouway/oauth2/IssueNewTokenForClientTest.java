@@ -6,8 +6,6 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.http.ParamRequest;
 import com.clouway.oauth2.http.Response;
 import com.clouway.oauth2.http.RsPrint;
-import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -18,10 +16,13 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -32,11 +33,11 @@ public class IssueNewTokenForClientTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  @Mock
-  Tokens tokens;
+  private Tokens tokens =  context.mock(Tokens.class);
 
-  @Mock
-  ClientAuthorizationRepository clientAuthorizationRepository;
+  private ClientAuthorizationRepository clientAuthorizationRepository = context.mock(ClientAuthorizationRepository.class);
+
+  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
 
   @Test
   public void happyPath() throws IOException {
@@ -45,7 +46,7 @@ public class IssueNewTokenForClientTest {
     final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code::");
+      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
       oneOf(tokens).issueToken("::user_id::", anyTime);
@@ -59,13 +60,28 @@ public class IssueNewTokenForClientTest {
   }
 
   @Test
+  public void controllerCallsClientAuthRepositoryWithCorrectValues() throws IOException {
+    final Client anyClient = aNewClient().build();
+
+    context.checking(new Expectations() {{
+      oneOf(clientAuthorizationRepository).findAuthorization(anyClient, "::auth code::");
+      will(returnValue(Optional.absent()));
+    }});
+
+    controller.execute(anyClient, new ParamRequest(
+            ImmutableMap.of("code", "::auth code::")),
+            null
+    );
+  }
+
+  @Test
   public void clientWasNotAuthorized() throws IOException {
     final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
     final Client client = aNewClient().build();
     final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).findAuthorization(client, "::auth_code1::");
+      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)),with(any(String.class)));
       will(returnValue(Optional.absent()));
     }});
 
