@@ -1,4 +1,4 @@
-package com.clouway.oauth2;
+package com.clouway.oauth2.exampleapp;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>

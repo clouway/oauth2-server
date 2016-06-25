@@ -1,6 +1,6 @@
 package com.clouway.oauth2.exampleapp.storage;
 
-import com.clouway.oauth2.ResourceOwner;
+import com.clouway.oauth2.exampleapp.ResourceOwner;
 import com.clouway.oauth2.Session;
 import com.clouway.oauth2.token.TokenGenerator;
 import com.google.common.base.Optional;
