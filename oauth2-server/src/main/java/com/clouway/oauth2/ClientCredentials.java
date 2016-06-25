@@ -3,11 +3,13 @@ package com.clouway.oauth2;
 import com.google.common.base.Objects;
 
 /**
+ * ClientCredentials is representing pair of id and secret of the client app.
+ *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public class ClientCredentials {
-  private String clientId;
-  private String clientSecret;
+  private final String clientId;
+  private final String clientSecret;
 
   public ClientCredentials(String clientId, String clientSecret) {
     this.clientId = clientId;
