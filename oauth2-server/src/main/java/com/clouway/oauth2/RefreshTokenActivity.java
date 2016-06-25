@@ -7,8 +7,6 @@ import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 
-import java.util.Date;
-
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
