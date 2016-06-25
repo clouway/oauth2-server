@@ -7,16 +7,20 @@ import com.clouway.oauth2.http.RsBadRequest;
 import static com.google.common.io.BaseEncoding.base64;
 
 /**
- * AuthorizationHeaderCredentialsRequest is a request which is decoding Authorization header into ClientCredentials
- * pair.
+ * BasicAuthenticationCredentialsRequest is using basic authentication scheme to decode {@link ClientCredentials} from
+ * the Basic Authorization header.
+ *
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc6749#section-2.3">OAuth2 Client Authentication</a>
+ * @see <a href="https://tools.ietf.org/html/rfc2617#section-2">Basic Authentication Scheme</a>
  *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-class AuthorizationHeaderCredentialsRequest implements InstantaneousRequest {
+class BasicAuthenticationCredentialsRequest implements InstantaneousRequest {
 
   private final ClientRequest clientRequest;
 
-  AuthorizationHeaderCredentialsRequest(ClientRequest clientRequest) {
+  BasicAuthenticationCredentialsRequest(ClientRequest clientRequest) {
     this.clientRequest = clientRequest;
   }
 

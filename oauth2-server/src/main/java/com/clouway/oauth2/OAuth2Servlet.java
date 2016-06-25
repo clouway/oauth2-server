@@ -66,7 +66,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             new RequestHandlerMatchingParam("grant_type", "authorization_code",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
-                                                    new AuthorizationHeaderCredentialsRequest(
+                                                    new BasicAuthenticationCredentialsRequest(
                                                             new ClientController(
                                                                     config.clientRepository(),
                                                                     new IssueNewTokenActivity(
@@ -78,7 +78,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             new RequestHandlerMatchingParam("grant_type", "refresh_token",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
-                                                    new AuthorizationHeaderCredentialsRequest(
+                                                    new BasicAuthenticationCredentialsRequest(
                                                             new ClientController(
                                                                     config.clientRepository(),
                                                                     new RefreshTokenActivity(config.tokens())

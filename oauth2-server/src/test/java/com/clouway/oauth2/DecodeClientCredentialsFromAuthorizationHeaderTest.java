@@ -24,7 +24,7 @@ public class DecodeClientCredentialsFromAuthorizationHeaderTest {
 
   private ClientRequest clientRequest = context.mock(ClientRequest.class);
 
-  AuthorizationHeaderCredentialsRequest handler = new AuthorizationHeaderCredentialsRequest(clientRequest);
+  BasicAuthenticationCredentialsRequest handler = new BasicAuthenticationCredentialsRequest(clientRequest);
 
   @Test
   public void happyPath() {
@@ -66,8 +66,7 @@ public class DecodeClientCredentialsFromAuthorizationHeaderTest {
   @Test
   public void clientIdAndClientSecretAreNotCorrectlySeparated() {
     final Request clientAuthRequest = clientAuthRequest(
-            //Basic testidtestsecret
-            "Basic dGVzdGlkdGVzdHNlY3JldA=="
+            "Basic dGVzdGlkdGVzdHNlY3JldA==" // is encoding of: testidtestsecret
     );
     Response response = handler.handleAsOf(clientAuthRequest, anyInstantTime());
     assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_BAD_REQUEST)));
