@@ -13,12 +13,12 @@ import com.google.gson.JsonObject;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class UserInfoController implements InstantaneousRequest {
+class UserInfoController implements InstantaneousRequest {
 
   private final IdentityFinder identityFinder;
   private final Tokens tokens;
 
-  public UserInfoController(IdentityFinder identityFinder, Tokens tokens) {
+  UserInfoController(IdentityFinder identityFinder, Tokens tokens) {
     this.identityFinder = identityFinder;
     this.tokens = tokens;
   }
