@@ -46,7 +46,7 @@ public class DecodeClientCredentialsFromAuthorizationHeaderTest {
   }
 
   @Test
-  public void headerIsNotWithBasicAuthorization() {
+  public void headerIsNotForBasicAuthorization() {
     final Request clientAuthRequest = clientAuthRequest(
             "::some header value::"
     );
@@ -55,7 +55,7 @@ public class DecodeClientCredentialsFromAuthorizationHeaderTest {
   }
 
   @Test
-  public void basicHeaderIsNotValidHexValue() {
+  public void basicHeaderIsNotEncodedWithBase64() {
     final Request clientAuthRequest = clientAuthRequest(
             "Basic z"
     );
