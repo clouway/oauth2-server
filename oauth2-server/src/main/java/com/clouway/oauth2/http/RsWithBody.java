@@ -2,7 +2,6 @@ package com.clouway.oauth2.http;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.Map;
 
 /**
@@ -18,13 +17,14 @@ public class RsWithBody extends RsWrap {
     super(new Response() {
       @Override
       public Status status() {
-        return new Status(HttpURLConnection.HTTP_OK, "");
+        return response.status();
       }
 
       @Override
       public Map<String, String> header() throws IOException {
         return response.header();
       }
+
       @Override
       public InputStream body() throws IOException {
         return body;

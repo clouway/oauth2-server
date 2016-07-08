@@ -2,7 +2,6 @@ package com.clouway.oauth2;
 
 import com.clouway.oauth2.http.Request;
 import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsBadRequest;
 import com.clouway.oauth2.http.RsJson;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.Tokens;
@@ -30,14 +29,14 @@ class UserInfoController implements InstantaneousRequest {
     Optional<Token> possibleTokenResponse = tokens.getNotExpiredToken(accessToken, instantTime);
 
     if (!possibleTokenResponse.isPresent()) {
-      return new RsBadRequest();
+      return OAuthError.invalidToken();
     }
 
     Token token = possibleTokenResponse.get();
 
     Optional<Identity> possibleIdentityResponse = identityFinder.findIdentity(token.identityId, instantTime);
     if (!possibleIdentityResponse.isPresent()) {
-      return new RsBadRequest();
+      return OAuthError.unknownClient();
     }
 
     Identity identity = possibleIdentityResponse.get();

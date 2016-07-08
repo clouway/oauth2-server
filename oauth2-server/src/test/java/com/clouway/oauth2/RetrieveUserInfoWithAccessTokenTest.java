@@ -70,7 +70,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
     }});
 
     Response response = new UserInfoController(null, tokens).handleAsOf(new ParamRequest(ImmutableMap.of("access_token", "::expired token id::")), anyInstantTime);
-    assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_BAD_REQUEST)));
+    assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_UNAUTHORIZED)));
   }
 
   @Test
