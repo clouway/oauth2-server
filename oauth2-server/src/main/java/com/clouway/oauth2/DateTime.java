@@ -40,4 +40,8 @@ public final class DateTime {
   public Date asDate() {
     return new Date(time.getTime());
   }
+
+  public Long timestamp() {
+    return time.getTime();
+  }
 }

@@ -32,6 +32,11 @@ public final class Token implements Serializable {
     return date.after(creationDate.plusSeconds(expiresInSeconds));
   }
 
+  public Long expirationTimestamp() {
+    DateTime expirationTime = creationDate.plusSeconds(expiresInSeconds);
+    return expirationTime.timestamp();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

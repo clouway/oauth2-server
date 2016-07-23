@@ -12,7 +12,9 @@ public class TokenBuilder {
     return new TokenBuilder();
   }
 
+  private DateTime createdOn = new DateTime();
   private String value;
+  private long timeToLiveInSeconds;
   private TokenType type = TokenType.BEARER;
 
   public TokenBuilder withValue(String value) {
@@ -20,8 +22,17 @@ public class TokenBuilder {
     return this;
   }
 
-  public Token build() {
-    return new Token(value, type, "", "", 10L,new DateTime());
+  public TokenBuilder timeToLiveInSeconds(long timeToLiveInSeconds) {
+    this.timeToLiveInSeconds = timeToLiveInSeconds;
+    return this;
   }
 
+  public TokenBuilder createdOn(DateTime createdOn) {
+    this.createdOn = createdOn;
+    return this;
+  }
+
+  public Token build() {
+    return new Token(value, type, "", "", timeToLiveInSeconds, createdOn);
+  }
 }

@@ -96,6 +96,13 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                             )))
                             ))
             ),
+            new FkRegex(".*/tokenInfo",
+                    new RequiresParam("access_token",
+                            new InstantaneousRequestController(
+                                    new TokenInfoController(config.tokens())
+                            )
+                    )
+            ),
             new FkRegex(".*/userInfo",
                     new RequiresParam("access_token",
                             new InstantaneousRequestController(
