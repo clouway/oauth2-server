@@ -1,7 +1,7 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.RsJson;
-import com.clouway.oauth2.http.RsWrap;
+import com.clouway.friendlyserve.RsJson;
+import com.clouway.friendlyserve.RsWrap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

@@ -1,7 +1,7 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.Request;
-import com.clouway.oauth2.http.Response;
+import com.clouway.friendlyserve.Request;
+import com.clouway.friendlyserve.Response;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)

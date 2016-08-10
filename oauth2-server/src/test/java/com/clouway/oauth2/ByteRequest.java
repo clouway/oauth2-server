@@ -1,6 +1,6 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.Request;
+import com.clouway.friendlyserve.Request;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 

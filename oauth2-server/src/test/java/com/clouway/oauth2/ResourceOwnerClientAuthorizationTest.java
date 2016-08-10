@@ -1,12 +1,12 @@
 package com.clouway.oauth2;
 
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.Status;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.http.ParamRequest;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.Status;
+import com.clouway.friendlyserve.testing.ParamRequest;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -23,7 +23,7 @@ import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)

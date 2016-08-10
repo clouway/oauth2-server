@@ -1,9 +1,9 @@
 package com.clouway.oauth2;
 
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.testing.ParamRequest;
+import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.http.ParamRequest;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsPrint;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
@@ -16,11 +16,10 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Date;
 
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)

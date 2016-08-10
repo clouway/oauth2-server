@@ -1,11 +1,11 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.ParamRequest;
-import com.clouway.oauth2.http.Request;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsPrint;
-import com.clouway.oauth2.http.RsText;
-import com.clouway.oauth2.http.Status;
+import com.clouway.friendlyserve.Request;
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.RsText;
+import com.clouway.friendlyserve.Status;
+import com.clouway.friendlyserve.testing.ParamRequest;
+import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -17,11 +17,10 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Date;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -61,7 +60,7 @@ public class IdentityControllerTest {
   @Test
   public void userWasNotAuthorized() throws IOException {
     IdentityController identityController = new IdentityController(identityFinder, identityActivity, "/r/oauth/login?continue=");
-    final Request request = new ParamRequest(ImmutableMap.of("client_id","::client1::"));
+    final Request request = new ParamRequest(ImmutableMap.of("client_id", "::client1::"));
     final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{

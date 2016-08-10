@@ -1,9 +1,9 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.ParamRequest;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsPrint;
-import com.clouway.oauth2.http.Status;
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.Status;
+import com.clouway.friendlyserve.testing.ParamRequest;
+import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;

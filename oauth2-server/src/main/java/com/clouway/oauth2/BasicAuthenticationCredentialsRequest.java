@@ -1,8 +1,8 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.Request;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsBadRequest;
+import com.clouway.friendlyserve.Request;
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.RsBadRequest;
 
 import static com.google.common.io.BaseEncoding.base64;
 

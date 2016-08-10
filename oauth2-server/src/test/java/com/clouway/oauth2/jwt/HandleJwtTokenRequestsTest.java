@@ -1,12 +1,13 @@
 package com.clouway.oauth2.jwt;
 
+import com.clouway.friendlyserve.testing.ParamRequest;
+import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.client.ServiceAccount;
 import com.clouway.oauth2.client.ServiceAccountRepository;
-import com.clouway.oauth2.http.ParamRequest;
-import com.clouway.oauth2.http.Request;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsPrint;
+
+import com.clouway.friendlyserve.Request;
+import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.Token;

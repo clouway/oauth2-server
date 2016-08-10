@@ -1,9 +1,9 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsJson;
-import com.clouway.oauth2.http.RsWithStatus;
-import com.clouway.oauth2.http.RsWrap;
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.RsJson;
+import com.clouway.friendlyserve.RsWithStatus;
+import com.clouway.friendlyserve.RsWrap;
 import com.google.gson.JsonObject;
 
 import java.net.HttpURLConnection;

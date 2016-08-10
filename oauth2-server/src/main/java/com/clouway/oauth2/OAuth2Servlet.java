@@ -1,14 +1,15 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.FkRegex;
-import com.clouway.oauth2.http.HttpException;
-import com.clouway.oauth2.http.RequestHandlerMatchingParam;
-import com.clouway.oauth2.http.RequiresHeader;
-import com.clouway.oauth2.http.RequiresParam;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.Status;
-import com.clouway.oauth2.http.TkFork;
-import com.clouway.oauth2.http.TkRequestWrap;
+import com.clouway.friendlyserve.FkRegex;
+import com.clouway.friendlyserve.HttpException;
+import com.clouway.friendlyserve.RequestHandlerMatchingParam;
+import com.clouway.friendlyserve.RequiresHeader;
+import com.clouway.friendlyserve.RequiresParam;
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.Status;
+import com.clouway.friendlyserve.TkFork;
+import com.clouway.friendlyserve.TkRequestWrap;
+import com.clouway.friendlyserve.servlets.ServletApiSupport;
 import com.clouway.oauth2.jws.RsaJwsSignature;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public abstract class OAuth2Servlet extends HttpServlet {
-  private TkFork fork;
+  private ServletApiSupport servletApiSupport;
 
   @Override
   public void init(ServletConfig servletConfig) throws ServletException {
@@ -53,7 +54,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
     OAuth2Config config = config();
 
-    fork = new TkFork(
+    TkFork fork = new TkFork(
             new FkRegex(".*/auth",
                     new InstantaneousRequestController(
                             new IdentityController(
@@ -110,6 +111,13 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             ))
             )
     );
+
+    servletApiSupport = new ServletApiSupport(fork);
+  }
+
+  @Override
+  protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    super.service(req, resp);
   }
 
   @Override
@@ -119,35 +127,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
   @Override
   protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-    try {
-      Response response = fork.ack(new TkRequestWrap(req));
-
-      Status status = response.status();
-      resp.setStatus(status.code);
-
-      // Handle redirects
-      if (status.code == HttpURLConnection.HTTP_MOVED_TEMP) {
-        resp.sendRedirect(status.redirectUrl);
-
-        return;
-      }
-
-      Map<String, String> header = response.header();
-      for (String key : header.keySet()) {
-        resp.setHeader(key, header.get(key));
-      }
-
-      ServletOutputStream out = resp.getOutputStream();
-
-      try (InputStream inputStream = response.body()) {
-        ByteStreams.copy(inputStream, out);
-      }
-
-      out.flush();
-
-    } catch (HttpException e) {
-      resp.setStatus(e.code());
-    }
+    servletApiSupport.serve(req, resp);
   }
 
   protected abstract OAuth2Config config();

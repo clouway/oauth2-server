@@ -4,9 +4,9 @@ import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.http.Request;
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsRedirect;
+import com.clouway.friendlyserve.Request;
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.RsRedirect;
 import com.google.common.base.Optional;
 
 /**

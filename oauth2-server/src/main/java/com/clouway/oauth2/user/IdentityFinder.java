@@ -2,7 +2,7 @@ package com.clouway.oauth2.user;
 
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
-import com.clouway.oauth2.http.Request;
+import com.clouway.friendlyserve.Request;
 import com.google.common.base.Optional;
 
 /**

@@ -1,7 +1,7 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.http.Response;
-import com.clouway.oauth2.http.RsPrint;
+import com.clouway.friendlyserve.Response;
+import com.clouway.friendlyserve.testing.RsPrint;
 import org.junit.Test;
 
 import java.io.IOException;
