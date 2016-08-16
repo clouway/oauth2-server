@@ -1,12 +1,14 @@
 package com.clouway.oauth2.exampleapp.storage;
 
+import com.clouway.friendlyserve.Request;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.exampleapp.UserRepository;
-import com.clouway.friendlyserve.Request;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.clouway.oauth2.user.User;
 import com.google.common.base.Optional;
+
+import java.util.Collections;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
@@ -26,7 +28,7 @@ class InMemoryUserRepository implements IdentityFinder, UserRepository {
 
   @Override
   public Optional<Identity> findIdentity(String identityId, DateTime instantTime) {
-    return Optional.of(new Identity("testUserID", "testUser", "test User", "User Family","test@clouway.com", null));
+    return Optional.of(new Identity("testUserID", "testUser", "test User", "User Family", "test@clouway.com", null, Collections.<String, Object>emptyMap()));
   }
 
   @Override

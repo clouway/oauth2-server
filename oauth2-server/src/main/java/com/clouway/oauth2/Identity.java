@@ -1,23 +1,27 @@
 package com.clouway.oauth2;
 
+import java.util.Map;
+
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public final class Identity {
-  private String id;
-  private String name;
-  private String givenName;
+  private final String id;
+  private final String name;
+  private final String givenName;
   private final String familyName;
-  private String email;
-  private String picture;
+  private final String email;
+  private final String picture;
+  private final Map<String, Object> claims;
 
-  public Identity(String id, String name, String givenName, String familyName, String email, String picture) {
+  public Identity(String id, String name, String givenName, String familyName, String email, String picture, Map<String, Object> claims) {
     this.id = id;
     this.name = name;
     this.givenName = givenName;
     this.familyName = familyName;
     this.email = email;
     this.picture = picture;
+    this.claims = claims;
   }
 
   public String id() {
@@ -44,5 +48,7 @@ public final class Identity {
     return picture;
   }
 
-
+  public Map<String, Object> claims() {
+    return claims;
+  }
 }

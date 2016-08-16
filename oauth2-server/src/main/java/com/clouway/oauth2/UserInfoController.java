@@ -9,6 +9,8 @@ import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
+import java.util.Map;
+
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
@@ -48,6 +50,19 @@ class UserInfoController implements InstantaneousRequest {
     o.addProperty("email", identity.email());
     o.addProperty("given_name", identity.givenName());
     o.addProperty("family_name", identity.familyName());
+
+    Map<String, Object> claims = identity.claims();
+
+    for (String key : claims.keySet()) {
+      Object value = claims.get(key);
+
+      if (value instanceof String) {
+        o.addProperty(key, (String) value);
+      }
+      if (value instanceof Number) {
+        o.addProperty(key, (Number) value);
+      }
+    }
 
     return new RsJson(o);
   }

@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -46,7 +47,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
       will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", 10L, anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);
-      will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::"))));
+      will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
     }});
 
     Response response = new UserInfoController(identityFinder, tokens).handleAsOf(request, anyInstantTime);
@@ -56,6 +57,31 @@ public class RetrieveUserInfoWithAccessTokenTest {
     assertThat(result.get("email").getAsString(), is(equalTo("::user email::")));
     assertThat(result.get("given_name").getAsString(), is(equalTo("::user given name::")));
     assertThat(result.get("family_name").getAsString(), is(equalTo("::family name::")));
+  }
+
+  @Test
+  public void identityWithPrivateClaims() throws Exception {
+    final Tokens tokens = context.mock(Tokens.class);
+    final Request request = new ParamRequest(
+            ImmutableMap.of("access_token", "::any token id::")
+    );
+    final IdentityFinder identityFinder = context.mock(IdentityFinder.class);
+    final DateTime anyInstantTime = new DateTime();
+
+    context.checking(new Expectations() {{
+      oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", 10L, anyInstantTime))));
+
+      oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);
+      will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
+              ImmutableMap.<String, Object>of("claim1", "::any string value::", "claim2", 342)))));
+    }});
+
+    Response response = new UserInfoController(identityFinder, tokens).handleAsOf(request, anyInstantTime);
+    JsonObject result = new RsPrint(response).asJson();
+
+    assertThat(result.get("claim1").getAsString(), is(equalTo("::any string value::")));
+    assertThat(result.get("claim2").getAsInt(), is(equalTo(342)));
   }
 
   @Test
