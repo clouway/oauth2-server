@@ -62,6 +62,10 @@ class UserInfoController implements InstantaneousRequest {
       if (value instanceof Number) {
         o.addProperty(key, (Number) value);
       }
+
+      if (value instanceof Boolean) {
+        o.addProperty(key, (Boolean) value);
+      }
     }
 
     return new RsJson(o);
