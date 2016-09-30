@@ -40,7 +40,7 @@ public class RefreshTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
-      will(returnValue(Optional.of(new Token("::token1::", TokenType.BEARER, "::refresh_token::", "", 600L, new DateTime()))));
+      will(returnValue(Optional.of(new Token("::token1::", TokenType.BEARER, "::refresh_token::", "","", 600L, new DateTime()))));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")), anyTime);

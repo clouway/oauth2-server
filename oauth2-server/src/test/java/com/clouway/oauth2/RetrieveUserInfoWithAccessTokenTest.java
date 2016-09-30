@@ -44,7 +44,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).getNotExpiredToken("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", 10L, anyInstantTime))));
+      will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::","", 10L, anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);
       will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
@@ -70,7 +70,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", 10L, anyInstantTime))));
+      will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", "", 10L, anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);
       will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
@@ -111,7 +111,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).getNotExpiredToken("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", 10L, anyInstantTime))));
+      will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", "", 10L, anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);
       will(returnValue(Optional.absent()));

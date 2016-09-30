@@ -10,18 +10,15 @@ import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
-import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 
 import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -49,7 +46,7 @@ public class IssueNewTokenForClientTest {
       oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
-      oneOf(tokens).issueToken("::user_id::", anyTime);
+      oneOf(tokens).issueToken(client, "::user_id::", anyTime);
       will(returnValue(aNewToken().withValue("::token::").build()));
     }});
 

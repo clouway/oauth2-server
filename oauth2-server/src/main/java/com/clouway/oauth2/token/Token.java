@@ -1,6 +1,7 @@
 package com.clouway.oauth2.token;
 
 import com.clouway.oauth2.DateTime;
+import com.google.common.base.Objects;
 
 import java.io.Serializable;
 
@@ -12,18 +13,20 @@ public final class Token implements Serializable {
   public final TokenType type;
   public final String refreshToken;
   public final String identityId;
+  public final String clientId;
   public final Long expiresInSeconds;
   public final DateTime creationDate;
 
   public Token() {
-    this(null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null);
   }
 
-  public Token(String value, TokenType type, String refreshToken, String identityId, Long expiresInSeconds, DateTime creationDate) {
+  public Token(String value, TokenType type, String refreshToken, String identityId, String clientId, Long expiresInSeconds, DateTime creationDate) {
     this.value = value;
     this.type = type;
     this.refreshToken = refreshToken;
     this.identityId = identityId;
+    this.clientId = clientId;
     this.expiresInSeconds = expiresInSeconds;
     this.creationDate = creationDate;
   }
@@ -40,25 +43,19 @@ public final class Token implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Token)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     Token token = (Token) o;
-
-    if (creationDate != null ? !creationDate.equals(token.creationDate) : token.creationDate != null) return false;
-    if (expiresInSeconds != null ? !expiresInSeconds.equals(token.expiresInSeconds) : token.expiresInSeconds != null)
-      return false;
-    if (type != null ? !type.equals(token.type) : token.type != null) return false;
-    if (value != null ? !value.equals(token.value) : token.value != null) return false;
-
-    return true;
+    return Objects.equal(value, token.value) &&
+            type == token.type &&
+            Objects.equal(refreshToken, token.refreshToken) &&
+            Objects.equal(identityId, token.identityId) &&
+            Objects.equal(clientId, token.clientId) &&
+            Objects.equal(expiresInSeconds, token.expiresInSeconds) &&
+            Objects.equal(creationDate, token.creationDate);
   }
 
   @Override
   public int hashCode() {
-    int result = value != null ? value.hashCode() : 0;
-    result = 31 * result + (type != null ? type.hashCode() : 0);
-    result = 31 * result + (expiresInSeconds != null ? expiresInSeconds.hashCode() : 0);
-    result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
-    return result;
+    return Objects.hashCode(value, clientId);
   }
 }
