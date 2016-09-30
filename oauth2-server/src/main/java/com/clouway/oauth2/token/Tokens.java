@@ -1,9 +1,8 @@
 package com.clouway.oauth2.token;
 
 import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.client.Client;
 import com.google.common.base.Optional;
-
-import java.util.Date;
 
 /**
  * Tokens is responsible for issuing and retriving of issued tokens.
@@ -31,9 +30,18 @@ public interface Tokens {
 
   /**
    * Ussues a new token for the provided identity.
+   *
+   * @param client the client to which token will be ussued
    * @param identityId the identityId for which token was issued
    * @param when the requested time on which it should be issued
-   * @return
+   * @return the newly issued token
    */
-  Token issueToken(String identityId, DateTime when);
+  Token issueToken(Client client, String identityId, DateTime when);
+
+  /**
+   * Revokes token from repository.
+   *
+   * @param token the token which to be revoked
+   */
+  void revokeToken(String token);
 }

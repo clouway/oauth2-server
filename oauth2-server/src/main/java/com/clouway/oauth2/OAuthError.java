@@ -11,10 +11,14 @@ import java.net.HttpURLConnection;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class OAuthError extends RsWrap {
+public final class OAuthError extends RsWrap {
 
   public static OAuthError invalidRequest() {
     return new OAuthError("invalid_request", HttpURLConnection.HTTP_BAD_REQUEST);
+  }
+
+  public static OAuthError invalidClient() {
+    return new OAuthError("invalid_client", HttpURLConnection.HTTP_BAD_REQUEST);
   }
 
   public static OAuthError unauthorizedClient() {
@@ -53,4 +57,5 @@ public class OAuthError extends RsWrap {
     o.addProperty("error_description", errorDescription);
     return new RsJson(o);
   }
+
 }

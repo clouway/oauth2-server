@@ -1,14 +1,10 @@
 package com.clouway.oauth2;
 
 import com.clouway.friendlyserve.FkRegex;
-import com.clouway.friendlyserve.HttpException;
 import com.clouway.friendlyserve.RequestHandlerMatchingParam;
 import com.clouway.friendlyserve.RequiresHeader;
 import com.clouway.friendlyserve.RequiresParam;
-import com.clouway.friendlyserve.Response;
-import com.clouway.friendlyserve.Status;
 import com.clouway.friendlyserve.TkFork;
-import com.clouway.friendlyserve.TkRequestWrap;
 import com.clouway.friendlyserve.servlets.ServletApiSupport;
 import com.clouway.oauth2.jws.RsaJwsSignature;
 import com.clouway.oauth2.jws.Signature;
@@ -16,18 +12,13 @@ import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.jwt.Jwt.Header;
 import com.clouway.oauth2.jwt.JwtController;
 import com.google.common.base.Optional;
-import com.google.common.io.ByteStreams;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.Map;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -96,6 +87,15 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                     config.serviceAccountRepository()
                                             )))
                             ))
+            ),
+            new FkRegex(".*/revoke",
+                    new RequiresParam("token",
+                            new InstantaneousRequestController(
+                                    new BasicAuthenticationCredentialsRequest(
+                                            new RevokeTokenController(config.clientRepository(), config.tokens())
+                                    )
+                            )
+                    )
             ),
             new FkRegex(".*/tokenInfo",
                     new RequiresParam("access_token",
