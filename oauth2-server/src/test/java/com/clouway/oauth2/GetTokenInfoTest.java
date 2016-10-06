@@ -38,7 +38,7 @@ public class GetTokenInfoTest {
     final Token anyToken = aNewToken().timeToLiveInSeconds(200).createdOn(anyTime).build();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
+      oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(anyToken)));
     }});
 
@@ -57,7 +57,7 @@ public class GetTokenInfoTest {
     final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
+      oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.absent()));
     }});
 
@@ -73,7 +73,7 @@ public class GetTokenInfoTest {
     final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken("::some token id::", anyTime);
+      oneOf(tokens).findTokenAvailableAt("::some token id::", anyTime);
       will(returnValue(Optional.absent()));
     }});
     tokenInfoController.handleAsOf(new ParamRequest(Collections.singletonMap("access_token", "::some token id::")), anyTime);

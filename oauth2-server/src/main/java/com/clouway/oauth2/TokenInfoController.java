@@ -22,7 +22,7 @@ class TokenInfoController implements InstantaneousRequest {
   public Response handleAsOf(Request request, DateTime instantTime) {
     String accessToken = request.param("access_token");
 
-    Optional<Token> possibleToken = tokens.getNotExpiredToken(accessToken, instantTime);
+    Optional<Token> possibleToken = tokens.findTokenAvailableAt(accessToken, instantTime);
     if (!possibleToken.isPresent()) {
       return OAuthError.invalidRequest();
     }

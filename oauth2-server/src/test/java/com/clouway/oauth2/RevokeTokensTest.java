@@ -39,7 +39,7 @@ public class RevokeTokensTest {
   @Test
   public void happyPath() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
+      oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(aNewToken().forClient("::client x::").build())));
 
       oneOf(clientRepository).findById("::client x::");
@@ -57,7 +57,7 @@ public class RevokeTokensTest {
   @Test
   public void tokenWasNotFound() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
+      oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.absent()));
     }});
 
@@ -70,7 +70,7 @@ public class RevokeTokensTest {
   @Test
   public void clientWasNotFound() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
+      oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(aNewToken().forClient("::client x::").build())));
 
       oneOf(clientRepository).findById("::client x::");
@@ -86,7 +86,7 @@ public class RevokeTokensTest {
   @Test
   public void clientSecretIsNotMatching() throws Exception {
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
+      oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(aNewToken().forClient("::client x::").build())));
 
       oneOf(clientRepository).findById(with(any(String.class)));

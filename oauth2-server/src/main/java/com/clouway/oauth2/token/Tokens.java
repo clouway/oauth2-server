@@ -17,7 +17,7 @@ public interface Tokens {
    * @param token then token for which is looked
    * @return an optional token value or absent value if not present
    */
-  Optional<Token> getNotExpiredToken(String token, DateTime when);
+  Optional<Token> findTokenAvailableAt(String token, DateTime when);
 
   /**
    * Refreshes token using the access token.

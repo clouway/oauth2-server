@@ -26,7 +26,7 @@ class RevokeTokenController implements ClientRequest {
   public Response handleAsOf(Request request, ClientCredentials credentials, DateTime instant) {
     String token = request.param("token");
 
-    Optional<Token> possibleToken = tokens.getNotExpiredToken(token, instant);
+    Optional<Token> possibleToken = tokens.findTokenAvailableAt(token, instant);
     if (!possibleToken.isPresent()) {
       return OAuthError.invalidRequest();
     }

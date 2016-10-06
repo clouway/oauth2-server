@@ -43,7 +43,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
     final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken("::any token id::", anyInstantTime);
+      oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
       will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::","", 10L, anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);
@@ -69,7 +69,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
     final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken(with(any(String.class)), with(any(DateTime.class)));
+      oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", "", 10L, anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);
@@ -91,7 +91,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
     final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken("::expired token id::", anyInstantTime);
+      oneOf(tokens).findTokenAvailableAt("::expired token id::", anyInstantTime);
       will(returnValue(Optional.absent()));
     }});
 
@@ -110,7 +110,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
     final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).getNotExpiredToken("::any token id::", anyInstantTime);
+      oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
       will(returnValue(Optional.of(new Token("", TokenType.BEARER, "", "::identity_id::", "", 10L, anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", anyInstantTime);

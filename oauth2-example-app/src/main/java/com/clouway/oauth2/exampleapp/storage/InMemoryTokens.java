@@ -28,7 +28,7 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Optional<Token> getNotExpiredToken(String tokenValue, DateTime instant) {
+  public Optional<Token> findTokenAvailableAt(String tokenValue, DateTime instant) {
     if (tokens.containsKey(tokenValue)) {
       Token token = tokens.get(tokenValue);
 

@@ -28,7 +28,7 @@ class UserInfoController implements InstantaneousRequest {
   public Response handleAsOf(Request request, DateTime instantTime) {
     String accessToken = request.param("access_token");
 
-    Optional<Token> possibleTokenResponse = tokens.getNotExpiredToken(accessToken, instantTime);
+    Optional<Token> possibleTokenResponse = tokens.findTokenAvailableAt(accessToken, instantTime);
 
     if (!possibleTokenResponse.isPresent()) {
       return OAuthError.invalidToken();
