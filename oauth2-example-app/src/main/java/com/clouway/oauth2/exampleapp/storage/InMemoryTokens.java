@@ -3,6 +3,7 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenGenerator;
 import com.clouway.oauth2.token.TokenType;
@@ -37,7 +38,7 @@ class InMemoryTokens implements Tokens {
         //remove the current token
         tokens.remove(tokenValue);
         // new instance
-        Token updatedToken = new Token(token.value, token.type, token.refreshToken, token.identityId, token.clientId, timeToLive.seconds, instant);
+        Token updatedToken = new Token(token.value, token.type, token.grantType, token.refreshToken, token.identityId, token.clientId, timeToLive.seconds, instant);
         //add the new token
         tokens.put(tokenValue, updatedToken);
 
@@ -57,7 +58,7 @@ class InMemoryTokens implements Tokens {
 
         String newTokenValue = tokenGenerator.generate();
 
-        Token updatedToken = new Token(newTokenValue, TokenType.BEARER, token.refreshToken, token.identityId, token.clientId, timeToLive.seconds, instant);
+        Token updatedToken = new Token(newTokenValue, TokenType.BEARER, token.grantType, token.refreshToken, token.identityId, token.clientId, timeToLive.seconds, instant);
 
         //add the new token
         tokens.put(updatedToken.value, updatedToken);
@@ -69,11 +70,11 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Token issueToken(Client client, String identityId, DateTime instant) {
+  public Token issueToken(GrantType grantType, Client client, String identityId, DateTime instant) {
     String token = tokenGenerator.generate();
     String refreshTokenValue = tokenGenerator.generate();
 
-    Token bearerToken = new Token(token, TokenType.BEARER, refreshTokenValue, identityId, client.id, timeToLive.seconds, instant);
+    Token bearerToken = new Token(token, TokenType.BEARER, GrantType.JWT, refreshTokenValue, identityId, client.id, timeToLive.seconds, instant);
 
     tokens.put(token, bearerToken);
 

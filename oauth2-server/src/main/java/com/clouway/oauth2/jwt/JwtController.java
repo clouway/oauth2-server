@@ -11,6 +11,7 @@ import com.clouway.oauth2.client.ServiceAccount;
 import com.clouway.oauth2.client.ServiceAccountRepository;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
+import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
@@ -78,7 +79,7 @@ public class JwtController implements InstantaneousRequest {
       return OAuthError.invalidGrant();
     }
 
-    Token token = tokens.issueToken(new Client(serviceAccount.clientId(), "", "", "", "", ""), serviceAccount.clientId(), instant);
+    Token token = tokens.issueToken(GrantType.JWT, new Client(serviceAccount.clientId(), "", "", "", "", ""), serviceAccount.clientId(), instant);
 
     return new BearerTokenResponse(token.value, token.expiresInSeconds, token.refreshToken);
   }

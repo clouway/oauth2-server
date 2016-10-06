@@ -3,6 +3,7 @@ package com.clouway.oauth2.user;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
 import com.clouway.friendlyserve.Request;
+import com.clouway.oauth2.token.GrantType;
 import com.google.common.base.Optional;
 
 /**
@@ -20,5 +21,5 @@ public interface IdentityFinder {
    */
   Optional<String> find(Request request, DateTime instantTime);
 
-  Optional<Identity> findIdentity(String identityId, DateTime instantTime);
+  Optional<Identity> findIdentity(String identityId, GrantType grantType, DateTime instantTime);
 }

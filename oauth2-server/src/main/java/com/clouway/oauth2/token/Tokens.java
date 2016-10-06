@@ -31,12 +31,14 @@ public interface Tokens {
   /**
    * Ussues a new token for the provided identity.
    *
+   *
+   * @param grantType
    * @param client the client to which token will be ussued
    * @param identityId the identityId for which token was issued
    * @param when the requested time on which it should be issued
    * @return the newly issued token
    */
-  Token issueToken(Client client, String identityId, DateTime when);
+  Token issueToken(GrantType grantType, Client client, String identityId, DateTime when);
 
   /**
    * Revokes token from repository.
