@@ -1,5 +1,6 @@
 package com.clouway.oauth2;
 
+import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenType;
 
@@ -33,7 +34,7 @@ public class TokenBuilder {
   }
 
   public Token build() {
-    return new Token(value, type, "", "", clientId, timeToLiveInSeconds, createdOn);
+    return new Token(value, type, GrantType.AUTHORIZATION_CODE, "", "", clientId, timeToLiveInSeconds, createdOn);
   }
 
   public TokenBuilder forClient(String clientId) {

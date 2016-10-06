@@ -4,6 +4,7 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
@@ -40,7 +41,7 @@ public class RefreshTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
-      will(returnValue(Optional.of(new Token("::token1::", TokenType.BEARER, "::refresh_token::", "","", 600L, new DateTime()))));
+      will(returnValue(Optional.of(new Token("::token1::", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "::refresh_token::", "","", 600L, new DateTime()))));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")), anyTime);

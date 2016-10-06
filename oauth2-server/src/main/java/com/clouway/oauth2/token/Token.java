@@ -11,6 +11,7 @@ import java.io.Serializable;
 public final class Token implements Serializable {
   public final String value;
   public final TokenType type;
+  public final GrantType grantType;
   public final String refreshToken;
   public final String identityId;
   public final String clientId;
@@ -18,12 +19,13 @@ public final class Token implements Serializable {
   public final DateTime creationDate;
 
   public Token() {
-    this(null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null, null);
   }
 
-  public Token(String value, TokenType type, String refreshToken, String identityId, String clientId, Long expiresInSeconds, DateTime creationDate) {
+  public Token(String value, TokenType type, GrantType grantType, String refreshToken, String identityId, String clientId, Long expiresInSeconds, DateTime creationDate) {
     this.value = value;
     this.type = type;
+    this.grantType = grantType;
     this.refreshToken = refreshToken;
     this.identityId = identityId;
     this.clientId = clientId;

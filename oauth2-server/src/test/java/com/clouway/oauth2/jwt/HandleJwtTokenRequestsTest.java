@@ -11,6 +11,7 @@ import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
+import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Token;
 import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
@@ -86,8 +87,8 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verify(with(signatureAsBytes), with(matching("::private_key::")));
       will(returnValue(true));
 
-      oneOf(tokens).issueToken(with(any(Client.class)),with(any(String.class)),with(any(DateTime.class)));
-      will(returnValue(new Token("::token_value::", TokenType.BEARER, "::refresh_token::", "::client_id::", "::client_id::", 1000L, new DateTime())));
+      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)),with(any(String.class)),with(any(DateTime.class)));
+      will(returnValue(new Token("::token_value::", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "::refresh_token::", "::client_id::", "::client_id::", 1000L, new DateTime())));
     }});
 
     Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)), anyInstantTime);

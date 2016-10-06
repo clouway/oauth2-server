@@ -6,6 +6,7 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
+import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -46,7 +47,7 @@ public class IssueNewTokenForClientTest {
       oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
 
-      oneOf(tokens).issueToken(client, "::user_id::", anyTime);
+      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", anyTime);
       will(returnValue(aNewToken().withValue("::token::").build()));
     }});
 
