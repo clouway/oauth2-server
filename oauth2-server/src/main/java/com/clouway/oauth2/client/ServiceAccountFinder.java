@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
  *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public interface ServiceAccountRepository {
+public interface ServiceAccountFinder {
   /**
    * Finds ServiceAccount for the provided claimSet.
    *

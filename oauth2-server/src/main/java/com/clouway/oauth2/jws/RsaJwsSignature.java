@@ -22,8 +22,10 @@ public class RsaJwsSignature implements com.clouway.oauth2.jws.Signature {
 
   public boolean verify(byte[] content, String privateKeyPem) {
     try {
-      byte[] privateKey = new PemFile(new ByteArrayInputStream(privateKeyPem.getBytes())).content();
-      PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKey);
+      Pem pem = new Pem();
+
+      Pem.Block block = pem.parse(new ByteArrayInputStream(privateKeyPem.getBytes()));
+      PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(block.getBytes());
       KeyFactory kf = KeyFactory.getInstance("RSA");
       PrivateKey privKey = kf.generatePrivate(keySpec);
 

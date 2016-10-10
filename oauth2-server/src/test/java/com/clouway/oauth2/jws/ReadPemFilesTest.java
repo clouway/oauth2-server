@@ -3,10 +3,11 @@ package com.clouway.oauth2.jws;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -47,9 +48,9 @@ public class ReadPemFilesTest {
 
   @Test
   public void happyPath() throws IOException {
-    PemFile file = new PemFile(ReadPemFilesTest.class.getResourceAsStream("secret.pem"));
-    byte[] content = file.content();
-    assertThat(content, is(equalTo(EXPECTED_BYTES)));
+    Pem pem = new Pem();
+    Pem.Block block = pem.parse(ReadPemFilesTest.class.getResourceAsStream("secret.pem"));
+    assertThat(block, is(equalTo(new Pem.Block("PRIVATE KEY", Collections.<String, String>emptyMap(), EXPECTED_BYTES))));
   }
 
 }

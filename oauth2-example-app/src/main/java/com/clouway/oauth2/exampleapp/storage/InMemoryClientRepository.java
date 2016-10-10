@@ -3,7 +3,7 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.client.ServiceAccount;
-import com.clouway.oauth2.client.ServiceAccountRepository;
+import com.clouway.oauth2.client.ServiceAccountFinder;
 import com.clouway.oauth2.jwt.Jwt.ClaimSet;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-class InMemoryClientRepository implements ClientRepository, ServiceAccountRepository {
+class InMemoryClientRepository implements ClientRepository, ServiceAccountFinder {
   private Map<String, Client> clients = Maps.newHashMap();
   private Map<String, ServiceAccount> serviceAccounts = Maps.newHashMap();
 

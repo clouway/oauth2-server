@@ -2,7 +2,7 @@ package com.clouway.oauth2;
 
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.client.ServiceAccountRepository;
+import com.clouway.oauth2.client.ServiceAccountFinder;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 
@@ -23,7 +23,7 @@ public final class OAuth2Config {
 
     private Tokens tokens;
     private IdentityFinder identityFinder;
-    private ServiceAccountRepository serviceAccountRepository;
+    private ServiceAccountFinder serviceAccountFinder;
     private ClientAuthorizationRepository clientAuthorizationRepository;
     private ClientRepository clientRepository;
     private String loginPageUrl;
@@ -37,8 +37,8 @@ public final class OAuth2Config {
       return this;
     }
 
-    public Builder serviceAccountRepository(ServiceAccountRepository serviceAccountRepository) {
-      this.serviceAccountRepository = serviceAccountRepository;
+    public Builder serviceAccountRepository(ServiceAccountFinder serviceAccountFinder) {
+      this.serviceAccountFinder = serviceAccountFinder;
       return this;
     }
 
@@ -69,14 +69,14 @@ public final class OAuth2Config {
 
   private final Tokens tokens;
   private final ClientAuthorizationRepository clientAuthorizationRepository;
-  private final ServiceAccountRepository serviceAccountRepository;
+  private final ServiceAccountFinder serviceAccountFinder;
   private final String loginPageUrl;
   private OAuth2Config(Builder builder) {
     this.tokens = builder.tokens;
     this.identityFinder = builder.identityFinder;
     this.clientRepository = builder.clientRepository;
     this.clientAuthorizationRepository = builder.clientAuthorizationRepository;
-    this.serviceAccountRepository = builder.serviceAccountRepository;
+    this.serviceAccountFinder = builder.serviceAccountFinder;
     this.loginPageUrl = builder.loginPageUrl;
   }
 
@@ -84,8 +84,8 @@ public final class OAuth2Config {
     return this.clientAuthorizationRepository;
   }
 
-  public ServiceAccountRepository serviceAccountRepository() {
-    return this.serviceAccountRepository;
+  public ServiceAccountFinder serviceAccountRepository() {
+    return this.serviceAccountFinder;
   }
 
   public Tokens tokens() {
