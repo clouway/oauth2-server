@@ -32,7 +32,7 @@
     <dependency>
       <groupId>com.clouway.fserve</groupId>
       <artifactId>fserve</artifactId>
-      <version>0.1</version>
+      <version>0.1.1</version>
     </dependency>
 
     <dependency>
@@ -73,7 +73,7 @@
     <dependency>
       <groupId>com.clouway.fserve</groupId>
       <artifactId>testing</artifactId>
-      <version>0.1</version>
+      <version>0.1.1</version>
       <scope>test</scope>
     </dependency>
 

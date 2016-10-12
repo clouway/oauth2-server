@@ -17,7 +17,7 @@ public class SerializeBearerTokensTest {
 
   @Test
   public void happyPath() throws IOException {
-    String expectedResponse = "Content-Type: application/json\r\n" +
+    String expectedResponse = "Content-Type: application/json; charset=utf-8\r\n" +
             "{\"access_token\":\"mF_9.B5f-4.1JqM\"," +
             "\"token_type\":\"Bearer\"," +
             "\"expires_in\":3600," +
@@ -29,7 +29,7 @@ public class SerializeBearerTokensTest {
 
   @Test
   public void anotherToken() throws IOException {
-    String expectedResponse = "Content-Type: application/json\r\n" +
+    String expectedResponse = "Content-Type: application/json; charset=utf-8\r\n" +
             "{\"access_token\":\"::token2::\"," +
             "\"token_type\":\"Bearer\"," +
             "\"expires_in\":2400," +
