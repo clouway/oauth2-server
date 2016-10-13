@@ -1,5 +1,7 @@
 package com.clouway.oauth2.client;
 
+import java.util.Collections;
+
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
@@ -29,6 +31,6 @@ public class ClientBuilder {
   }
 
   public Client build() {
-    return new Client(clientId, clientSecret, "test name", "::url::", "::desc::", redirectUrl);
+    return new Client(clientId, clientSecret, "test name", "::url::", "::desc::", Collections.singleton(redirectUrl));
   }
 }

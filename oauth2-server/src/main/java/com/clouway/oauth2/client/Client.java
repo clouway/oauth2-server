@@ -1,6 +1,13 @@
 package com.clouway.oauth2.client;
 
 import com.clouway.oauth2.ClientCredentials;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
+
+import java.util.Objects;
+import java.util.Set;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -11,15 +18,27 @@ public class Client {
   public final String name;
   public final String url;
   public final String description;
-  public final String redirectURI;
+  public final Set<String> redirectURLs;
 
-  public Client(String id, String secret, String name, String url, String description, String redirectURI) {
+  public Client(String id, String secret, String name, String url, String description, Set<String> redirectURLs) {
     this.id = id;
     this.secret = secret;
     this.name = name;
     this.url = url;
     this.description = description;
-    this.redirectURI = redirectURI;
+    this.redirectURLs = redirectURLs;
+  }
+
+  public Optional<String> determineRedirectUrl(String requestedUrl) {
+    if (isNullOrEmpty(requestedUrl)) {
+      return Optional.fromNullable(Iterables.getFirst(redirectURLs, "http://client.was.not.configured.properly.com"));
+    }
+
+    if (!redirectURLs.contains(requestedUrl)) {
+      return Optional.absent();
+    }
+
+    return Optional.of(requestedUrl);
   }
 
   public boolean credentialsMatch(ClientCredentials credentials) {
@@ -30,27 +49,18 @@ public class Client {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-
     Client client = (Client) o;
-
-    if (description != null ? !description.equals(client.description) : client.description != null) return false;
-    if (id != null ? !id.equals(client.id) : client.id != null) return false;
-    if (name != null ? !name.equals(client.name) : client.name != null) return false;
-    if (redirectURI != null ? !redirectURI.equals(client.redirectURI) : client.redirectURI != null) return false;
-    if (secret != null ? !secret.equals(client.secret) : client.secret != null) return false;
-    if (url != null ? !url.equals(client.url) : client.url != null) return false;
-
-    return true;
+    return Objects.equals(id, client.id) &&
+            Objects.equals(secret, client.secret) &&
+            Objects.equals(name, client.name) &&
+            Objects.equals(url, client.url) &&
+            Objects.equals(description, client.description) &&
+            Objects.equals(redirectURLs, client.redirectURLs);
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (secret != null ? secret.hashCode() : 0);
-    result = 31 * result + (name != null ? name.hashCode() : 0);
-    result = 31 * result + (url != null ? url.hashCode() : 0);
-    result = 31 * result + (description != null ? description.hashCode() : 0);
-    result = 31 * result + (redirectURI != null ? redirectURI.hashCode() : 0);
-    return result;
+    return Objects.hash(id, secret, name, url, description, redirectURLs);
   }
+
 }

@@ -1,12 +1,12 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsText;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
+import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.client.ClientRepository;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -107,14 +108,7 @@ public class AuthorizeClientsTest {
   }
 
   private Client newClient(String clientId, String secret) {
-    return new Client(
-            clientId,
-            secret,
-            "::test_client::",
-            "::url::",
-            "::description::",
-            "::redirect::"
-    );
+    return aNewClient().withId(clientId).withSecret(secret).build();
   }
 
 }

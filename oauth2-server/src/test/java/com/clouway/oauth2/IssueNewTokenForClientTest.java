@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
@@ -45,7 +46,7 @@ public class IssueNewTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
-      will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", "::redirect_uri::", "::user_id::"))));
+      will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", Collections.singleton("::redirect_uri::"), "::user_id::"))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", anyTime);
       will(returnValue(aNewToken().withValue("::token::").build()));
