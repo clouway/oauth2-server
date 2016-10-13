@@ -19,6 +19,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
+import java.util.Collections;
+
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
@@ -33,7 +35,7 @@ public class InMemoryModule extends AbstractModule {
     bind(SessionSecurity.class).toInstance(resourceOwnerRepository);
 
     InMemoryClientRepository clientRepository = new InMemoryClientRepository();
-    clientRepository.register(new Client("fe72722a40de846e03865cb3b582aed57841ac71", "857613db7b18232c72a5093ad19dbc6df74a139e", "testname", "http://localhost:8080", "test", "http://localhost:8080/oauth/callback"));
+    clientRepository.register(new Client("fe72722a40de846e03865cb3b582aed57841ac71", "857613db7b18232c72a5093ad19dbc6df74a139e", "testname", "http://localhost:8080", "test", Collections.singleton("http://localhost:8080/oauth/callback")));
     clientRepository.registerServiceAccount("xxx@apps.clouway.com", "-----BEGIN PRIVATE KEY-----\n" +
             "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCH/eazwg0BwuFx\n" +
             "PmXOoauqD54ZPN+3XRF8FxrYo0XvQ8TiJAEJBJo/qjNahn4YYl/6RbP8YLHCe3nd\n" +

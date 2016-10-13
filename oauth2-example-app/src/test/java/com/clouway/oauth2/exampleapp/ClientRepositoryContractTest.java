@@ -6,6 +6,8 @@ import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
@@ -25,7 +27,7 @@ public abstract class ClientRepositoryContractTest {
 
   @Test
   public void findById() throws Exception {
-    Client client = new Client("id1", "secret1", "name1", "url1", "description1", "redirectURI1");
+    Client client = new Client("id1", "secret1", "name1", "url1", "description1", Collections.singleton("redirectURI1"));
     repository.register(client);
 
     Optional<Client> actualClient = repository.findById("id1");

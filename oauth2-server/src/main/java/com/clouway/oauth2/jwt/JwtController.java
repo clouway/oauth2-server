@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -79,7 +80,7 @@ public class JwtController implements InstantaneousRequest {
       return OAuthError.invalidGrant();
     }
 
-    Token token = tokens.issueToken(GrantType.JWT, new Client(serviceAccount.clientId(), "", "", "", "", ""), serviceAccount.clientId(), instant);
+    Token token = tokens.issueToken(GrantType.JWT, new Client(serviceAccount.clientId(), "", "", "", "", Collections.<String>emptySet()), serviceAccount.clientId(), instant);
 
     return new BearerTokenResponse(token.value, token.expiresInSeconds, token.refreshToken);
   }
