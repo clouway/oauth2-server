@@ -31,12 +31,12 @@ public class JwtController implements InstantaneousRequest {
 
   private final SignatureFactory signatureFactory;
   private final Tokens tokens;
-  private final ClientKeyStore repository;
+  private final ClientKeyStore keyStore;
 
-  public JwtController(SignatureFactory signatureFactory, Tokens tokens, ClientKeyStore repository) {
+  public JwtController(SignatureFactory signatureFactory, Tokens tokens, ClientKeyStore keyStore) {
     this.signatureFactory = signatureFactory;
     this.tokens = tokens;
-    this.repository = repository;
+    this.keyStore = keyStore;
   }
 
   @Override
@@ -59,7 +59,7 @@ public class JwtController implements InstantaneousRequest {
     Jwt.Header header = gson.fromJson(headerValue, Jwt.Header.class);
     Jwt.ClaimSet claimSet = gson.fromJson(content, Jwt.ClaimSet.class);
 
-    Optional<Pem.Block> possibleResponse = repository.findKey(header, claimSet);
+    Optional<Pem.Block> possibleResponse = keyStore.findKey(header, claimSet);
 
     if (!possibleResponse.isPresent()) {
       return OAuthError.invalidGrant();
