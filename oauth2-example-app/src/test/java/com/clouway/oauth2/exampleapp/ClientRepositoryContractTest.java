@@ -27,7 +27,7 @@ public abstract class ClientRepositoryContractTest {
 
   @Test
   public void findById() throws Exception {
-    Client client = new Client("id1", "secret1", "name1", "url1", "description1", Collections.singleton("redirectURI1"));
+    Client client = new Client("id1", "secret1", "description1", Collections.singleton("redirectURI1"));
     repository.register(client);
 
     Optional<Client> actualClient = repository.findById("id1");
