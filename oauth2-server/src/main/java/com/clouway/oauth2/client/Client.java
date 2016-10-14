@@ -15,16 +15,12 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public class Client {
   public final String id;
   public final String secret;
-  public final String name;
-  public final String url;
   public final String description;
   public final Set<String> redirectURLs;
 
-  public Client(String id, String secret, String name, String url, String description, Set<String> redirectURLs) {
+  public Client(String id, String secret, String description, Set<String> redirectURLs) {
     this.id = id;
     this.secret = secret;
-    this.name = name;
-    this.url = url;
     this.description = description;
     this.redirectURLs = redirectURLs;
   }
@@ -52,15 +48,13 @@ public class Client {
     Client client = (Client) o;
     return Objects.equals(id, client.id) &&
             Objects.equals(secret, client.secret) &&
-            Objects.equals(name, client.name) &&
-            Objects.equals(url, client.url) &&
             Objects.equals(description, client.description) &&
             Objects.equals(redirectURLs, client.redirectURLs);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, secret, name, url, description, redirectURLs);
+    return Objects.hash(id, secret, description, redirectURLs);
   }
 
 }

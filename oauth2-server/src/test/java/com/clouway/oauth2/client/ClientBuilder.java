@@ -31,6 +31,6 @@ public class ClientBuilder {
   }
 
   public Client build() {
-    return new Client(clientId, clientSecret, "test name", "::url::", "::desc::", Collections.singleton(redirectUrl));
+    return new Client(clientId, clientSecret, "::desc::", Collections.singleton(redirectUrl));
   }
 }
