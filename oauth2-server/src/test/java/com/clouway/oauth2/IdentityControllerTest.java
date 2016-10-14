@@ -6,7 +6,7 @@ import com.clouway.friendlyserve.RsText;
 import com.clouway.friendlyserve.Status;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
-import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -31,7 +31,7 @@ public class IdentityControllerTest {
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  IdentityFinder identityFinder;
+  ResourceOwnerIdentityFinder identityFinder;
 
   @Mock
   IdentityActivity identityActivity;

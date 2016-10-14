@@ -22,7 +22,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
   }
 
   @Override
-  public Response execute(String userId, Request request) {
+  public Response execute(String identityId, Request request) {
     String responseType = request.param("response_type");
     String clientId = request.param("client_id");
     String requestedUrl = request.param("redirect_uri");
@@ -42,7 +42,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
       return OAuthError.unauthorizedClient("Client Redirect URL is not matching the configured one.");
     }
 
-    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(client, userId, responseType);
+    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(client, identityId, responseType);
 
     // RFC-6749 - Section: 4.2.2.1
     // The authorization server redirects the user-agent by

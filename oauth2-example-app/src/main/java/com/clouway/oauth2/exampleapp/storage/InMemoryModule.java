@@ -15,6 +15,7 @@ import com.clouway.oauth2.exampleapp.UserRepository;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.token.UrlSafeTokenGenerator;
 import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -74,6 +75,8 @@ public class InMemoryModule extends AbstractModule {
     InMemoryUserRepository userRepository = new InMemoryUserRepository();
 
     bind(IdentityFinder.class).toInstance(userRepository);
+    bind(ResourceOwnerIdentityFinder.class).toInstance(userRepository);
+
     bind(UserRepository.class).toInstance(userRepository);
   }
 

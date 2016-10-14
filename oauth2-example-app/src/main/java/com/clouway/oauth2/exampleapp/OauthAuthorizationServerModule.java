@@ -9,6 +9,7 @@ import com.clouway.oauth2.client.ServiceAccountFinder;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
@@ -32,14 +33,16 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     private final ClientRepository clientRepository;
     private final Tokens tokens;
     private final IdentityFinder identityFinder;
+    private final ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
     private final ServiceAccountFinder serviceAccountFinder;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, Tokens tokens, IdentityFinder identityFinder, ServiceAccountFinder serviceAccountFinder) {
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, ServiceAccountFinder serviceAccountFinder) {
       this.clientAuthorizationRepository = clientAuthorizationRepository;
       this.clientRepository = clientRepository;
       this.tokens = tokens;
       this.identityFinder = identityFinder;
+      this.resourceOwnerIdentityFinder = resourceOwnerIdentityFinder;
       this.serviceAccountFinder = serviceAccountFinder;
     }
 
@@ -51,6 +54,7 @@ public class OauthAuthorizationServerModule extends AbstractModule {
               .clientRepository(clientRepository)
               .tokens(tokens)
               .identityFinder(identityFinder)
+              .resourceOwnerIdentityFinder(resourceOwnerIdentityFinder)
               .serviceAccountRepository(serviceAccountFinder)
               .build();
     }

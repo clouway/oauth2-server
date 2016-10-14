@@ -6,6 +6,7 @@ import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.exampleapp.UserRepository;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 import com.clouway.oauth2.user.User;
 import com.google.common.base.Optional;
 
@@ -14,7 +15,7 @@ import java.util.Collections;
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-class InMemoryUserRepository implements IdentityFinder, UserRepository {
+class InMemoryUserRepository implements IdentityFinder, ResourceOwnerIdentityFinder, UserRepository {
 
   @Override
   public Optional<String> find(Request request, DateTime instantTime) {
