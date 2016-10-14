@@ -49,7 +49,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
             new FkRegex(".*/auth",
                     new InstantaneousRequestController(
                             new IdentityController(
-                                    config.identityFinder(),
+                                    config.resourceOwnerIdentityFinder(),
                                     new ClientAuthorizationActivity(config.clientRepository(), config.clientAuthorizationRepository()), config.loginPageUrl())
                     )
             ),

@@ -5,6 +5,7 @@ import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.client.ServiceAccountFinder;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 
 /**
  * OAuth2Config is a configuration class which is used to pass configuration from apps to the oauth2-server flow.
@@ -14,6 +15,8 @@ import com.clouway.oauth2.user.IdentityFinder;
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public final class OAuth2Config {
+
+
 
   public static OAuth2Config.Builder newConfig() {
     return new OAuth2Config.Builder();
@@ -27,6 +30,7 @@ public final class OAuth2Config {
     private ClientAuthorizationRepository clientAuthorizationRepository;
     private ClientRepository clientRepository;
     private String loginPageUrl;
+    private ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
 
     public Builder tokens(Tokens tokens) {
       this.tokens = tokens;
@@ -34,6 +38,11 @@ public final class OAuth2Config {
     }
     public Builder identityFinder(IdentityFinder identityFinder) {
       this.identityFinder = identityFinder;
+      return this;
+    }
+
+    public Builder resourceOwnerIdentityFinder(ResourceOwnerIdentityFinder resourceOwnerIdentityFinder) {
+      this.resourceOwnerIdentityFinder = resourceOwnerIdentityFinder;
       return this;
     }
 
@@ -64,7 +73,7 @@ public final class OAuth2Config {
   }
 
   private final IdentityFinder identityFinder;
-
+  private final ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
   private final ClientRepository clientRepository;
 
   private final Tokens tokens;
@@ -74,6 +83,7 @@ public final class OAuth2Config {
   private OAuth2Config(Builder builder) {
     this.tokens = builder.tokens;
     this.identityFinder = builder.identityFinder;
+    this.resourceOwnerIdentityFinder = builder.resourceOwnerIdentityFinder;
     this.clientRepository = builder.clientRepository;
     this.clientAuthorizationRepository = builder.clientAuthorizationRepository;
     this.serviceAccountFinder = builder.serviceAccountFinder;
@@ -98,6 +108,10 @@ public final class OAuth2Config {
 
   public ClientRepository clientRepository() {
     return this.clientRepository;
+  }
+
+  public ResourceOwnerIdentityFinder resourceOwnerIdentityFinder() {
+    return this.resourceOwnerIdentityFinder;
   }
 
   public String loginPageUrl() {

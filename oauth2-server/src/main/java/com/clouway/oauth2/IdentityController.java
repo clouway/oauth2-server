@@ -3,12 +3,11 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsRedirect;
-import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 import com.google.common.base.Optional;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
 
 /**
  * IdentityController is responsible for determining the Identity of the caller. Sent request to this controller
@@ -19,11 +18,11 @@ import java.util.Date;
  */
 final class IdentityController implements InstantaneousRequest {
 
-  private final IdentityFinder identityFinder;
+  private final ResourceOwnerIdentityFinder identityFinder;
   private final IdentityActivity identityActivity;
   private final String loginPageUrl;
 
-  IdentityController(IdentityFinder identityFinder, IdentityActivity identityActivity, String loginPageUrl) {
+  IdentityController(ResourceOwnerIdentityFinder identityFinder, IdentityActivity identityActivity, String loginPageUrl) {
     this.identityFinder = identityFinder;
     this.identityActivity = identityActivity;
     this.loginPageUrl = loginPageUrl;
