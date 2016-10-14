@@ -3,6 +3,9 @@ package com.clouway.oauth2.jws;
 import com.google.common.io.BaseEncoding;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -42,22 +45,23 @@ public class VerifySignaturesWithRsaTest {
           "-----END PRIVATE KEY-----";
 
   @Test
-  public void signatureIsMatching() {
-
+  public void signatureIsMatching() throws IOException {
+    Pem.Block privateKey = new Pem().parse(new ByteArrayInputStream(privateKeyPem.getBytes()));
     byte[] signatureValue = BaseEncoding.base64Url().decode("WBAzzss3J8Ea6-xxOCVS2OZ2HoqpiLdfCLhIJEevaPck377qTpiM__lHta_S8dSCuTl5FjREqixIiwGrJVJEIkfExUwS5YWekdJRniSKdqLjmXussePaCSgco3reJDqNcRCGiv9DSLH0GfZFdv11Ik5nyaHjNnS4ykEi76guaY8-T3uVFjOH4e2o8Wm0vBbq9hzo9UHdgnsI2BLrzDVoydGWM7uZW8MQNKTuGWY_Ywyj1hilr9rw4yy2FvBe7G-56qaq8--IlVNZ6ocJX2dYhZPqDtZUYwLRqwFyM_F53Kt81I8Qht6HBgH-fgrfbd7Ms67BeLGsupFvuM9sF-hGOQ");
 
     boolean isSignedWithThatKey = new RsaJwsSignature(signatureValue)
-            .verify(String.format("%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", "eyJpc3MiOiJ4eHhAZGV2ZWxvcGVyLmNvbSIsInNjb3BlIjoidGVzdDEgdGVzdDIiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjkwMDIvb2F1dGgyL3Rva2VuIiwiZXhwIjoxNDYxMjM4OTQ4LCJpYXQiOjE0NjEyMzUzNDgsInN1YiI6InVzZXJAZXhhbXBsZS5jb20iLCJwcm4iOiJ1c2VyQGV4YW1wbGUuY29tIn0").getBytes(), privateKeyPem);
+            .verify(String.format("%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", "eyJpc3MiOiJ4eHhAZGV2ZWxvcGVyLmNvbSIsInNjb3BlIjoidGVzdDEgdGVzdDIiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjkwMDIvb2F1dGgyL3Rva2VuIiwiZXhwIjoxNDYxMjM4OTQ4LCJpYXQiOjE0NjEyMzUzNDgsInN1YiI6InVzZXJAZXhhbXBsZS5jb20iLCJwcm4iOiJ1c2VyQGV4YW1wbGUuY29tIn0").getBytes(), privateKey);
 
     assertThat(isSignedWithThatKey, is(equalTo(true)));
   }
 
   @Test
-  public void signatureIsNotMatching() {
+  public void signatureIsNotMatching() throws IOException {
+    Pem.Block privateKey = new Pem().parse(new ByteArrayInputStream(privateKeyPem.getBytes()));
     byte[] signatureValue = BaseEncoding.base64Url().decode("WBAzzss3J8Ea6-xxOCVS2OZ2HoqpiLdfCLhIJEevaPck377qTpiM__lHta_S8dSCuTl5FjREqixIiwGrJVJEIkfExUwS5YWekdJRniSKdqLjmXussePaCSgco3reJDqNcRCGiv9DSLH0GfZFdv11Ik5nyaHjNnS4ykEi76guaY8-T3uVFjOH4e2o8Wm0vBbq9hzo9UHdgnsI2BLrzDVoydGWM7uZW8MQNKTuGWY_Ywyj1hilr9rw4yy2FvBe7G-56qaq8--IlVNZ6ocJX2dYhZPqDtZUYwLRqwFyM_F53Kt81I8Qht6HBgH-fgrfbd7Ms67BeLGsupFvuM9sF-hGOQ");
 
     boolean isSignedWithThatKey = new RsaJwsSignature(signatureValue)
-            .verify(String.format("%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXJJJJ", "eyJpc3MiOiJ4eHhAZGV2ZWxvcGVyLmNvbSIsInNjb3BlIjoidGVzdDEgdGVzdDIiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjkwMDIvb2F1dGgyL3Rva2VuIiwiZXhwIjoxNDYxMjM4OTQ4LCJpYXQiOjE0NjEyMzUzNDgsInN1YiI6InVzZXJAZXhhbXBsZS5jb20iLCJwcm4iOiJ1c2VyQGV4YW1wbGUuY29tIn0").getBytes(), privateKeyPem);
+            .verify(String.format("%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXJJJJ", "eyJpc3MiOiJ4eHhAZGV2ZWxvcGVyLmNvbSIsInNjb3BlIjoidGVzdDEgdGVzdDIiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjkwMDIvb2F1dGgyL3Rva2VuIiwiZXhwIjoxNDYxMjM4OTQ4LCJpYXQiOjE0NjEyMzUzNDgsInN1YiI6InVzZXJAZXhhbXBsZS5jb20iLCJwcm4iOiJ1c2VyQGV4YW1wbGUuY29tIn0").getBytes(), privateKey);
 
     assertThat(isSignedWithThatKey, is(equalTo(false)));
   }

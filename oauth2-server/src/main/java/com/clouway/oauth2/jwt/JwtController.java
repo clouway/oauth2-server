@@ -7,8 +7,8 @@ import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.InstantaneousRequest;
 import com.clouway.oauth2.OAuthError;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ServiceAccount;
-import com.clouway.oauth2.client.ServiceAccountFinder;
+import com.clouway.oauth2.client.ClientKeyStore;
+import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.GrantType;
@@ -31,9 +31,9 @@ public class JwtController implements InstantaneousRequest {
 
   private final SignatureFactory signatureFactory;
   private final Tokens tokens;
-  private final ServiceAccountFinder repository;
+  private final ClientKeyStore repository;
 
-  public JwtController(SignatureFactory signatureFactory, Tokens tokens, ServiceAccountFinder repository) {
+  public JwtController(SignatureFactory signatureFactory, Tokens tokens, ClientKeyStore repository) {
     this.signatureFactory = signatureFactory;
     this.tokens = tokens;
     this.repository = repository;
@@ -59,13 +59,13 @@ public class JwtController implements InstantaneousRequest {
     Jwt.Header header = gson.fromJson(headerValue, Jwt.Header.class);
     Jwt.ClaimSet claimSet = gson.fromJson(content, Jwt.ClaimSet.class);
 
-    Optional<ServiceAccount> possibleResponse = repository.findServiceAccount(claimSet);
+    Optional<Pem.Block> possibleResponse = repository.findKey(header, claimSet);
 
     if (!possibleResponse.isPresent()) {
       return OAuthError.invalidGrant();
     }
 
-    ServiceAccount serviceAccount = possibleResponse.get();
+    Pem.Block serviceAccountKey = possibleResponse.get();
 
     Optional<Signature> optSignature = signatureFactory.createSignature(signatureValue, header);
 
@@ -76,11 +76,11 @@ public class JwtController implements InstantaneousRequest {
 
     byte[] headerAndContentAsBytes = String.format("%s.%s", parts.get(0), parts.get(1)).getBytes();
 
-    if (!optSignature.get().verify(headerAndContentAsBytes, serviceAccount.privateKey())) {
+    if (!optSignature.get().verify(headerAndContentAsBytes, serviceAccountKey)) {
       return OAuthError.invalidGrant();
     }
 
-    Token token = tokens.issueToken(GrantType.JWT, new Client(serviceAccount.clientId(), "", "", Collections.<String>emptySet()), serviceAccount.clientId(), instant);
+    Token token = tokens.issueToken(GrantType.JWT, new Client(claimSet.iss, "", "", Collections.<String>emptySet()), claimSet.iss, instant);
 
     return new BearerTokenResponse(token.value, token.expiresInSeconds, token.refreshToken);
   }

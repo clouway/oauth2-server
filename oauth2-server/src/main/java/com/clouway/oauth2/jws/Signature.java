@@ -13,9 +13,9 @@ public interface Signature {
    * <p/>
    *
    * @param content the content to be verified
-   * @param privateKeyPem the private key used for verifying
+   * @param privateKey the private key used for verifying
    * @return true if signature is
    */
-  boolean verify(byte[] content, String privateKeyPem);
+  boolean verify(byte[] content, Pem.Block privateKey);
 
 }

@@ -5,7 +5,7 @@ import com.clouway.oauth2.OAuth2Config;
 import com.clouway.oauth2.OAuth2Servlet;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.client.ServiceAccountFinder;
+import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
@@ -34,16 +34,16 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     private final Tokens tokens;
     private final IdentityFinder identityFinder;
     private final ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
-    private final ServiceAccountFinder serviceAccountFinder;
+    private final ClientKeyStore clientKeyStore;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, ServiceAccountFinder serviceAccountFinder) {
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, ClientKeyStore clientKeyStore) {
       this.clientAuthorizationRepository = clientAuthorizationRepository;
       this.clientRepository = clientRepository;
       this.tokens = tokens;
       this.identityFinder = identityFinder;
       this.resourceOwnerIdentityFinder = resourceOwnerIdentityFinder;
-      this.serviceAccountFinder = serviceAccountFinder;
+      this.clientKeyStore = clientKeyStore;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class OauthAuthorizationServerModule extends AbstractModule {
               .tokens(tokens)
               .identityFinder(identityFinder)
               .resourceOwnerIdentityFinder(resourceOwnerIdentityFinder)
-              .serviceAccountRepository(serviceAccountFinder)
+              .serviceAccountRepository(clientKeyStore)
               .build();
     }
   }
