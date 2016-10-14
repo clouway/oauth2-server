@@ -2,7 +2,7 @@ package com.clouway.oauth2;
 
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.client.ServiceAccountFinder;
+import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
@@ -26,7 +26,7 @@ public final class OAuth2Config {
 
     private Tokens tokens;
     private IdentityFinder identityFinder;
-    private ServiceAccountFinder serviceAccountFinder;
+    private ClientKeyStore clientKeyStore;
     private ClientAuthorizationRepository clientAuthorizationRepository;
     private ClientRepository clientRepository;
     private String loginPageUrl;
@@ -46,8 +46,8 @@ public final class OAuth2Config {
       return this;
     }
 
-    public Builder serviceAccountRepository(ServiceAccountFinder serviceAccountFinder) {
-      this.serviceAccountFinder = serviceAccountFinder;
+    public Builder serviceAccountRepository(ClientKeyStore clientKeyStore) {
+      this.clientKeyStore = clientKeyStore;
       return this;
     }
 
@@ -78,7 +78,7 @@ public final class OAuth2Config {
 
   private final Tokens tokens;
   private final ClientAuthorizationRepository clientAuthorizationRepository;
-  private final ServiceAccountFinder serviceAccountFinder;
+  private final ClientKeyStore clientKeyStore;
   private final String loginPageUrl;
   private OAuth2Config(Builder builder) {
     this.tokens = builder.tokens;
@@ -86,7 +86,7 @@ public final class OAuth2Config {
     this.resourceOwnerIdentityFinder = builder.resourceOwnerIdentityFinder;
     this.clientRepository = builder.clientRepository;
     this.clientAuthorizationRepository = builder.clientAuthorizationRepository;
-    this.serviceAccountFinder = builder.serviceAccountFinder;
+    this.clientKeyStore = builder.clientKeyStore;
     this.loginPageUrl = builder.loginPageUrl;
   }
 
@@ -94,8 +94,8 @@ public final class OAuth2Config {
     return this.clientAuthorizationRepository;
   }
 
-  public ServiceAccountFinder serviceAccountRepository() {
-    return this.serviceAccountFinder;
+  public ClientKeyStore serviceAccountRepository() {
+    return this.clientKeyStore;
   }
 
   public Tokens tokens() {

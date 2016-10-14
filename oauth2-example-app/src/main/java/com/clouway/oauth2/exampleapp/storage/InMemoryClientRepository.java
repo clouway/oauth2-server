@@ -2,21 +2,26 @@ package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.client.ServiceAccount;
-import com.clouway.oauth2.client.ServiceAccountFinder;
+import com.clouway.oauth2.client.ClientKeyStore;
+import com.clouway.oauth2.jws.Pem;
+import com.clouway.oauth2.jws.Pem.Block;
 import com.clouway.oauth2.jwt.Jwt.ClaimSet;
+import com.clouway.oauth2.jwt.Jwt.Header;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Map;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-class InMemoryClientRepository implements ClientRepository, ServiceAccountFinder {
-  private Map<String, Client> clients = Maps.newHashMap();
-  private Map<String, ServiceAccount> serviceAccounts = Maps.newHashMap();
+class InMemoryClientRepository implements ClientRepository, ClientKeyStore {
+  private final Map<String, Client> clients = Maps.newHashMap();
+  private final Map<String, Pem.Block> serviceAccountKeys = Maps.newHashMap();
+  private final Pem pem = new Pem();
 
   @Inject
   public InMemoryClientRepository() {
@@ -33,14 +38,15 @@ class InMemoryClientRepository implements ClientRepository, ServiceAccountFinder
   }
 
   @Override
-  public Optional<ServiceAccount> findServiceAccount(ClaimSet claimSet) {
-    if (serviceAccounts.containsKey(claimSet.iss)) {
-      return Optional.of(serviceAccounts.get(claimSet.iss));
-    }
-    return Optional.absent();
+  public Optional<Block> findKey(Header header, ClaimSet claimSet) {
+    return null;
   }
 
   public void registerServiceAccount(String clientEmail, String privateKeyAsPem) {
-    serviceAccounts.put(clientEmail,new ServiceAccount(clientEmail, privateKeyAsPem));
+    try {
+      serviceAccountKeys.put(clientEmail, pem.parse(new ByteArrayInputStream(privateKeyAsPem.getBytes())));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
