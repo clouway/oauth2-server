@@ -1,6 +1,7 @@
 package com.clouway.oauth2;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -50,5 +51,24 @@ public final class Identity {
 
   public Map<String, Object> claims() {
     return claims;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Identity identity = (Identity) o;
+    return Objects.equals(id, identity.id) &&
+            Objects.equals(name, identity.name) &&
+            Objects.equals(givenName, identity.givenName) &&
+            Objects.equals(familyName, identity.familyName) &&
+            Objects.equals(email, identity.email) &&
+            Objects.equals(picture, identity.picture) &&
+            Objects.equals(claims, identity.claims);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }
