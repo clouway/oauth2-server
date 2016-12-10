@@ -11,8 +11,7 @@ import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenType;
+import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -71,12 +70,12 @@ public class HandleJwtTokenRequestsTest {
       will(returnValue(true));
 
       oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
-      will(returnValue(new Token("::token_value::", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "::refresh_token::", "::client_id::", "::client_id::", 1000L, new DateTime())));
+      will(returnValue(new TokenResponse(true, "::access_token::", "::refresh_token::", 1000L)));
     }});
 
     Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)), anyInstantTime);
     String responseContent = new RsPrint(response).printBody();
-    assertThat(responseContent, containsString("::token_value::"));
+    assertThat(responseContent, containsString("::access_token::"));
     assertThat(responseContent, containsString("::refresh_token::"));
     assertThat(responseContent, containsString("1000"));
   }

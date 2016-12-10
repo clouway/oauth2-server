@@ -35,7 +35,7 @@ public class GetTokenInfoTest {
   @Test
   public void availableToken() throws Exception {
     final DateTime anyTime = new DateTime();
-    final Token anyToken = aNewToken().timeToLiveInSeconds(200).createdOn(anyTime).build();
+    final Token anyToken = aNewToken().expiresAt(anyTime.plusSeconds(200)).build();
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
@@ -48,7 +48,7 @@ public class GetTokenInfoTest {
     assertThat(response.status().code, is(HttpURLConnection.HTTP_OK));
     assertThat(o.get("sub").getAsString(), equalTo(anyToken.identityId));
     assertThat(o.get("exp").getAsString(), equalTo("" + anyTime.plusSeconds(200).asDate().getTime()));
-    assertThat(o.get("expires_in").getAsInt(), equalTo(anyToken.expiresInSeconds.intValue()));
+    assertThat(o.get("expires_in").getAsInt(), equalTo(anyToken.ttlSeconds(anyTime).intValue()));
 
   }
 

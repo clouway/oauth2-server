@@ -1,12 +1,13 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.authorization.Authorization;
-import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
-import com.clouway.oauth2.client.Client;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
+import com.clouway.oauth2.authorization.Authorization;
+import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.token.GrantType;
+import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -16,9 +17,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.Collections;
 
-import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -32,7 +33,7 @@ public class IssueNewTokenForClientTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private Tokens tokens =  context.mock(Tokens.class);
+  private Tokens tokens = context.mock(Tokens.class);
 
   private ClientAuthorizationRepository clientAuthorizationRepository = context.mock(ClientAuthorizationRepository.class);
 
@@ -49,13 +50,35 @@ public class IssueNewTokenForClientTest {
       will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", Collections.singleton("::redirect_uri::"), "::user_id::"))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", anyTime);
-      will(returnValue(aNewToken().withValue("::token::").build()));
+      will(returnValue(new TokenResponse(true, "::token::", "::refresh token::", 2000L)));
     }});
 
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
     String body = new RsPrint(response).printBody();
 
     assertThat(body, containsString("::token::"));
+  }
+
+  @Test
+  public void tokenCannotBeIssued() throws Exception {
+    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
+    final Client client = aNewClient().build();
+    final DateTime anyTime = new DateTime();
+
+    context.checking(new Expectations() {{
+      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
+      will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", Collections.singleton("::redirect_uri::"), "::user_id::"))));
+
+      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", anyTime);
+      will(returnValue(new TokenResponse(false, "", "", 0L)));
+    }});
+
+    Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
+    String body = new RsPrint(response).printBody();
+
+    assertThat(response.status().code, is(HttpURLConnection.HTTP_BAD_REQUEST));
+    assertThat(body, containsString("invalid_request"));
+
   }
 
   @Test
@@ -68,7 +91,7 @@ public class IssueNewTokenForClientTest {
     }});
 
     controller.execute(anyClient, new ParamRequest(
-            ImmutableMap.of("code", "::auth code::")),
+                    ImmutableMap.of("code", "::auth code::")),
             null
     );
   }
@@ -80,7 +103,7 @@ public class IssueNewTokenForClientTest {
     final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)),with(any(String.class)));
+      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
       will(returnValue(Optional.absent()));
     }});
 

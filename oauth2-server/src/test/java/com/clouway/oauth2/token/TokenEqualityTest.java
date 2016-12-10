@@ -17,8 +17,8 @@ public class TokenEqualityTest {
   @Test
   public void areEqual() {
     DateTime creationDate = new DateTime();
-    Token token1 = new Token("value", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "refreshToken", "identityId", "::client id::", 1L, creationDate);
-    Token token2 = new Token("value", TokenType.BEARER, GrantType.AUTHORIZATION_CODE,"refreshToken", "identityId", "::client id::", 1L, creationDate);
+    Token token1 = new Token("value", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", creationDate);
+    Token token2 = new Token("value", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", creationDate);
 
     assertThat(token1, is(token2));
   }
@@ -26,16 +26,16 @@ public class TokenEqualityTest {
   @Test
   public void areNotEqual() {
     DateTime creationDate = new DateTime();
-    Token token1 = new Token("value1", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "refreshToken", "identityId", "::client id::", 1L, creationDate);
-    Token token2 = new Token("value2", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "refreshToken", "identityId", "::client id::", 1L, creationDate);
+    Token token1 = new Token("value1", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", creationDate);
+    Token token2 = new Token("value2", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", creationDate);
 
     assertThat(token1, is(not(token2)));
   }
 
   @Test
   public void areNotEqualWhenDifferentExpirationTimes() {
-    Token token1 = new Token("value", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "refreshToken", "identityId", "::client id::", 1L, new DateTime(new Date(1408532291030L)));
-    Token token2 = new Token("value", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "refreshToken", "identityId", "::client id::", 1L, new DateTime(new Date(1408532291031L)));
+    Token token1 = new Token("value", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", new DateTime(new Date(1408532291030L)));
+    Token token2 = new Token("value", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", new DateTime(new Date(1408532291031L)));
 
     assertThat(token1, is(not(token2)));
   }

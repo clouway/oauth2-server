@@ -17,6 +17,10 @@ public final class OAuthError extends RsWrap {
     return new OAuthError("invalid_request", HttpURLConnection.HTTP_BAD_REQUEST);
   }
 
+  public static OAuthError invalidRequest(String description) {
+    return new OAuthError(HttpURLConnection.HTTP_BAD_REQUEST, "invalid_request", description);
+  }
+
   public static OAuthError invalidClient() {
     return new OAuthError("invalid_client", HttpURLConnection.HTTP_BAD_REQUEST);
   }
@@ -61,5 +65,4 @@ public final class OAuthError extends RsWrap {
     o.addProperty("error_description", errorDescription);
     return new RsJson(o);
   }
-
 }

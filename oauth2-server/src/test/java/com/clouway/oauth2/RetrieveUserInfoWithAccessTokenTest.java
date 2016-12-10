@@ -45,7 +45,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "", "::identity_id::","", 10L, anyInstantTime))));
+      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "::identity_id::","", anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime);
       will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
@@ -71,7 +71,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.AUTHORIZATION_CODE,"", "::identity_id::", "", 10L, anyInstantTime))));
+      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "::identity_id::", "", anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime);
       will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
@@ -112,7 +112,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.JWT,"", "::identity_id::", "", 10L, anyInstantTime))));
+      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.JWT, "::identity_id::", "", anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.JWT, anyInstantTime);
       will(returnValue(Optional.absent()));

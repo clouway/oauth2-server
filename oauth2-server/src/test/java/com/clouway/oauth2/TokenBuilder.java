@@ -8,14 +8,15 @@ import com.clouway.oauth2.token.TokenType;
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public class TokenBuilder {
+
+
   public static TokenBuilder aNewToken() {
     return new TokenBuilder();
   }
 
   private String clientId = "";
-  private DateTime createdOn = new DateTime();
+  private DateTime expiresAt = new DateTime();
   private String value;
-  private long timeToLiveInSeconds;
   private TokenType type = TokenType.BEARER;
 
   public TokenBuilder withValue(String value) {
@@ -23,18 +24,13 @@ public class TokenBuilder {
     return this;
   }
 
-  public TokenBuilder timeToLiveInSeconds(long timeToLiveInSeconds) {
-    this.timeToLiveInSeconds = timeToLiveInSeconds;
-    return this;
-  }
-
-  public TokenBuilder createdOn(DateTime createdOn) {
-    this.createdOn = createdOn;
+  public TokenBuilder expiresAt(DateTime expiresAt) {
+    this.expiresAt = expiresAt;
     return this;
   }
 
   public Token build() {
-    return new Token(value, type, GrantType.AUTHORIZATION_CODE, "", "", clientId, timeToLiveInSeconds, createdOn);
+    return new Token(value, type, GrantType.AUTHORIZATION_CODE, "", clientId, expiresAt);
   }
 
   public TokenBuilder forClient(String clientId) {

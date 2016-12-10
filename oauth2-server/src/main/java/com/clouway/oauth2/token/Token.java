@@ -12,34 +12,50 @@ public final class Token implements Serializable {
   public final String value;
   public final TokenType type;
   public final GrantType grantType;
-  public final String refreshToken;
   public final String identityId;
   public final String clientId;
-  public final Long expiresInSeconds;
-  public final DateTime creationDate;
+  private final DateTime expiresAt;
 
   public Token() {
-    this(null, null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null);
   }
 
-  public Token(String value, TokenType type, GrantType grantType, String refreshToken, String identityId, String clientId, Long expiresInSeconds, DateTime creationDate) {
+  public Token(String value, TokenType type, GrantType grantType, String identityId, String clientId, DateTime expiresAt) {
     this.value = value;
     this.type = type;
     this.grantType = grantType;
-    this.refreshToken = refreshToken;
     this.identityId = identityId;
     this.clientId = clientId;
-    this.expiresInSeconds = expiresInSeconds;
-    this.creationDate = creationDate;
+    this.expiresAt = expiresAt;
   }
 
-  public boolean expiresAt(DateTime date) {
-    return date.after(creationDate.plusSeconds(expiresInSeconds));
+  /**
+   * Checks whether the Token expires at the provided instant time.
+   *
+   * @param instant the instant to against witch instant is checked
+   * @return true if token expires at the provided time and false in other case
+   */
+  public boolean expiresAt(DateTime instant) {
+    return instant.after(expiresAt);
   }
 
+  /**
+   * Expiration time as timestamp value.
+   *
+   * @return the expiration time as timestamp
+   */
   public Long expirationTimestamp() {
-    DateTime expirationTime = creationDate.plusSeconds(expiresInSeconds);
-    return expirationTime.timestamp();
+    return expiresAt.timestamp();
+  }
+
+  /**
+   * Gets time to live in seconds of the current token.
+   *
+   * @param instant the instant time used for check
+   * @return the time to live in seconds
+   */
+  public Long ttlSeconds(DateTime instant) {
+    return (expiresAt.timestamp() - instant.timestamp()) / 1000;
   }
 
   @Override
@@ -49,11 +65,9 @@ public final class Token implements Serializable {
     Token token = (Token) o;
     return Objects.equal(value, token.value) &&
             type == token.type &&
-            Objects.equal(refreshToken, token.refreshToken) &&
             Objects.equal(identityId, token.identityId) &&
             Objects.equal(clientId, token.clientId) &&
-            Objects.equal(expiresInSeconds, token.expiresInSeconds) &&
-            Objects.equal(creationDate, token.creationDate);
+            Objects.equal(expiresAt, token.expiresAt);
   }
 
   @Override

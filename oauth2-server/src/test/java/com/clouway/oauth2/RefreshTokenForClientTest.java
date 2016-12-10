@@ -4,11 +4,8 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenType;
+import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -41,14 +38,14 @@ public class RefreshTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
-      will(returnValue(Optional.of(new Token("::token1::", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "::refresh_token::", "","", 600L, new DateTime()))));
+      will(returnValue(new TokenResponse(true, "::access_token::", "::refresh_token::", 600L)));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")), anyTime);
 
     String body = new RsPrint(response).printBody();
 
-    assertThat(body, containsString("::token1::"));
+    assertThat(body, containsString("::access_token::"));
     assertThat(body, containsString("600"));
     assertThat(body, containsString("::refresh_token::"));
   }
@@ -61,7 +58,7 @@ public class RefreshTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
-      will(returnValue(Optional.absent()));
+      will(returnValue(new TokenResponse(false, "", "", 0L)));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")), anyTime);

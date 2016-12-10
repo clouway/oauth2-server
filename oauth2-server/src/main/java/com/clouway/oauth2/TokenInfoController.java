@@ -32,7 +32,7 @@ class TokenInfoController implements InstantaneousRequest {
     JsonObject o = new JsonObject();
     o.addProperty("sub", token.identityId);
     o.addProperty("exp", token.expirationTimestamp());
-    o.addProperty("expires_in", token.expiresInSeconds);
+    o.addProperty("expires_in", token.ttlSeconds(instantTime));
 
     return new RsJson(o);
   }

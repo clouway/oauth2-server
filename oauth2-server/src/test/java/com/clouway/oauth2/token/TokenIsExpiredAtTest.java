@@ -15,14 +15,13 @@ public class TokenIsExpiredAtTest {
 
   @Test
   public void isStillActive() {
-    Token token = aNewToken().createdOn(new DateTime(newTime(10, 0, 0))).timeToLiveInSeconds(60L).build();
-    assertThat(token.expiresAt(new DateTime(newTime(10, 0, 0))), is(false));
+    Token token = aNewToken().expiresAt(new DateTime(newTime(10, 0, 0))).build();
+    assertThat(token.expiresAt(new DateTime(newTime(9, 59, 59))), is(false));
   }
 
   @Test
   public void wasExpired() {
-    Token token = aNewToken().createdOn(new DateTime(newTime(10, 0, 0))).timeToLiveInSeconds(60L).build();
+    Token token = aNewToken().expiresAt(new DateTime(newTime(10, 0, 0))).build();
     assertThat(token.expiresAt(new DateTime(newTime(10, 1, 1))), is(true));
   }
-
 }

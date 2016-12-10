@@ -23,10 +23,10 @@ public interface Tokens {
    * Refreshes token using the access token.
    *
    * @param token the access token
-   * @param when token is going to be refreshed
+   * @param when  token is going to be refreshed
    * @return the refreshed token
    */
-  Optional<Token> refreshToken(String token, DateTime when);
+  TokenResponse refreshToken(String token, DateTime when);
 
   /**
    * Ussues a new token for the provided identity.
@@ -38,7 +38,7 @@ public interface Tokens {
    * @param when the requested time on which it should be issued
    * @return the newly issued token
    */
-  Token issueToken(GrantType grantType, Client client, String identityId, DateTime when);
+  TokenResponse issueToken(GrantType grantType, Client client, String identityId, DateTime when);
 
   /**
    * Revokes token from repository.

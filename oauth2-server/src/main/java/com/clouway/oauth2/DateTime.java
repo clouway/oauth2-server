@@ -32,6 +32,10 @@ public final class DateTime {
     return new DateTime(new Date(time.getTime() + 1000 * seconds));
   }
 
+  public DateTime minusSeconds(long seconds) {
+    return new DateTime(new Date(time.getTime() - 1000 * seconds));
+  }
+
   @Override
   public String toString() {
     return "DateTime{" + time + '}';

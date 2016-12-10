@@ -12,7 +12,7 @@ import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -80,9 +80,9 @@ public class JwtController implements InstantaneousRequest {
       return OAuthError.invalidGrant();
     }
 
-    Token token = tokens.issueToken(GrantType.JWT, new Client(claimSet.iss, "", "", Collections.<String>emptySet()), claimSet.iss, instant);
+    TokenResponse response = tokens.issueToken(GrantType.JWT, new Client(claimSet.iss, "", "", Collections.<String>emptySet()), claimSet.iss, instant);
 
-    return new BearerTokenResponse(token.value, token.expiresInSeconds, token.refreshToken);
+    return new BearerTokenResponse(response.accessToken, response.ttlInSeconds, response.refreshToken);
   }
 
 }
