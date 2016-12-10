@@ -8,6 +8,7 @@ import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -26,6 +27,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String responseType = request.param("response_type");
     String clientId = request.param("client_id");
     String requestedUrl = request.param("redirect_uri");
+    String state = request.param("state");
 
     Optional<Client> possibleClientResponse = clientRepository.findById(clientId);
 
@@ -36,9 +38,9 @@ class ClientAuthorizationActivity implements IdentityActivity {
     Client client = possibleClientResponse.get();
 
 
-    Optional<String> redirectUrl = client.determineRedirectUrl(requestedUrl);
+    Optional<String> possibleRedirectUrl = client.determineRedirectUrl(requestedUrl);
 
-    if (!redirectUrl.isPresent()) {
+    if (!possibleRedirectUrl.isPresent()) {
       return OAuthError.unauthorizedClient("Client Redirect URL is not matching the configured one.");
     }
 
@@ -50,10 +52,19 @@ class ClientAuthorizationActivity implements IdentityActivity {
     // HTTP/1.1 302 Found
     // Location: https://client.example.com/cb#error=access_denied&state=xyz
     if (!possibleAuthorizationResponse.isPresent()) {
-      return new RsRedirect(redirectUrl.get() + "?error=access_denied");
+      return new RsRedirect(possibleRedirectUrl.get() + "?error=access_denied");
     }
 
+    String callback = possibleRedirectUrl.get();
+
     Authorization authorization = possibleAuthorizationResponse.get();
-    return new RsRedirect(String.format("%s?code=%s", redirectUrl.get(), authorization.code));
+    return new RsRedirect(createCallbackUrl(callback, authorization.code, state));
+  }
+
+  private String createCallbackUrl(String callback, String code, String state) {
+    if (Strings.isNullOrEmpty(state)) {
+      return String.format("%s?code=%s", callback, code);
+    }
+    return String.format("%s?code=%s&state=%s", callback, code, state);
   }
 }

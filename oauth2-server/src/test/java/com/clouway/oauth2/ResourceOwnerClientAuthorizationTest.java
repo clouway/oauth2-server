@@ -68,6 +68,33 @@ public class ResourceOwnerClientAuthorizationTest {
   }
 
   @Test
+  public void stateIsPassedToCallbackWhenProvided() throws Exception {
+    ParamRequest authRequest = new ParamRequest(
+            ImmutableMap.of(
+                    "response_type", "code",
+                    "client_id", "::client_id::",
+                    "redirect_uri", "http://example.com/callback",
+                    "state", "abc"
+            )
+    );
+    final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
+
+    context.checking(new Expectations() {{
+      oneOf(clientRepository).findById(with(any(String.class)));
+      will(returnValue(Optional.of(anyExistingClient)));
+
+      oneOf(clientAuthorizationRepository).authorize(with(any(Client.class)), with(any(String.class)), with(any(String.class)));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "1234", Collections.singleton("http://example.com/callback"), "identityId"))));
+    }});
+
+    Response response = activity.execute("user1", authRequest);
+    Status status = response.status();
+
+    assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
+    assertThat(status.redirectUrl, is(containsString("http://example.com/callback?code=1234&state=abc")));
+  }
+
+  @Test
   public void redirectUrlWasNotRequested() throws Exception {
     ParamRequest authRequest = new ParamRequest(
             ImmutableMap.of("response_type", "code", "client_id", "::another client::")
