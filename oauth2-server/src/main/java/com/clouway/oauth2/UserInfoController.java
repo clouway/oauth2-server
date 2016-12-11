@@ -3,7 +3,7 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsJson;
-import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
@@ -28,13 +28,13 @@ class UserInfoController implements InstantaneousRequest {
   public Response handleAsOf(Request request, DateTime instantTime) {
     String accessToken = request.param("access_token");
 
-    Optional<Token> possibleTokenResponse = tokens.findTokenAvailableAt(accessToken, instantTime);
+    Optional<BearerToken> possibleTokenResponse = tokens.findTokenAvailableAt(accessToken, instantTime);
 
     if (!possibleTokenResponse.isPresent()) {
       return OAuthError.invalidToken();
     }
 
-    Token token = possibleTokenResponse.get();
+    BearerToken token = possibleTokenResponse.get();
 
     Optional<Identity> possibleIdentityResponse = identityFinder.findIdentity(token.identityId, token.grantType, instantTime);
     if (!possibleIdentityResponse.isPresent()) {

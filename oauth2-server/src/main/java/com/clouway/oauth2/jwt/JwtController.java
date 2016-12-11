@@ -17,11 +17,13 @@ import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -42,6 +44,7 @@ public class JwtController implements InstantaneousRequest {
   @Override
   public Response handleAsOf(Request request, DateTime instant) {
     String assertion = request.param("assertion");
+    String scope = request.param("scope") == null ? "" : request.param("scope");
 
     List<String> parts = Lists.newArrayList(Splitter.on(".").split(assertion));
 
@@ -80,7 +83,9 @@ public class JwtController implements InstantaneousRequest {
       return OAuthError.invalidGrant();
     }
 
-    TokenResponse response = tokens.issueToken(GrantType.JWT, new Client(claimSet.iss, "", "", Collections.<String>emptySet()), claimSet.iss, instant);
+    Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
+    Client client = new Client(claimSet.iss, "", "", Collections.<String>emptySet());
+    TokenResponse response = tokens.issueToken(GrantType.JWT, client, claimSet.iss, scopes, instant);
 
     return new BearerTokenResponse(response.accessToken, response.ttlInSeconds, response.refreshToken);
   }

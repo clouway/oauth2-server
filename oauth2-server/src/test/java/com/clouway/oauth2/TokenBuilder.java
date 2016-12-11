@@ -1,8 +1,10 @@
 package com.clouway.oauth2;
 
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.TokenType;
+
+import java.util.Collections;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -29,8 +31,8 @@ public class TokenBuilder {
     return this;
   }
 
-  public Token build() {
-    return new Token(value, type, GrantType.AUTHORIZATION_CODE, "", clientId, expiresAt);
+  public BearerToken build() {
+    return new BearerToken(value, GrantType.AUTHORIZATION_CODE, "", clientId, Collections.<String>emptySet(), expiresAt);
   }
 
   public TokenBuilder forClient(String clientId) {

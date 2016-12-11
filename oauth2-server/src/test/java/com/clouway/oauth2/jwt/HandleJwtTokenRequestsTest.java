@@ -15,6 +15,7 @@ import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -23,6 +24,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -55,6 +58,7 @@ public class HandleJwtTokenRequestsTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void happyPath() throws IOException {
     final Signature anySignatureThatWillVerifies = context.mock(Signature.class);
     final DateTime anyInstantTime = new DateTime();
@@ -69,7 +73,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verify(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
+      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(String.class)), with(any(Set.class)), with(any(DateTime.class)));
       will(returnValue(new TokenResponse(true, "::access_token::", "::refresh_token::", 1000L)));
     }});
 
@@ -78,6 +82,31 @@ public class HandleJwtTokenRequestsTest {
     assertThat(responseContent, containsString("::access_token::"));
     assertThat(responseContent, containsString("::refresh_token::"));
     assertThat(responseContent, containsString("1000"));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void scopesArePassed() throws IOException {
+    final Signature anySignatureThatWillVerifies = context.mock(Signature.class);
+    final DateTime anyInstantTime = new DateTime();
+    final Client jwtClient = new Client("xxx@developer.com", "", "", Collections.<String>emptySet());
+    context.checking(new Expectations() {{
+      oneOf(repository).findKey(with(any(Jwt.Header.class)), with(any(Jwt.ClaimSet.class)));
+      will(returnValue(Optional.of(new Pem.Block("", ImmutableMap.<String, String>of(), new byte[]{}))));
+
+      oneOf(signatureFactory).createSignature(with(any(byte[].class)), with(any(Jwt.Header.class)));
+      will(returnValue(Optional.of(anySignatureThatWillVerifies)));
+
+      oneOf(anySignatureThatWillVerifies).verify(with(any(byte[].class)), with(any(Pem.Block.class)));
+      will(returnValue(true));
+
+      oneOf(tokens).issueToken(
+              GrantType.JWT, jwtClient, "xxx@developer.com", Sets.newHashSet("CanDoX", "CanDoY"), anyInstantTime
+      );
+      will(returnValue(new TokenResponse(false, "", "", 0L)));
+    }});
+
+    controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature), "CanDoX CanDoY"), anyInstantTime);
   }
 
   @Test
@@ -94,5 +123,9 @@ public class HandleJwtTokenRequestsTest {
 
   private Request newJwtRequest(String assertion) {
     return new ParamRequest(ImmutableMap.of("assertion", assertion));
+  }
+
+  private Request newJwtRequest(String assertion, String scope) {
+    return new ParamRequest(ImmutableMap.of("assertion", assertion, "scope", scope));
   }
 }

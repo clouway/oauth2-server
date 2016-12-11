@@ -9,6 +9,7 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -18,7 +19,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Set;
 
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
@@ -56,8 +59,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientRepository).findById("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", "code");
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "1234", Collections.singleton("http://example.com/callback"), "identityId"))));
+      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.<String>emptySet(), "code");
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
     Response response = activity.execute("user1", authRequest);
@@ -67,7 +70,9 @@ public class ResourceOwnerClientAuthorizationTest {
     assertThat(status.redirectUrl, is(containsString("http://example.com/callback?code=1234")));
   }
 
+
   @Test
+  @SuppressWarnings("unchecked")
   public void stateIsPassedToCallbackWhenProvided() throws Exception {
     ParamRequest authRequest = new ParamRequest(
             ImmutableMap.of(
@@ -83,8 +88,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientRepository).findById(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(with(any(Client.class)), with(any(String.class)), with(any(String.class)));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "1234", Collections.singleton("http://example.com/callback"), "identityId"))));
+      oneOf(clientAuthorizationRepository).authorize(with(any(Client.class)), with(any(String.class)), with(any(Set.class)), with(any(String.class)));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
     Response response = activity.execute("user1", authRequest);
@@ -92,6 +97,52 @@ public class ResourceOwnerClientAuthorizationTest {
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
     assertThat(status.redirectUrl, is(containsString("http://example.com/callback?code=1234&state=abc")));
+  }
+
+  @Test
+  public void singleScopeIsPassed() throws Exception {
+    ParamRequest authRequest = new ParamRequest(
+            ImmutableMap.of(
+                    "response_type", "code",
+                    "client_id", "::client_id::",
+                    "redirect_uri", "http://example.com/callback",
+                    "scope", "abc"
+            )
+    );
+    final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
+
+    context.checking(new Expectations() {{
+      oneOf(clientRepository).findById(with(any(String.class)));
+      will(returnValue(Optional.of(anyExistingClient)));
+
+      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.singleton("abc"), "code");
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
+    }});
+
+    activity.execute("user1", authRequest);
+  }
+
+  @Test
+  public void multipleScopesArePassed() throws Exception {
+    ParamRequest authRequest = new ParamRequest(
+            ImmutableMap.of(
+                    "response_type", "code",
+                    "client_id", "::client_id::",
+                    "redirect_uri", "http://example.com/callback",
+                    "scope", "CanDoX CanDoY CanDoZ"
+            )
+    );
+    final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
+
+    context.checking(new Expectations() {{
+      oneOf(clientRepository).findById(with(any(String.class)));
+      will(returnValue(Optional.of(anyExistingClient)));
+
+      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), "code");
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
+    }});
+
+    activity.execute("user1", authRequest);
   }
 
   @Test
@@ -105,8 +156,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientRepository).findById(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", "code");
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "1234", Collections.singleton("http://example.com/callback"), "identityId"))));
+      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.<String>emptySet(), "code");
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
     Response response = activity.execute("user1", authRequest);
@@ -128,7 +179,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientRepository).findById("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "::identity_id::", "code");
+      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "::identity_id::", Collections.<String>emptySet(), "code");
       will(returnValue(Optional.absent()));
     }});
 

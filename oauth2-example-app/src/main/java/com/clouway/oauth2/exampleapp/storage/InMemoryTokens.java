@@ -4,15 +4,15 @@ import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.TokenGenerator;
 import com.clouway.oauth2.token.TokenResponse;
-import com.clouway.oauth2.token.TokenType;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ import java.util.Set;
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
 class InMemoryTokens implements Tokens {
-  private final Map<String, Token> tokens = Maps.newHashMap();
+  private final Map<String, BearerToken> tokens = Maps.newHashMap();
   private final Map<String, String> refreshTokenToAccessToken = Maps.newHashMap();
   private final TokenGenerator tokenGenerator;
   private Duration timeToLive;
@@ -32,16 +32,16 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public Optional<Token> findTokenAvailableAt(String tokenValue, DateTime instant) {
+  public Optional<BearerToken> findTokenAvailableAt(String tokenValue, DateTime instant) {
     if (tokens.containsKey(tokenValue)) {
-      Token token = tokens.get(tokenValue);
+      BearerToken token = tokens.get(tokenValue);
 
       if (!token.expiresAt(instant)) {
         //update token expirationDate time
         //remove the current token
         tokens.remove(tokenValue);
         // new instance
-        Token updatedToken = new Token(token.value, token.type, token.grantType, token.identityId, token.clientId, instant);
+        BearerToken updatedToken = new BearerToken(token.value, token.grantType, token.identityId, token.clientId, Collections.<String>emptySet(), instant);
         //add the new token
         tokens.put(tokenValue, updatedToken);
 
@@ -56,11 +56,11 @@ class InMemoryTokens implements Tokens {
   public TokenResponse refreshToken(String refreshToken, DateTime instant) {
     if (refreshTokenToAccessToken.containsKey(refreshToken)) {
       String accessToken = refreshTokenToAccessToken.get(refreshToken);
-      Token oldToken = tokens.get(accessToken);
+      BearerToken oldToken = tokens.get(accessToken);
       tokens.remove(accessToken);
 
       String newTokenValue = tokenGenerator.generate();
-      Token updatedToken = new Token(newTokenValue, TokenType.BEARER, oldToken.grantType, oldToken.identityId, oldToken.clientId, instant);
+      BearerToken updatedToken = new BearerToken(newTokenValue, oldToken.grantType, oldToken.identityId, oldToken.clientId, Collections.<String>emptySet(), instant);
 
       tokens.put(newTokenValue, updatedToken);
       refreshTokenToAccessToken.put(refreshToken, newTokenValue);
@@ -73,14 +73,14 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public TokenResponse issueToken(GrantType grantType, Client client, String identityId, DateTime instant) {
+  public TokenResponse issueToken(GrantType grantType, Client client, String identityId, Set<String> scopes, DateTime when) {
     String token = tokenGenerator.generate();
     String refreshTokenValue = tokenGenerator.generate();
 
-    Token bearerToken = new Token(token, TokenType.BEARER, GrantType.JWT, identityId, client.id, instant);
+    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identityId, client.id, scopes, when);
     tokens.put(token, bearerToken);
 
-    return new TokenResponse(true, token, refreshTokenValue, bearerToken.ttlSeconds(instant));
+    return new TokenResponse(true, token, refreshTokenValue, bearerToken.ttlSeconds(when));
   }
 
   @Override

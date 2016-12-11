@@ -5,8 +5,7 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.Token;
-import com.clouway.oauth2.token.TokenType;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
@@ -45,7 +44,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "::identity_id::","", anyInstantTime))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, "::identity_id::","", Collections.<String>emptySet(), anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime);
       will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
@@ -71,7 +70,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.AUTHORIZATION_CODE, "::identity_id::", "", anyInstantTime))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, "::identity_id::", "", Collections.<String>emptySet(), anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime);
       will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
@@ -112,7 +111,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new Token("", TokenType.BEARER, GrantType.JWT, "::identity_id::", "", anyInstantTime))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.JWT, "::identity_id::", "", Collections.<String>emptySet(), anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.JWT, anyInstantTime);
       will(returnValue(Optional.absent()));

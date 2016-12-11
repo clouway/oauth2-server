@@ -4,7 +4,7 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.Status;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
-import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
@@ -35,7 +35,7 @@ public class GetTokenInfoTest {
   @Test
   public void availableToken() throws Exception {
     final DateTime anyTime = new DateTime();
-    final Token anyToken = aNewToken().expiresAt(anyTime.plusSeconds(200)).build();
+    final BearerToken anyToken = aNewToken().expiresAt(anyTime.plusSeconds(200)).build();
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));

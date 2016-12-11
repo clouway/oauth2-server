@@ -4,28 +4,29 @@ import com.clouway.oauth2.DateTime;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-public final class Token implements Serializable {
+public final class BearerToken implements Serializable {
   public final String value;
-  public final TokenType type;
   public final GrantType grantType;
   public final String identityId;
   public final String clientId;
+  public final Set<String> scopes;
   private final DateTime expiresAt;
 
-  public Token() {
+  public BearerToken() {
     this(null, null, null, null, null, null);
   }
 
-  public Token(String value, TokenType type, GrantType grantType, String identityId, String clientId, DateTime expiresAt) {
+  public BearerToken(String value, GrantType grantType, String identityId, String clientId, Set<String> scopes, DateTime expiresAt) {
     this.value = value;
-    this.type = type;
     this.grantType = grantType;
     this.identityId = identityId;
     this.clientId = clientId;
+    this.scopes = scopes;
     this.expiresAt = expiresAt;
   }
 
@@ -62,9 +63,8 @@ public final class Token implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Token token = (Token) o;
+    BearerToken token = (BearerToken) o;
     return Objects.equal(value, token.value) &&
-            type == token.type &&
             Objects.equal(identityId, token.identityId) &&
             Objects.equal(clientId, token.clientId) &&
             Objects.equal(expiresAt, token.expiresAt);

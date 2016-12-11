@@ -47,9 +47,9 @@ public class IssueNewTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
-      will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", Collections.singleton("::redirect_uri::"), "::user_id::"))));
+      will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
-      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", anyTime);
+      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", Collections.<String>emptySet(), anyTime);
       will(returnValue(new TokenResponse(true, "::token::", "::refresh token::", 2000L)));
     }});
 
@@ -67,9 +67,9 @@ public class IssueNewTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
-      will(returnValue(Optional.of(new Authorization("", "", "::auth_code::", Collections.singleton("::redirect_uri::"), "::user_id::"))));
+      will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
-      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", anyTime);
+      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", Collections.<String>emptySet(), anyTime);
       will(returnValue(new TokenResponse(false, "", "", 0L)));
     }});
 

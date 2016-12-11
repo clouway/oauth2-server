@@ -8,7 +8,11 @@ import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
 import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
+
+import java.util.Set;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -28,6 +32,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String clientId = request.param("client_id");
     String requestedUrl = request.param("redirect_uri");
     String state = request.param("state");
+    String scope = request.param("scope") == null ? "" : request.param("scope");
 
     Optional<Client> possibleClientResponse = clientRepository.findById(clientId);
 
@@ -37,14 +42,14 @@ class ClientAuthorizationActivity implements IdentityActivity {
 
     Client client = possibleClientResponse.get();
 
-
     Optional<String> possibleRedirectUrl = client.determineRedirectUrl(requestedUrl);
 
     if (!possibleRedirectUrl.isPresent()) {
       return OAuthError.unauthorizedClient("Client Redirect URL is not matching the configured one.");
     }
 
-    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(client, identityId, responseType);
+    Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
+    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(client, identityId, scopes, responseType);
 
     // RFC-6749 - Section: 4.2.2.1
     // The authorization server redirects the user-agent by

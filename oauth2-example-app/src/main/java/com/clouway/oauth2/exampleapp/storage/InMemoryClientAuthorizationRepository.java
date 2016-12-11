@@ -9,6 +9,7 @@ import com.google.common.collect.Maps;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -43,10 +44,10 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
   }
 
   @Override
-  public Optional<Authorization> authorize(Client client, String identityId, String responseType) {
+  public Optional<Authorization> authorize(Client client, String identityId, Set<String> scopes, String responseType) {
     String code = tokenGenerator.generate();
 
-    Authorization authorization = new Authorization(responseType, client.id, code, client.redirectURLs, identityId);
+    Authorization authorization = new Authorization(responseType, client.id, identityId, code, scopes, client.redirectURLs);
     register(authorization);
 
     return Optional.of(authorization);

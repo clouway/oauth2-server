@@ -5,7 +5,7 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsEmpty;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRepository;
-import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 
@@ -26,7 +26,7 @@ class RevokeTokenController implements ClientRequest {
   public Response handleAsOf(Request request, ClientCredentials credentials, DateTime instant) {
     String token = request.param("token");
 
-    Optional<Token> possibleToken = tokens.findTokenAvailableAt(token, instant);
+    Optional<BearerToken> possibleToken = tokens.findTokenAvailableAt(token, instant);
     if (!possibleToken.isPresent()) {
       return OAuthError.invalidRequest();
     }

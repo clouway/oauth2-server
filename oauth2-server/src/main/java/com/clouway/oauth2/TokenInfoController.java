@@ -3,8 +3,9 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsJson;
-import com.clouway.oauth2.token.Token;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
@@ -22,17 +23,21 @@ class TokenInfoController implements InstantaneousRequest {
   public Response handleAsOf(Request request, DateTime instantTime) {
     String accessToken = request.param("access_token");
 
-    Optional<Token> possibleToken = tokens.findTokenAvailableAt(accessToken, instantTime);
+    Optional<BearerToken> possibleToken = tokens.findTokenAvailableAt(accessToken, instantTime);
     if (!possibleToken.isPresent()) {
       return OAuthError.invalidRequest();
     }
 
-    Token token = possibleToken.get();
+    BearerToken token = possibleToken.get();
 
     JsonObject o = new JsonObject();
     o.addProperty("sub", token.identityId);
     o.addProperty("exp", token.expirationTimestamp());
     o.addProperty("expires_in", token.ttlSeconds(instantTime));
+
+    if (!token.scopes.isEmpty()) {
+      o.addProperty("scope", Joiner.on(" ").join(token.scopes));
+    }
 
     return new RsJson(o);
   }

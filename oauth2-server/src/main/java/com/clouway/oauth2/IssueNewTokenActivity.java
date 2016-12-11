@@ -37,9 +37,9 @@ class IssueNewTokenActivity implements ClientActivity {
 
     Authorization authorization = possibleResponse.get();
 
-    TokenResponse response = tokens.issueToken(GrantType.AUTHORIZATION_CODE, client, authorization.identityId, instant);
+    TokenResponse response = tokens.issueToken(GrantType.AUTHORIZATION_CODE, client, authorization.identityId, authorization.scopes, instant);
     if (!response.isSuccessful()) {
-      return OAuthError.invalidRequest("Token cannot be issued due internal error");
+      return OAuthError.invalidRequest("Token cannot be issued.");
     }
 
     return new BearerTokenResponse(response.accessToken, response.ttlInSeconds, response.refreshToken);

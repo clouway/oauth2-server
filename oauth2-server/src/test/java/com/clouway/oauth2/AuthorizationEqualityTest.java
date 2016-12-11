@@ -15,16 +15,32 @@ import static org.junit.Assert.assertThat;
 public class AuthorizationEqualityTest {
   @Test
   public void areEqual() {
-    Authorization authorization1 = new Authorization("code", "id", "123456", Collections.singleton("redirectURI"), "identityId");
-    Authorization authorization2 = new Authorization("code", "id", "123456", Collections.singleton("redirectURI"), "identityId");
+    Authorization authorization1 = new Authorization("code", "id", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
+    Authorization authorization2 = new Authorization("code", "id", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
 
     assertThat(authorization1, is(authorization2));
   }
 
   @Test
-  public void areNotEqual() {
-    Authorization authorization1 = new Authorization("code1", "id1", "123456", Collections.singleton("redirectURI1"), "identityId");
-    Authorization authorization2 = new Authorization("code2", "id2", "654321", Collections.singleton("redirectURI2"), "identityId");
+  public void idIsNotMatching() {
+    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
+    Authorization authorization2 = new Authorization("code", "id2", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
+
+    assertThat(authorization1, is(not(authorization2)));
+  }
+
+  @Test
+  public void scopesAreNotMatching() {
+    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
+    Authorization authorization2 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope2"), Collections.singleton("redirectURI"));
+
+    assertThat(authorization1, is(not(authorization2)));
+  }
+
+  @Test
+  public void redirectURIsAreNotMatching() throws Exception {
+    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
+    Authorization authorization2 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI2"));
 
     assertThat(authorization1, is(not(authorization2)));
   }
