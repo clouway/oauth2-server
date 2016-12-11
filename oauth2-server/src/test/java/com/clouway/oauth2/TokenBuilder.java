@@ -1,8 +1,7 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.BearerToken;
-import com.clouway.oauth2.token.TokenType;
+import com.clouway.oauth2.token.GrantType;
 
 import java.util.Collections;
 
@@ -19,7 +18,6 @@ public class TokenBuilder {
   private String clientId = "";
   private DateTime expiresAt = new DateTime();
   private String value;
-  private TokenType type = TokenType.BEARER;
 
   public TokenBuilder withValue(String value) {
     this.value = value;
