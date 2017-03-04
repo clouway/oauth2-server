@@ -6,6 +6,7 @@ import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collections;
 
+import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -50,7 +52,7 @@ public class IssueNewTokenForClientTest {
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", Collections.<String>emptySet(), anyTime);
-      will(returnValue(new TokenResponse(true, "::token::", "::refresh token::", 2000L)));
+      will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
     }});
 
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
@@ -70,7 +72,7 @@ public class IssueNewTokenForClientTest {
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", Collections.<String>emptySet(), anyTime);
-      will(returnValue(new TokenResponse(false, "", "", 0L)));
+      will(returnValue(new TokenResponse(false, null, "")));
     }});
 
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);

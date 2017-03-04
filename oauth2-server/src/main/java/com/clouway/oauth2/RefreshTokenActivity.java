@@ -3,6 +3,7 @@ package com.clouway.oauth2;
 import com.clouway.oauth2.client.Client;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 
@@ -26,6 +27,8 @@ class RefreshTokenActivity implements ClientActivity {
       return OAuthError.invalidGrant();
     }
 
-    return new BearerTokenResponse(response.accessToken, response.ttlInSeconds, response.refreshToken);
+    BearerToken accessToken = response.accessToken;
+
+    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.refreshToken);
   }
 }

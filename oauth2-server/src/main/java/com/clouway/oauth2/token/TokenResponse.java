@@ -11,18 +11,17 @@ package com.clouway.oauth2.token;
 public final class TokenResponse {
   private final boolean successful;
 
-  public final String accessToken;
+  public final BearerToken accessToken;
   public final String refreshToken;
-  public final Long ttlInSeconds;
 
-  public TokenResponse(boolean successful, String accessToken, String refreshToken, Long ttlInSeconds) {
+  public TokenResponse(boolean successful, BearerToken accessToken, String refreshToken) {
     this.successful = successful;
-    this.accessToken = accessToken;
     this.refreshToken = refreshToken;
-    this.ttlInSeconds = ttlInSeconds;
+    this.accessToken = accessToken;
   }
 
   public boolean isSuccessful() {
     return successful;
   }
+
 }

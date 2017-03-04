@@ -1,11 +1,12 @@
 package com.clouway.oauth2;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public final class DateTime {
+public final class DateTime implements Serializable {
   private final Date time;
 
   public DateTime(Date time) {

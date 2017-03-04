@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
+import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -74,7 +75,7 @@ public class HandleJwtTokenRequestsTest {
       will(returnValue(true));
 
       oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(String.class)), with(any(Set.class)), with(any(DateTime.class)));
-      will(returnValue(new TokenResponse(true, "::access_token::", "::refresh_token::", 1000L)));
+      will(returnValue(new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyInstantTime.plusSeconds(1000)).build(), "::refresh_token::")));
     }});
 
     Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)), anyInstantTime);
@@ -103,7 +104,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(tokens).issueToken(
               GrantType.JWT, jwtClient, "xxx@developer.com", Sets.newHashSet("CanDoX", "CanDoY"), anyInstantTime
       );
-      will(returnValue(new TokenResponse(false, "", "", 0L)));
+      will(returnValue(new TokenResponse(true, aNewToken().build(), "")));
     }});
 
     controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature), "CanDoX CanDoY"), anyInstantTime);

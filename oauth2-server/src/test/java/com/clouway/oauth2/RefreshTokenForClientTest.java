@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -38,7 +39,9 @@ public class RefreshTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
-      will(returnValue(new TokenResponse(true, "::access_token::", "::refresh_token::", 600L)));
+      will(returnValue(
+              new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyTime.plusSeconds(600)).build(), "::refresh_token::")
+      ));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")), anyTime);
@@ -58,7 +61,7 @@ public class RefreshTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
-      will(returnValue(new TokenResponse(false, "", "", 0L)));
+      will(returnValue(new TokenResponse(false, null, "")));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")), anyTime);
