@@ -11,6 +11,7 @@ import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
+import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
@@ -86,8 +87,14 @@ public class JwtController implements InstantaneousRequest {
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
     Client client = new Client(claimSet.iss, "", "", Collections.<String>emptySet());
     TokenResponse response = tokens.issueToken(GrantType.JWT, client, claimSet.iss, scopes, instant);
+    
+    if (!response.isSuccessful()) {
+      return OAuthError.invalidRequest("tokens issuing is temporary unavailable");
+    }
+    
+    BearerToken accessToken = response.accessToken;
 
-    return new BearerTokenResponse(response.accessToken, response.ttlInSeconds, response.refreshToken);
+    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.refreshToken);
   }
 
 }

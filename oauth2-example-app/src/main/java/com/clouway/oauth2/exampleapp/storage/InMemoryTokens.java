@@ -3,8 +3,8 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.BearerToken;
+import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenGenerator;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
@@ -23,12 +23,10 @@ class InMemoryTokens implements Tokens {
   private final Map<String, BearerToken> tokens = Maps.newHashMap();
   private final Map<String, String> refreshTokenToAccessToken = Maps.newHashMap();
   private final TokenGenerator tokenGenerator;
-  private Duration timeToLive;
 
   @Inject
-  public InMemoryTokens(TokenGenerator tokenGenerator, Duration timeToLive) {
+  public InMemoryTokens(TokenGenerator tokenGenerator) {
     this.tokenGenerator = tokenGenerator;
-    this.timeToLive = timeToLive;
   }
 
   @Override
@@ -65,11 +63,11 @@ class InMemoryTokens implements Tokens {
       tokens.put(newTokenValue, updatedToken);
       refreshTokenToAccessToken.put(refreshToken, newTokenValue);
 
-      return new TokenResponse(true, updatedToken.value, refreshToken, updatedToken.ttlSeconds(instant));
+      return new TokenResponse(true, updatedToken, refreshToken);
 
     }
 
-    return new TokenResponse(false, "", "", 0L);
+    return new TokenResponse(false, null, "");
   }
 
   @Override
@@ -77,10 +75,10 @@ class InMemoryTokens implements Tokens {
     String token = tokenGenerator.generate();
     String refreshTokenValue = tokenGenerator.generate();
 
-    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identityId, client.id, scopes, when);
+    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identityId, client.id, scopes, when.plusSeconds(10000));
     tokens.put(token, bearerToken);
 
-    return new TokenResponse(true, token, refreshTokenValue, bearerToken.ttlSeconds(when));
+    return new TokenResponse(true, bearerToken, refreshTokenValue);
   }
 
   @Override
