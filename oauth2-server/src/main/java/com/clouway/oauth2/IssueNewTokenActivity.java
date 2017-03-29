@@ -9,6 +9,7 @@ import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 
 /**
@@ -19,10 +20,12 @@ import com.google.common.base.Optional;
 class IssueNewTokenActivity implements ClientActivity {
 
   private final Tokens tokens;
+  private final IdentityFinder identityFinder;
   private final ClientAuthorizationRepository clientAuthorizationRepository;
 
-  IssueNewTokenActivity(Tokens tokens, ClientAuthorizationRepository clientAuthorizationRepository) {
+  IssueNewTokenActivity(Tokens tokens, IdentityFinder identityFinder, ClientAuthorizationRepository clientAuthorizationRepository) {
     this.tokens = tokens;
+    this.identityFinder = identityFinder;
     this.clientAuthorizationRepository = clientAuthorizationRepository;
   }
 
@@ -38,7 +41,14 @@ class IssueNewTokenActivity implements ClientActivity {
 
     Authorization authorization = possibleResponse.get();
 
-    TokenResponse response = tokens.issueToken(GrantType.AUTHORIZATION_CODE, client, authorization.identityId, authorization.scopes, instant);
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(authorization.identityId, GrantType.AUTHORIZATION_CODE, instant);
+    if (!possibleIdentity.isPresent()) {
+      return OAuthError.invalidGrant();
+    }
+
+    Identity identity = possibleIdentity.get();
+
+    TokenResponse response = tokens.issueToken(GrantType.AUTHORIZATION_CODE, client, identity, authorization.scopes, instant);
     if (!response.isSuccessful()) {
       return OAuthError.invalidRequest("Token cannot be issued.");
     }

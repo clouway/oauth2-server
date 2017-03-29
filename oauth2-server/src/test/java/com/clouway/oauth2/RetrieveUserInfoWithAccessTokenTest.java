@@ -44,7 +44,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, "::identity_id::","", Collections.<String>emptySet(), anyInstantTime))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, "::identity_id::","", "::user email::", Collections.<String>emptySet(), anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime);
       will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
@@ -70,7 +70,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
-      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, "::identity_id::", "", Collections.<String>emptySet(), anyInstantTime))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, "::identity_id::", "", "::user email::", Collections.<String>emptySet(), anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime);
       will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
@@ -111,7 +111,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new BearerToken("", GrantType.JWT, "::identity_id::", "", Collections.<String>emptySet(), anyInstantTime))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.JWT, "::identity_id::", "", "::user email::", Collections.<String>emptySet(), anyInstantTime))));
 
       oneOf(identityFinder).findIdentity("::identity_id::", GrantType.JWT, anyInstantTime);
       will(returnValue(Optional.absent()));

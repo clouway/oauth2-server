@@ -18,6 +18,7 @@ public class TokenBuilder {
   private String clientId = "";
   private DateTime expiresAt = new DateTime();
   private String value;
+  private String email = "";
 
   public TokenBuilder withValue(String value) {
     this.value = value;
@@ -29,8 +30,13 @@ public class TokenBuilder {
     return this;
   }
 
+  public TokenBuilder withEmail(String email) {
+    this.email = email;
+    return this;
+  }
+
   public BearerToken build() {
-    return new BearerToken(value, GrantType.AUTHORIZATION_CODE, "", clientId, Collections.<String>emptySet(), expiresAt);
+    return new BearerToken(value, GrantType.AUTHORIZATION_CODE, "", clientId, email, Collections.<String>emptySet(), expiresAt);
   }
 
   public TokenBuilder forClient(String clientId) {

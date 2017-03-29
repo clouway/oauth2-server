@@ -62,7 +62,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                             new ClientController(
                                                                     config.clientRepository(),
                                                                     new IssueNewTokenActivity(
-                                                                            config.tokens(), config.clientAuthorizationRepository()
+                                                                            config.tokens(), config.identityFinder(), config.clientAuthorizationRepository()
                                                                     )
                                                             )
                                                     ))
@@ -84,8 +84,8 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                             new JwtController(
                                                     signatureFactory,
                                                     config.tokens(),
-                                                    config.serviceAccountRepository()
-                                            )))
+                                                    config.serviceAccountRepository(),
+                                                    config.identityFinder())))
                             ))
             ),
             new FkRegex(".*/revoke",

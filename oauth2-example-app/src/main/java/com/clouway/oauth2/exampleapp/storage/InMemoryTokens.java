@@ -2,12 +2,14 @@ package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Duration;
+import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenGenerator;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -25,7 +27,7 @@ class InMemoryTokens implements Tokens {
   private final TokenGenerator tokenGenerator;
 
   @Inject
-  public InMemoryTokens(TokenGenerator tokenGenerator) {
+  public InMemoryTokens(TokenGenerator tokenGenerator, Duration timeToLive) {
     this.tokenGenerator = tokenGenerator;
   }
 
@@ -39,7 +41,7 @@ class InMemoryTokens implements Tokens {
         //remove the current token
         tokens.remove(tokenValue);
         // new instance
-        BearerToken updatedToken = new BearerToken(token.value, token.grantType, token.identityId, token.clientId, Collections.<String>emptySet(), instant);
+        BearerToken updatedToken = new BearerToken(token.value, token.grantType, token.identityId, token.clientId, token.email, Collections.<String>emptySet(), instant);
         //add the new token
         tokens.put(tokenValue, updatedToken);
 
@@ -58,7 +60,7 @@ class InMemoryTokens implements Tokens {
       tokens.remove(accessToken);
 
       String newTokenValue = tokenGenerator.generate();
-      BearerToken updatedToken = new BearerToken(newTokenValue, oldToken.grantType, oldToken.identityId, oldToken.clientId, Collections.<String>emptySet(), instant);
+      BearerToken updatedToken = new BearerToken(newTokenValue, oldToken.grantType, oldToken.identityId, oldToken.clientId, oldToken.email, Collections.<String>emptySet(), instant);
 
       tokens.put(newTokenValue, updatedToken);
       refreshTokenToAccessToken.put(refreshToken, newTokenValue);
@@ -71,11 +73,11 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public TokenResponse issueToken(GrantType grantType, Client client, String identityId, Set<String> scopes, DateTime when) {
+  public TokenResponse issueToken(GrantType grantType, Client client, Identity identity, Set<String> scopes, DateTime when) {
     String token = tokenGenerator.generate();
     String refreshTokenValue = tokenGenerator.generate();
 
-    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identityId, client.id, scopes, when.plusSeconds(10000));
+    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identity.id(), client.id, identity.email(), scopes, when);
     tokens.put(token, bearerToken);
 
     return new TokenResponse(true, bearerToken, refreshTokenValue);

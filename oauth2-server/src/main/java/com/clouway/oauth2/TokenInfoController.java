@@ -31,9 +31,12 @@ class TokenInfoController implements InstantaneousRequest {
     BearerToken token = possibleToken.get();
 
     JsonObject o = new JsonObject();
+    o.addProperty("azp", token.clientId);
+    o.addProperty("aud", token.clientId);
     o.addProperty("sub", token.identityId);
     o.addProperty("exp", token.expirationTimestamp());
     o.addProperty("expires_in", token.ttlSeconds(instantTime));
+    o.addProperty("email", token.email);
 
     if (!token.scopes.isEmpty()) {
       o.addProperty("scope", Joiner.on(" ").join(token.scopes));

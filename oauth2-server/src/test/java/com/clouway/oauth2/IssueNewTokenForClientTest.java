@@ -6,10 +6,10 @@ import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collections;
 
+import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
 import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
@@ -39,20 +40,26 @@ public class IssueNewTokenForClientTest {
 
   private ClientAuthorizationRepository clientAuthorizationRepository = context.mock(ClientAuthorizationRepository.class);
 
-  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
+  private IdentityFinder identityFinder = context.mock(IdentityFinder.class);
+
+  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository);
 
   @Test
   public void happyPath() throws IOException {
-    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
+    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository);
     final Client client = aNewClient().build();
     final DateTime anyTime = new DateTime();
+    final Identity identity = aNewIdentity().withId("::user_id::").build();
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
-      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", Collections.<String>emptySet(), anyTime);
+      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, Collections.<String>emptySet(), anyTime);
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
+
+      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.of(identity)));
     }});
 
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
@@ -63,16 +70,20 @@ public class IssueNewTokenForClientTest {
 
   @Test
   public void tokenCannotBeIssued() throws Exception {
-    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
+    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository);
     final Client client = aNewClient().build();
     final DateTime anyTime = new DateTime();
+    final Identity identity = aNewIdentity().withId("::user_id::").build();
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
-      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, "::user_id::", Collections.<String>emptySet(), anyTime);
+      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, Collections.<String>emptySet(), anyTime);
       will(returnValue(new TokenResponse(false, null, "")));
+
+      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.of(identity)));
     }});
 
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
@@ -100,7 +111,7 @@ public class IssueNewTokenForClientTest {
 
   @Test
   public void clientWasNotAuthorized() throws IOException {
-    final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, clientAuthorizationRepository);
+    final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository);
     final Client client = aNewClient().build();
     final DateTime anyTime = new DateTime();
 

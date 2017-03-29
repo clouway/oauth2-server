@@ -4,6 +4,7 @@ import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.BearerTokenResponse;
 import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.InstantaneousRequest;
 import com.clouway.oauth2.OAuthError;
 import com.clouway.oauth2.client.Client;
@@ -15,6 +16,7 @@ import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -35,11 +37,13 @@ public class JwtController implements InstantaneousRequest {
   private final SignatureFactory signatureFactory;
   private final Tokens tokens;
   private final ClientKeyStore keyStore;
+  private final IdentityFinder identityFinder;
 
-  public JwtController(SignatureFactory signatureFactory, Tokens tokens, ClientKeyStore keyStore) {
+  public JwtController(SignatureFactory signatureFactory, Tokens tokens, ClientKeyStore keyStore, IdentityFinder identityFinder) {
     this.signatureFactory = signatureFactory;
     this.tokens = tokens;
     this.keyStore = keyStore;
+    this.identityFinder = identityFinder;
   }
 
   @Override
@@ -84,9 +88,17 @@ public class JwtController implements InstantaneousRequest {
       return OAuthError.invalidGrant();
     }
 
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(claimSet.iss, GrantType.JWT, instant);
+
+    if (!possibleIdentity.isPresent()) {
+      return OAuthError.invalidGrant();
+    }
+
+    Identity identity = possibleIdentity.get();
+
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
     Client client = new Client(claimSet.iss, "", "", Collections.<String>emptySet());
-    TokenResponse response = tokens.issueToken(GrantType.JWT, client, claimSet.iss, scopes, instant);
+    TokenResponse response = tokens.issueToken(GrantType.JWT, client, identity, scopes, instant);
     
     if (!response.isSuccessful()) {
       return OAuthError.invalidRequest("tokens issuing is temporary unavailable");
