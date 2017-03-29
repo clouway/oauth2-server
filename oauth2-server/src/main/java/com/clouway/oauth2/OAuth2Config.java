@@ -80,6 +80,7 @@ public final class OAuth2Config {
   private final ClientAuthorizationRepository clientAuthorizationRepository;
   private final ClientKeyStore clientKeyStore;
   private final String loginPageUrl;
+
   private OAuth2Config(Builder builder) {
     this.tokens = builder.tokens;
     this.identityFinder = builder.identityFinder;

@@ -93,6 +93,12 @@
       <version>1.0</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.clouway.security</groupId>
+      <artifactId>jwt-java-client-okhttp</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+
     <!-- Testing Libraries-->
     <dependency>
       <groupId>org.hamcrest</groupId>

@@ -14,17 +14,18 @@ import com.google.gson.JsonObject;
  */
 public class BearerTokenResponse extends RsWrap {
 
-  public BearerTokenResponse(String accessToken, Long expiresInSeconds, String refreshToken) {
-    super(new RsJson(createToken(accessToken, expiresInSeconds, refreshToken)
+  public BearerTokenResponse(String accessToken, Long expiresInSeconds, String refreshToken,String encodedIdToken) {
+    super(new RsJson(createToken(accessToken, expiresInSeconds, refreshToken,encodedIdToken)
     ));
   }
 
-  private static JsonElement createToken(String accessToken, Long expiresInSeconds, String refreshToken) {
+  private static JsonElement createToken(String accessToken, Long expiresInSeconds, String refreshToken,String encodedIdToken) {
     JsonObject o = new JsonObject();
     o.addProperty("access_token", accessToken);
     o.addProperty("token_type", "Bearer");
     o.addProperty("expires_in", expiresInSeconds);
     o.addProperty("refresh_token", refreshToken);
+    o.addProperty("id_token",encodedIdToken);
     return o;
   }
 }

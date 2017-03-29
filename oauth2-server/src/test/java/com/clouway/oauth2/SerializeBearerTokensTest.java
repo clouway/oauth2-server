@@ -17,26 +17,29 @@ public class SerializeBearerTokensTest {
 
   @Test
   public void happyPath() throws IOException {
+
     String expectedResponse = "Content-Type: application/json; charset=utf-8\r\n" +
             "{\"access_token\":\"mF_9.B5f-4.1JqM\"," +
             "\"token_type\":\"Bearer\"," +
             "\"expires_in\":3600," +
-            "\"refresh_token\":" +
-            "\"tGzv3JOkF0XG5Qx2TlKWIA\"}";
+            "\"refresh_token\":\"tGzv3JOkF0XG5Qx2TlKWIA\"," +
+            "\"id_token\":\"::id token::\"}";
 
-    assertThat(contentOf(new BearerTokenResponse("mF_9.B5f-4.1JqM", 3600L, "tGzv3JOkF0XG5Qx2TlKWIA")), is(equalTo(expectedResponse)));
+    assertThat(contentOf(new BearerTokenResponse("mF_9.B5f-4.1JqM", 3600L, "tGzv3JOkF0XG5Qx2TlKWIA","::id token::")), is(equalTo(expectedResponse)));
   }
 
   @Test
   public void anotherToken() throws IOException {
+
     String expectedResponse = "Content-Type: application/json; charset=utf-8\r\n" +
             "{\"access_token\":\"::token2::\"," +
             "\"token_type\":\"Bearer\"," +
             "\"expires_in\":2400," +
             "\"refresh_token\":" +
-            "\"::refresh_token::2\"}";
+            "\"::refresh_token::2\","+
+            "\"id_token\":\"::id token::\"}";
 
-    assertThat(contentOf(new BearerTokenResponse("::token2::", 2400L, "::refresh_token::2")), is(equalTo(expectedResponse)));
+    assertThat(contentOf(new BearerTokenResponse("::token2::", 2400L, "::refresh_token::2","::id token::")), is(equalTo(expectedResponse)));
   }
 
   private String contentOf(Response response) throws IOException {

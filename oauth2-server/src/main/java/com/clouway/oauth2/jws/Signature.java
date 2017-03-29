@@ -1,5 +1,10 @@
 package com.clouway.oauth2.jws;
 
+import com.clouway.oauth2.jws.Pem.Block;
+
+import java.security.Key;
+import java.security.KeyPair;
+
 /**
  * Signature is representing a single JWS signature that is applied over received messages.
  * <p/>
@@ -12,10 +17,30 @@ public interface Signature {
    * Verify is verifying Signature using the provided privateKey as PEM file.
    * <p/>
    *
-   * @param content the content to be verified
+   * @param content    the content to be verified
    * @param privateKey the private key used for verifying
    * @return true if signature is
    */
-  boolean verify(byte[] content, Pem.Block privateKey);
+  boolean verifyWithPrivateKey(byte[] content, Pem.Block privateKey);
+
+  /**
+   * Verify is veryfying Signature using the provided publicKey as PEM file
+   * <p/>
+   *
+   * @param content to be verified
+   * @param key The public key to verify the content with
+   * @return
+   */
+  boolean verify(byte[] content, Block key);
+
+  /**
+   * Sign a token with a private key
+   * <p/>
+   *
+   * @param content of the token
+   * @param privateKey to sign the token with
+   * @return token signature to be added to the token header.claims
+   */
+  String sign(byte[] content, Pem.Block privateKey);
 
 }

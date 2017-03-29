@@ -6,6 +6,7 @@ import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
@@ -20,13 +21,15 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
+import static com.clouway.oauth2.PemKeyGenerator.generatePrivateKey;
 import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -42,11 +45,13 @@ public class IssueNewTokenForClientTest {
 
   private IdentityFinder identityFinder = context.mock(IdentityFinder.class);
 
-  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository);
+  private ClientKeyStore keyStore = context.mock(ClientKeyStore.class);
+
+  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository, keyStore);
 
   @Test
   public void happyPath() throws IOException {
-    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository);
+    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository, keyStore);
     final Client client = aNewClient().build();
     final DateTime anyTime = new DateTime();
     final Identity identity = aNewIdentity().withId("::user_id::").build();
@@ -56,10 +61,15 @@ public class IssueNewTokenForClientTest {
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, Collections.<String>emptySet(), anyTime);
-      will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
+      will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::", "::id_token::")));
 
       oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(identity)));
+
+      oneOf(keyStore).publicCertificates();
+      will(returnValue(new LinkedHashMap() {{
+        put("53r7IfiCaT3",generatePrivateKey());
+      }}));
     }});
 
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
@@ -70,7 +80,7 @@ public class IssueNewTokenForClientTest {
 
   @Test
   public void tokenCannotBeIssued() throws Exception {
-    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository);
+    IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository, keyStore);
     final Client client = aNewClient().build();
     final DateTime anyTime = new DateTime();
     final Identity identity = aNewIdentity().withId("::user_id::").build();
@@ -80,10 +90,16 @@ public class IssueNewTokenForClientTest {
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, Collections.<String>emptySet(), anyTime);
-      will(returnValue(new TokenResponse(false, null, "")));
+      will(returnValue(new TokenResponse(false, null, "", "::id_token::")));
 
       oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(identity)));
+
+      oneOf(keyStore).publicCertificates();
+      will(returnValue(new LinkedHashMap() {{
+        put("53r7IfiCaT3", generatePrivateKey());
+      }}));
+
     }});
 
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
@@ -111,7 +127,7 @@ public class IssueNewTokenForClientTest {
 
   @Test
   public void clientWasNotAuthorized() throws IOException {
-    final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository);
+    final IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, identityFinder, clientAuthorizationRepository, keyStore);
     final Client client = aNewClient().build();
     final DateTime anyTime = new DateTime();
 

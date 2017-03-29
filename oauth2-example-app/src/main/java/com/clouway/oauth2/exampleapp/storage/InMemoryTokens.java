@@ -65,11 +65,11 @@ class InMemoryTokens implements Tokens {
       tokens.put(newTokenValue, updatedToken);
       refreshTokenToAccessToken.put(refreshToken, newTokenValue);
 
-      return new TokenResponse(true, updatedToken, refreshToken);
+      return new TokenResponse(true, updatedToken, refreshToken,"");
 
     }
 
-    return new TokenResponse(false, null, "");
+    return new TokenResponse(false, null, "","");
   }
 
   @Override
@@ -80,7 +80,7 @@ class InMemoryTokens implements Tokens {
     BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identity.id(), client.id, identity.email(), scopes, when);
     tokens.put(token, bearerToken);
 
-    return new TokenResponse(true, bearerToken, refreshTokenValue);
+    return new TokenResponse(true, bearerToken, refreshTokenValue,"");
   }
 
   @Override

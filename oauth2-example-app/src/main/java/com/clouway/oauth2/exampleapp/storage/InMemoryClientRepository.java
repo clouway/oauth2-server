@@ -55,6 +55,12 @@ class InMemoryClientRepository implements ClientRegistry, ClientFinder, ClientKe
     return null;
   }
 
+  @Override
+  public Map<String, Block> publicCertificates() {
+    return null;
+  }
+
+
   public void registerServiceAccount(String clientEmail, String privateKeyAsPem) {
     try {
       serviceAccountKeys.put(clientEmail, pem.parse(new ByteArrayInputStream(privateKeyAsPem.getBytes())));
