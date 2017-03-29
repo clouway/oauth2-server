@@ -1,6 +1,5 @@
 package com.clouway.oauth2.authorization;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;

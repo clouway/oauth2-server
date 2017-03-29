@@ -27,7 +27,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
@@ -78,14 +77,14 @@ public class HandleJwtTokenRequestsTest {
       oneOf(signatureFactory).createSignature(with(any(byte[].class)), with(any(Jwt.Header.class)));
       will(returnValue(Optional.of(anySignatureThatWillVerifies)));
 
-      oneOf(anySignatureThatWillVerifies).verify(with(any(byte[].class)), with(any(Pem.Block.class)));
+      oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
       oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(aNewIdentity().build())));
 
       oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
-      will(returnValue(new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyInstantTime.plusSeconds(1000)).build(), "::refresh_token::")));
+      will(returnValue(new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyInstantTime.plusSeconds(1000)).build(), "::refresh_token::","")));
     }});
 
     Response response = controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature)), anyInstantTime);
@@ -110,7 +109,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(signatureFactory).createSignature(with(any(byte[].class)), with(any(Jwt.Header.class)));
       will(returnValue(Optional.of(anySignatureThatWillVerifies)));
 
-      oneOf(anySignatureThatWillVerifies).verify(with(any(byte[].class)), with(any(Pem.Block.class)));
+      oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
       oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
@@ -119,7 +118,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(tokens).issueToken(
               GrantType.JWT, jwtClient, identity, Sets.newHashSet("CanDoX", "CanDoY"), anyInstantTime
       );
-      will(returnValue(new TokenResponse(true, aNewToken().build(), "")));
+      will(returnValue(new TokenResponse(true, aNewToken().build(), "","")));
     }});
 
     controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature), "CanDoX CanDoY"), anyInstantTime);

@@ -13,11 +13,13 @@ public final class TokenResponse {
 
   public final BearerToken accessToken;
   public final String refreshToken;
+  public final String idToken;
 
-  public TokenResponse(boolean successful, BearerToken accessToken, String refreshToken) {
+  public TokenResponse(boolean successful, BearerToken accessToken, String refreshToken, String idToken) {
     this.successful = successful;
     this.refreshToken = refreshToken;
     this.accessToken = accessToken;
+    this.idToken = idToken;
   }
 
   public boolean isSuccessful() {
