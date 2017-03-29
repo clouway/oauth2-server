@@ -14,18 +14,20 @@ public final class BearerToken implements Serializable {
   public final GrantType grantType;
   public final String identityId;
   public final String clientId;
+  public final String email;
   public final Set<String> scopes;
   private final DateTime expiresAt;
 
   public BearerToken() {
-    this(null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null);
   }
 
-  public BearerToken(String value, GrantType grantType, String identityId, String clientId, Set<String> scopes, DateTime expiresAt) {
+  public BearerToken(String value, GrantType grantType, String identityId, String clientId, String email, Set<String> scopes, DateTime expiresAt) {
     this.value = value;
     this.grantType = grantType;
     this.identityId = identityId;
     this.clientId = clientId;
+    this.email = email;
     this.scopes = scopes;
     this.expiresAt = expiresAt;
   }

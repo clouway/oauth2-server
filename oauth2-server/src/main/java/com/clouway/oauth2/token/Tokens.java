@@ -1,6 +1,7 @@
 package com.clouway.oauth2.token;
 
 import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.client.Client;
 import com.google.common.base.Optional;
 
@@ -31,16 +32,16 @@ public interface Tokens {
   TokenResponse refreshToken(String token, DateTime when);
 
   /**
-   * Ussues a new token for the provided identity.
+   * Issues a new token for the provided identity.
    *
    * @param grantType  type of the taken to be issued - JWT or Bearer
-   * @param client     the client to which token will be ussued
-   * @param identityId the identityId for which token was issued
+   * @param client     the client to which token will be issued
+   * @param identity   the identity for which token was issued
    * @param scopes     requested scopes
    * @param when       the requested time on which it should be issued
    * @return the newly issued token
    */
-  TokenResponse issueToken(GrantType grantType, Client client, String identityId, Set<String> scopes, DateTime when);
+  TokenResponse issueToken(GrantType grantType, Client client, Identity identity, Set<String> scopes, DateTime when);
 
   /**
    * Revokes token from repository.

@@ -46,10 +46,12 @@ public class GetTokenInfoTest {
     JsonObject o = new RsPrint(response).asJson();
 
     assertThat(response.status().code, is(HttpURLConnection.HTTP_OK));
+    assertThat(o.get("azp").getAsString(), equalTo(anyToken.clientId));
+    assertThat(o.get("aud").getAsString(), equalTo(anyToken.clientId));
     assertThat(o.get("sub").getAsString(), equalTo(anyToken.identityId));
     assertThat(o.get("exp").getAsString(), equalTo("" + anyTime.plusSeconds(200).asDate().getTime()));
     assertThat(o.get("expires_in").getAsInt(), equalTo(anyToken.ttlSeconds(anyTime).intValue()));
-
+    assertThat(o.get("email").getAsString(), equalTo(anyToken.email));
   }
 
   @Test

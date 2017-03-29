@@ -1,5 +1,7 @@
 package com.clouway.oauth2.exampleapp.storage;
 
+import com.clouway.oauth2.Duration;
+
 import com.clouway.oauth2.exampleapp.ResourceOwnerStore;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
@@ -81,7 +83,7 @@ public class InMemoryModule extends AbstractModule {
   @Provides
   @Singleton
   public Tokens getTokenRepository() {
-    return new InMemoryTokens(new UrlSafeTokenGenerator());
+    return new InMemoryTokens(new UrlSafeTokenGenerator(), new Duration(900000000L));
   }
 
   @Provides
