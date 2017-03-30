@@ -1,7 +1,9 @@
 package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.client.ClientRegistrationRequest;
 import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.exampleapp.storage.InMemoryClientRepositoryTest;
 import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,22 +17,21 @@ import static org.junit.Assert.assertFalse;
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
  */
-public abstract class ClientRepositoryContractTest {
+public class ClientRepositoryContractTest {
 
   private ClientRepository repository;
 
   @Before
   public void setUp() throws Exception {
-    repository = createRepository();
-
+    repository = new InMemoryClientRepositoryTest();
   }
 
   @Test
   public void findById() throws Exception {
-    Client client = new Client("id1", "secret1", "description1", Collections.singleton("redirectURI1"));
-    repository.register(client);
+    ClientRegistrationRequest request = new ClientRegistrationRequest("secret1", "description1", Collections.singleton("redirectURI1"));
+    Client client = repository.register(request);
 
-    Optional<Client> actualClient = repository.findById("id1");
+    Optional<Client> actualClient = repository.findById(client.id);
 
     assertThat(actualClient.get(), is(client));
   }
@@ -41,7 +42,4 @@ public abstract class ClientRepositoryContractTest {
 
     assertFalse(client.isPresent());
   }
-
- public abstract ClientRepository createRepository();
-
 }
