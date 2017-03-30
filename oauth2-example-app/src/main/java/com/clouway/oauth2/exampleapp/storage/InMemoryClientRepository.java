@@ -1,6 +1,7 @@
 package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.client.ClientRegistrationRequest;
 import com.clouway.oauth2.client.ClientRepository;
 import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.jws.Pem;
@@ -14,6 +15,7 @@ import com.google.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -28,8 +30,12 @@ class InMemoryClientRepository implements ClientRepository, ClientKeyStore {
   }
 
   @Override
-  public void register(Client client) {
+  public Client register(ClientRegistrationRequest request) {
+    String randomId = UUID.randomUUID().toString();
+    Client client =
+            new Client(randomId, request.secret, request.description, request.redirectURLs);
     clients.put(client.id, client);
+    return client;
   }
 
   @Override
