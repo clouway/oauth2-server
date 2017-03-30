@@ -6,7 +6,7 @@ import com.clouway.friendlyserve.RsRedirect;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -18,11 +18,11 @@ import java.util.Set;
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 class ClientAuthorizationActivity implements IdentityActivity {
-  private final ClientRepository clientRepository;
+  private final ClientFinder clientFinder;
   private final ClientAuthorizationRepository clientAuthorizationRepository;
 
-  ClientAuthorizationActivity(ClientRepository clientRepository, ClientAuthorizationRepository clientAuthorizationRepository) {
-    this.clientRepository = clientRepository;
+  ClientAuthorizationActivity(ClientFinder clientFinder, ClientAuthorizationRepository clientAuthorizationRepository) {
+    this.clientFinder = clientFinder;
     this.clientAuthorizationRepository = clientAuthorizationRepository;
   }
 
@@ -34,7 +34,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String state = request.param("state");
     String scope = request.param("scope") == null ? "" : request.param("scope");
 
-    Optional<Client> possibleClientResponse = clientRepository.findById(clientId);
+    Optional<Client> possibleClientResponse = clientFinder.findClient(clientId);
 
     if (!possibleClientResponse.isPresent()) {
       return OAuthError.unauthorizedClient();

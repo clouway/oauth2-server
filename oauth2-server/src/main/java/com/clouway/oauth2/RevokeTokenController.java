@@ -4,7 +4,7 @@ import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsEmpty;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
@@ -14,11 +14,11 @@ import com.google.common.base.Optional;
  */
 class RevokeTokenController implements ClientRequest {
 
-  private final ClientRepository clientRepository;
+  private final ClientFinder clientFinder;
   private final Tokens tokens;
 
-  RevokeTokenController(ClientRepository clientRepository, Tokens tokens) {
-    this.clientRepository = clientRepository;
+  RevokeTokenController(ClientFinder clientFinder, Tokens tokens) {
+    this.clientFinder = clientFinder;
     this.tokens = tokens;
   }
 
@@ -31,7 +31,7 @@ class RevokeTokenController implements ClientRequest {
       return OAuthError.invalidRequest();
     }
 
-    Optional<Client> possibleClient = clientRepository.findById(possibleToken.get().clientId);
+    Optional<Client> possibleClient = clientFinder.findClient(possibleToken.get().clientId);
     if (!possibleClient.isPresent()) {
       return OAuthError.invalidClient();
     }

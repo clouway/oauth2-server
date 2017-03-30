@@ -2,8 +2,9 @@ package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRegistrationRequest;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.client.ClientKeyStore;
+import com.clouway.oauth2.exampleapp.ClientRegistry;
 import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Pem.Block;
 import com.clouway.oauth2.jwt.Jwt.ClaimSet;
@@ -20,13 +21,19 @@ import java.util.UUID;
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
-class InMemoryClientRepository implements ClientRepository, ClientKeyStore {
+class InMemoryClientRepository implements ClientRegistry, ClientFinder, ClientKeyStore {
   private final Map<String, Client> clients = Maps.newHashMap();
   private final Map<String, Pem.Block> serviceAccountKeys = Maps.newHashMap();
   private final Pem pem = new Pem();
 
   @Inject
   public InMemoryClientRepository() {
+  }
+
+  @Override
+  public Client register(Client client) {
+    clients.put(client.id, client);
+    return client;
   }
 
   @Override
@@ -39,8 +46,8 @@ class InMemoryClientRepository implements ClientRepository, ClientKeyStore {
   }
 
   @Override
-  public Optional<Client> findById(String id) {
-    return Optional.fromNullable(clients.get(id));
+  public Optional<Client> findClient(String clientId) {
+    return Optional.fromNullable(clients.get(clientId));
   }
 
   @Override

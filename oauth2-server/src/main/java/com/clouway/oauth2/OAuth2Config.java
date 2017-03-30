@@ -1,7 +1,7 @@
 package com.clouway.oauth2;
 
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
@@ -28,7 +28,7 @@ public final class OAuth2Config {
     private IdentityFinder identityFinder;
     private ClientKeyStore clientKeyStore;
     private ClientAuthorizationRepository clientAuthorizationRepository;
-    private ClientRepository clientRepository;
+    private ClientFinder clientFinder;
     private String loginPageUrl;
     private ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
 
@@ -56,8 +56,8 @@ public final class OAuth2Config {
       return this;
     }
 
-    public Builder clientRepository(ClientRepository clientRepository) {
-      this.clientRepository = clientRepository;
+    public Builder clientFinder(ClientFinder clientFinder) {
+      this.clientFinder = clientFinder;
       return this;
     }
 
@@ -74,7 +74,7 @@ public final class OAuth2Config {
 
   private final IdentityFinder identityFinder;
   private final ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
-  private final ClientRepository clientRepository;
+  private final ClientFinder clientFinder;
 
   private final Tokens tokens;
   private final ClientAuthorizationRepository clientAuthorizationRepository;
@@ -84,7 +84,7 @@ public final class OAuth2Config {
     this.tokens = builder.tokens;
     this.identityFinder = builder.identityFinder;
     this.resourceOwnerIdentityFinder = builder.resourceOwnerIdentityFinder;
-    this.clientRepository = builder.clientRepository;
+    this.clientFinder = builder.clientFinder;
     this.clientAuthorizationRepository = builder.clientAuthorizationRepository;
     this.clientKeyStore = builder.clientKeyStore;
     this.loginPageUrl = builder.loginPageUrl;
@@ -106,8 +106,8 @@ public final class OAuth2Config {
     return this.identityFinder;
   }
 
-  public ClientRepository clientRepository() {
-    return this.clientRepository;
+  public ClientFinder clientFinder() {
+    return this.clientFinder;
   }
 
   public ResourceOwnerIdentityFinder resourceOwnerIdentityFinder() {

@@ -3,7 +3,7 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.FakeRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -29,12 +29,12 @@ public class RevokeTokensTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private ClientRepository clientRepository = context.mock(ClientRepository.class);
+  private ClientFinder clientFinder = context.mock(ClientFinder.class);
   private Tokens tokens = context.mock(Tokens.class);
 
   private DateTime anyInstantenousTime = new DateTime();
 
-  private RevokeTokenController controller = new RevokeTokenController(clientRepository, tokens);
+  private RevokeTokenController controller = new RevokeTokenController(clientFinder, tokens);
 
   @Test
   public void happyPath() throws Exception {
@@ -42,7 +42,7 @@ public class RevokeTokensTest {
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(aNewToken().forClient("::client x::").build())));
 
-      oneOf(clientRepository).findById("::client x::");
+      oneOf(clientFinder).findClient("::client x::");
       will(returnValue(Optional.of(aNewClient().withId("::client x::").withSecret("::client secret::").build())));
 
       oneOf(tokens).revokeToken("::any token::");
@@ -73,7 +73,7 @@ public class RevokeTokensTest {
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(aNewToken().forClient("::client x::").build())));
 
-      oneOf(clientRepository).findById("::client x::");
+      oneOf(clientFinder).findClient("::client x::");
       will(returnValue(Optional.absent()));
     }});
 
@@ -89,7 +89,7 @@ public class RevokeTokensTest {
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(aNewToken().forClient("::client x::").build())));
 
-      oneOf(clientRepository).findById(with(any(String.class)));
+      oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(aNewClient().withId("::client x::").withSecret("::client secret::").build())));
     }});
 

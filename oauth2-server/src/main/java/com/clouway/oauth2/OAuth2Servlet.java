@@ -50,7 +50,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                     new InstantaneousRequestController(
                             new IdentityController(
                                     config.resourceOwnerIdentityFinder(),
-                                    new ClientAuthorizationActivity(config.clientRepository(), config.clientAuthorizationRepository()), config.loginPageUrl())
+                                    new ClientAuthorizationActivity(config.clientFinder(), config.clientAuthorizationRepository()), config.loginPageUrl())
                     )
             ),
             new FkRegex(".*/token",
@@ -60,7 +60,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                             new InstantaneousRequestController(
                                                     new BasicAuthenticationCredentialsRequest(
                                                             new ClientController(
-                                                                    config.clientRepository(),
+                                                                    config.clientFinder(),
                                                                     new IssueNewTokenActivity(
                                                                             config.tokens(), config.identityFinder(), config.clientAuthorizationRepository()
                                                                     )
@@ -72,7 +72,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                             new InstantaneousRequestController(
                                                     new BasicAuthenticationCredentialsRequest(
                                                             new ClientController(
-                                                                    config.clientRepository(),
+                                                                    config.clientFinder(),
                                                                     new RefreshTokenActivity(config.tokens())
                                                             ))
 
@@ -92,7 +92,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                     new RequiresParam("token",
                             new InstantaneousRequestController(
                                     new BasicAuthenticationCredentialsRequest(
-                                            new RevokeTokenController(config.clientRepository(), config.tokens())
+                                            new RevokeTokenController(config.clientFinder(), config.tokens())
                                     )
                             )
                     )
