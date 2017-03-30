@@ -6,7 +6,7 @@ import com.clouway.friendlyserve.RsText;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
@@ -31,7 +31,7 @@ public class AuthorizeClientsTest {
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  ClientRepository clientRepository;
+  ClientFinder clientFinder;
 
   @Mock
   ClientActivity clientActivity;
@@ -40,7 +40,7 @@ public class AuthorizeClientsTest {
 
   @Before
   public void createHandler() {
-    handler = new ClientController(clientRepository, clientActivity);
+    handler = new ClientController(clientFinder, clientActivity);
   }
 
   @Test
@@ -51,7 +51,7 @@ public class AuthorizeClientsTest {
     final DateTime anyInstantTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("fe72722a40de846e03865cb3b582aed57841ac71");
+      oneOf(clientFinder).findClient("fe72722a40de846e03865cb3b582aed57841ac71");
       will(returnValue(Optional.of(anyRegisteredClient)));
 
       oneOf(clientActivity).execute(anyRegisteredClient, anyRequest, anyInstantTime);
@@ -73,7 +73,7 @@ public class AuthorizeClientsTest {
     final Request anyRequest = new ParamRequest(ImmutableMap.<String, String>of());
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("::unknown client id::");
+      oneOf(clientFinder).findClient("::unknown client id::");
       will(returnValue(Optional.absent()));
     }});
 
@@ -93,7 +93,7 @@ public class AuthorizeClientsTest {
     final Request anyRequest = new ParamRequest(ImmutableMap.<String, String>of());
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("::known client id::");
+      oneOf(clientFinder).findClient("::known client id::");
       will(returnValue(Optional.of(anyRegisteredClient)));
     }});
 

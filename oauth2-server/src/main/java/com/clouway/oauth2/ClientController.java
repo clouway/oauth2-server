@@ -1,7 +1,7 @@
 package com.clouway.oauth2;
 
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.google.common.base.Optional;
@@ -11,17 +11,17 @@ import com.google.common.base.Optional;
  */
 class ClientController implements ClientRequest {
 
-  private final ClientRepository clientRepository;
+  private final ClientFinder clientFinder;
   private final ClientActivity clientActivity;
 
-  ClientController(ClientRepository clientRepository, ClientActivity clientActivity) {
-    this.clientRepository = clientRepository;
+  ClientController(ClientFinder clientFinder, ClientActivity clientActivity) {
+    this.clientFinder = clientFinder;
     this.clientActivity = clientActivity;
   }
 
   @Override
   public Response handleAsOf(Request request, ClientCredentials credentials, DateTime instant) {
-    Optional<Client> possibleResponse = clientRepository.findById(credentials.clientId());
+    Optional<Client> possibleResponse = clientFinder.findClient(credentials.clientId());
 
     // Client was not authorized
     if (!possibleResponse.isPresent()) {

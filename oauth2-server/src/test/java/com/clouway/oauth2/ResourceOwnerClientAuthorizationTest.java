@@ -6,7 +6,7 @@ import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -40,12 +40,12 @@ public class ResourceOwnerClientAuthorizationTest {
   ClientAuthorizationRepository clientAuthorizationRepository;
 
   @Mock
-  ClientRepository clientRepository;
+  ClientFinder clientFinder;
   private ClientAuthorizationActivity activity;
 
   @Before
   public void setUpActivity() {
-    activity = new ClientAuthorizationActivity(clientRepository, clientAuthorizationRepository);
+    activity = new ClientAuthorizationActivity(clientFinder, clientAuthorizationRepository);
   }
 
   @Test
@@ -56,7 +56,7 @@ public class ResourceOwnerClientAuthorizationTest {
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("::client_id::");
+      oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
       oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.<String>emptySet(), "code");
@@ -85,7 +85,7 @@ public class ResourceOwnerClientAuthorizationTest {
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById(with(any(String.class)));
+      oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
       oneOf(clientAuthorizationRepository).authorize(with(any(Client.class)), with(any(String.class)), with(any(Set.class)), with(any(String.class)));
@@ -112,7 +112,7 @@ public class ResourceOwnerClientAuthorizationTest {
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById(with(any(String.class)));
+      oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
       oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.singleton("abc"), "code");
@@ -135,7 +135,7 @@ public class ResourceOwnerClientAuthorizationTest {
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById(with(any(String.class)));
+      oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
       oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), "code");
@@ -153,7 +153,7 @@ public class ResourceOwnerClientAuthorizationTest {
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById(with(any(String.class)));
+      oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
       oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.<String>emptySet(), "code");
@@ -176,7 +176,7 @@ public class ResourceOwnerClientAuthorizationTest {
 
     context.checking(new Expectations() {{
 
-      oneOf(clientRepository).findById("::client_id::");
+      oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
       oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "::identity_id::", Collections.<String>emptySet(), "code");
@@ -196,7 +196,7 @@ public class ResourceOwnerClientAuthorizationTest {
             ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "https://example.com")
     );
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("::client_id::");
+      oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.absent()));
     }});
 
@@ -218,7 +218,7 @@ public class ResourceOwnerClientAuthorizationTest {
     final Client anyExistingClient = aNewClient().withRedirectUrl("https://example.com/callback").build();
 
     context.checking(new Expectations() {{
-      oneOf(clientRepository).findById("::client_id::");
+      oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
     }});
 

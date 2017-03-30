@@ -4,7 +4,7 @@ import com.clouway.oauth2.Duration;
 import com.clouway.oauth2.OAuth2Config;
 import com.clouway.oauth2.OAuth2Servlet;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
-import com.clouway.oauth2.client.ClientRepository;
+import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.Tokens;
@@ -30,16 +30,16 @@ public class OauthAuthorizationServerModule extends AbstractModule {
   static class OAuth2ServletBinding extends OAuth2Servlet {
 
     private final ClientAuthorizationRepository clientAuthorizationRepository;
-    private final ClientRepository clientRepository;
+    private final ClientFinder clientFinder;
     private final Tokens tokens;
     private final IdentityFinder identityFinder;
     private final ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
     private final ClientKeyStore clientKeyStore;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientRepository clientRepository, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, ClientKeyStore clientKeyStore) {
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientFinder clientFinder, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, ClientKeyStore clientKeyStore) {
       this.clientAuthorizationRepository = clientAuthorizationRepository;
-      this.clientRepository = clientRepository;
+      this.clientFinder = clientFinder;
       this.tokens = tokens;
       this.identityFinder = identityFinder;
       this.resourceOwnerIdentityFinder = resourceOwnerIdentityFinder;
@@ -51,7 +51,7 @@ public class OauthAuthorizationServerModule extends AbstractModule {
       return OAuth2Config.newConfig()
               .loginPageUrl("/r/oauth/login?continue=")
               .clientAuthorizationRepository(clientAuthorizationRepository)
-              .clientRepository(clientRepository)
+              .clientFinder(clientFinder)
               .tokens(tokens)
               .identityFinder(identityFinder)
               .resourceOwnerIdentityFinder(resourceOwnerIdentityFinder)
