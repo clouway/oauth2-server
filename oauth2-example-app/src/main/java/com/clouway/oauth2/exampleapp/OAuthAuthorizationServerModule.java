@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class OauthAuthorizationServerModule extends AbstractModule {
+public class OAuthAuthorizationServerModule extends AbstractModule {
 
   @Singleton
   static class OAuth2ServletBinding extends OAuth2Servlet {
@@ -60,25 +60,11 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     }
   }
 
-
-  private String url = "";
   private String loginPagePath = "";
   private Duration tokenTimeToLive;
   private Boolean generatesNewRefreshToken = false;
 
-  /**
-   * constructs the module
-   *
-   * @param url
-   * @param tokenTimeToLive in seconds
-   */
-  public OauthAuthorizationServerModule(String url, Long tokenTimeToLive) {
-    this.url = url;
-    this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
-  }
-
-  public OauthAuthorizationServerModule(String url, String loginPagePath, Long tokenTimeToLive) {
-    this.url = url;
+  public OAuthAuthorizationServerModule(String loginPagePath, Long tokenTimeToLive) {
     this.loginPagePath = loginPagePath;
     this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
   }
@@ -86,31 +72,16 @@ public class OauthAuthorizationServerModule extends AbstractModule {
   /**
    * constructs the module
    *
-   * @param url
    * @param tokenTimeToLive in seconds
    */
-  public OauthAuthorizationServerModule(String url, Long tokenTimeToLive, Boolean generatesNewRefreshToken) {
-    this.url = url;
-    this.generatesNewRefreshToken = generatesNewRefreshToken;
-    this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
-  }
-
-  /**
-   * constructs the module
-   *
-   * @param url
-   * @param tokenTimeToLive in seconds
-   */
-  public OauthAuthorizationServerModule(String url, String loginPagePath, Long tokenTimeToLive, Boolean generatesNewRefreshToken) {
-    this.url = url;
+  public OAuthAuthorizationServerModule(String loginPagePath, Long tokenTimeToLive, Boolean generatesNewRefreshToken) {
     this.loginPagePath = loginPagePath;
     this.generatesNewRefreshToken = generatesNewRefreshToken;
     this.tokenTimeToLive = Duration.seconds(tokenTimeToLive);
   }
-
 
   protected void configure() {
-    install(new SecurityModule(url, loginPagePath));
+    install(new SecurityModule("/r/oauth", loginPagePath));
     install(new ServletModule() {
       @Override
       protected void configureServlets() {
@@ -118,9 +89,6 @@ public class OauthAuthorizationServerModule extends AbstractModule {
         serve("/testapi").with(new HttpServlet() {
           @Override
           protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-            String token = req.getHeader("Authorization").split("\\s")[0];
-
             PrintWriter writer = resp.getWriter();
             writer.println("Hello !!!");
             writer.flush();
@@ -132,13 +100,11 @@ public class OauthAuthorizationServerModule extends AbstractModule {
     install(new SitebricksModule() {
       @Override
       protected void configureSitebricks() {
-        at(url + "/login").show(LoginEndpoint.class);
-        at(url + "/userInfo/:token").serve(UserInfoEndPoint.class);
+        at("/r/oauth/login").show(LoginEndpoint.class);
+        at("/r/oauth/userInfo/:token").serve(UserInfoEndPoint.class);
       }
     });
-
   }
-
 
   @Provides
   @TokenTimeToLive

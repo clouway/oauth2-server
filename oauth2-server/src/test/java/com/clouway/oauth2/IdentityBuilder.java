@@ -1,7 +1,7 @@
 package com.clouway.oauth2;
 
 /**
- * Created by IaNiTyy on 29.03.17.
+ * @author Ianislav Nachev <qnislav.nachev@gmail.com>
  */
 public class IdentityBuilder {
 

@@ -1,6 +1,6 @@
 package com.clouway.oauth2.app;
 
-import com.clouway.oauth2.exampleapp.OauthAuthorizationServerModule;
+import com.clouway.oauth2.exampleapp.OAuthAuthorizationServerModule;
 import com.clouway.oauth2.exampleapp.storage.InMemoryModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -33,7 +33,7 @@ public class AppServer {
     context.addEventListener(new GuiceServletContextListener() {
       @Override
       protected Injector getInjector() {
-        return Guice.createInjector(new OauthAuthorizationServerModule("/r/oauth", 60 * 60L), new InMemoryModule());
+        return Guice.createInjector(new OAuthAuthorizationServerModule("/r/oauth/login", 60 * 60L), new InMemoryModule());
       }
     });
 
