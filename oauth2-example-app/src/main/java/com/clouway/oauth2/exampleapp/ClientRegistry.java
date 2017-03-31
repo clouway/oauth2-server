@@ -4,7 +4,7 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientRegistrationRequest;
 
 /**
- *  Created by IaNiTyy on 30.03.17.
+ *  @author Ianislav Nachev <qnislav.nachev@gmail.com>
  */
 public interface ClientRegistry {
 
