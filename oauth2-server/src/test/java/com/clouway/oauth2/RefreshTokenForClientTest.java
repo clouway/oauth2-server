@@ -40,7 +40,7 @@ public class RefreshTokenForClientTest {
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
       will(returnValue(
-              new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyTime.plusSeconds(600)).build(), "::refresh_token::", "encodedIdToken")
+              new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyTime.plusSeconds(600)).build(), "::refresh_token::")
       ));
     }});
 
@@ -61,7 +61,7 @@ public class RefreshTokenForClientTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).refreshToken("::refresh_token::", anyTime);
-      will(returnValue(new TokenResponse(false, null, "", "encodedIdToken")));
+      will(returnValue(new TokenResponse(false, null, "")));
     }});
 
     Response response = action.execute(client, new ParamRequest(ImmutableMap.of("refresh_token", "::refresh_token::")), anyTime);

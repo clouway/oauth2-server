@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class  JwtController implements InstantaneousRequest {
+public class JwtController implements InstantaneousRequest {
   private final Gson gson = new Gson();
 
   private final SignatureFactory signatureFactory;
@@ -105,8 +105,8 @@ public class  JwtController implements InstantaneousRequest {
     }
     
     BearerToken accessToken = response.accessToken;
-
-    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.refreshToken,response.idToken);
+    
+    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.refreshToken);
   }
 
 }

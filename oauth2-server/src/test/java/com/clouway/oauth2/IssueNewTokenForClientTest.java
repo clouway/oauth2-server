@@ -61,7 +61,7 @@ public class IssueNewTokenForClientTest {
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, Collections.<String>emptySet(), anyTime);
-      will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::", "::id_token::")));
+      will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
 
       oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(identity)));
@@ -90,7 +90,7 @@ public class IssueNewTokenForClientTest {
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, Collections.<String>emptySet(), anyTime);
-      will(returnValue(new TokenResponse(false, null, "", "::id_token::")));
+      will(returnValue(new TokenResponse(false, null, "")));
 
       oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(identity)));
