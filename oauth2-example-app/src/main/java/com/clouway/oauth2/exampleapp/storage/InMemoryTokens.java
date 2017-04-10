@@ -9,7 +9,6 @@ import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenGenerator;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
-import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -65,11 +64,11 @@ class InMemoryTokens implements Tokens {
       tokens.put(newTokenValue, updatedToken);
       refreshTokenToAccessToken.put(refreshToken, newTokenValue);
 
-      return new TokenResponse(true, updatedToken, refreshToken,"");
+      return new TokenResponse(true, updatedToken, refreshToken);
 
     }
 
-    return new TokenResponse(false, null, "","");
+    return new TokenResponse(false, null, "");
   }
 
   @Override
@@ -80,7 +79,7 @@ class InMemoryTokens implements Tokens {
     BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identity.id(), client.id, identity.email(), scopes, when);
     tokens.put(token, bearerToken);
 
-    return new TokenResponse(true, bearerToken, refreshTokenValue,"");
+    return new TokenResponse(true, bearerToken, refreshTokenValue);
   }
 
   @Override
