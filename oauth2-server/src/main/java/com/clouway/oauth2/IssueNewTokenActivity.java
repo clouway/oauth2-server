@@ -43,29 +43,31 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
 
   @Override
   public Response execute(Client client, Identity identity, Set<String> scopes, Request request, DateTime instant) {
-    Map<String, Block> certificates = keyStore.privateCertificates();
-    String certKey = randomKey(certificates);
-    Pem.Block key = certificates.get(certKey);
-
     TokenResponse response = tokens.issueToken(GrantType.AUTHORIZATION_CODE, client, identity, scopes, instant);
     if (!response.isSuccessful()) {
       return OAuthError.invalidRequest("Token cannot be issued.");
     }
 
     BearerToken accessToken = response.accessToken;
-    String host = request.header("Host");
+    Map<String, Block> certificates = keyStore.privateCertificates();
+    String idToken = "";
 
-    String idToken = Jwts.builder()
-            .setHeaderParam("cid", certKey)//CertificateId - the ID of the certificate that the token was signed with.
-            .setIssuer(host)
-            .setAudience(client.id)
-            .setSubject(identity.id())
-            .setIssuedAt(instant.asDate())
-            .setExpiration(new Date(accessToken.expirationTimestamp()))
-            .claim("identity", identityAsJson(identity).toString())
-            .signWith(SignatureAlgorithm.RS256, parsePem(key))
-            .compact();
+    if (certificates != null && !certificates.isEmpty()) {
+      String certKey = randomKey(certificates);
+      Pem.Block key = certificates.get(certKey);
+      String host = request.header("Host");
 
+      idToken = Jwts.builder()
+              .setHeaderParam("cid", certKey)//CertificateId - the ID of the certificate that the token was signed with.
+              .setIssuer(host)
+              .setAudience(client.id)
+              .setSubject(identity.id())
+              .setIssuedAt(instant.asDate())
+              .setExpiration(new Date(accessToken.expirationTimestamp()))
+              .claim("identity", identityAsJson(identity).toString())
+              .signWith(SignatureAlgorithm.RS256, parsePem(key))
+              .compact();
+    }
     return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.refreshToken, idToken);
   }
 
