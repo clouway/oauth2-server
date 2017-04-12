@@ -26,7 +26,8 @@ import static com.clouway.oauth2.authorization.AuthorizationBuilder.newAuthoriza
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.*;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -56,11 +57,32 @@ public class IssueNewTokenForClientTest {
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
     }});
 
-
     Response response = controller.execute(aNewClient().build(), identity, anyAuhtorization.scopes, new ParamRequest(Collections.<String, String>emptyMap()), anyTime);
     String body = new RsPrint(response).printBody();
 
     assertThat(body, containsString("id_token"));
+    assertThat(body, containsString("::token::"));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void noPrivateCertsAreConfigured() throws Exception {
+    final DateTime anyTime = new DateTime();
+    final Identity identity = aNewIdentity().withId("::user_id::").build();
+    final Authorization anyAuhtorization = newAuthorization().build();
+
+    context.checking(new Expectations() {{
+      oneOf(keyStore).privateCertificates();
+      will(returnValue(Collections.emptyMap()));
+
+      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
+      will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
+    }});
+
+    Response response = controller.execute(aNewClient().build(), identity, anyAuhtorization.scopes, new ParamRequest(Collections.<String, String>emptyMap()), anyTime);
+    String body = new RsPrint(response).printBody();
+
+    assertThat(body, not(containsString("id_token")));
     assertThat(body, containsString("::token::"));
   }
 
@@ -74,9 +96,6 @@ public class IssueNewTokenForClientTest {
     context.checking(new Expectations() {{
       oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
       will(returnValue(new TokenResponse(false, null, "")));
-
-      oneOf(keyStore).privateCertificates();
-      will(returnValue(Collections.singletonMap("53r7IfiCaT3", generatePrivateKey())));
     }});
 
     Response response = controller.execute(client, identity, Collections.<String>emptySet(), new ParamRequest(Collections.<String, String>emptyMap()), anyTime);
@@ -94,13 +113,10 @@ public class IssueNewTokenForClientTest {
     final Authorization authorization = newAuthorization().build();
 
     context.checking(new Expectations() {{
-      oneOf(keyStore).privateCertificates();
-      will(returnValue(Collections.singletonMap("53r7IfiCaT3", generatePrivateKey())));
-
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, authorization.scopes, anyTime);
       will(returnValue(new TokenResponse(false, null, "")));
     }});
-    
+
     controller.execute(client, identity, authorization.scopes, new ParamRequest(Collections.<String, String>emptyMap()), anyTime);
   }
 
