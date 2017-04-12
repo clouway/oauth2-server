@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.clouway.security</groupId>
@@ -21,6 +22,12 @@
       <version>18.0</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+
     <!-- HTTP Dependencies -->
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -34,6 +41,26 @@
       <artifactId>fserve</artifactId>
       <version>0.1.1</version>
     </dependency>
+
+    <!-- Serializing -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.9.0.pr2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.9.0.pr2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.9.0.pr2</version>
+    </dependency>
+
 
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -79,5 +106,58 @@
 
 
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>jarjar-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jarjar</goal>
+            </goals>
+            <configuration>
+              <includes>
+
+                <include>com.fasterxml.jackson.core:jackson-databind</include>
+
+                <include>com.fasterxml.jackson.core:jackson-core</include>
+
+                <include>com.fasterxml.jackson.core:jackson-annotations</include>
+
+                <include>io.jsonwebtoken:jjwt</include>
+
+              </includes>
+              <rules>
+
+                <rule>
+                  <pattern>com.fasterxml.jackson.core.**</pattern>
+                  <result>com.clouway.security.internal.jackson-core.@1</result>
+                </rule>
+
+                <rule>
+                  <pattern>com.fasterxml.jackson.core.**</pattern>
+                  <result>com.clouway.security.internal.jackson-annotations.@1</result>
+                </rule>
+
+                <rule>
+                  <pattern>com.fasterxml.jackson.core.**</pattern>
+                  <result>com.clouway.security.internal.jackson-databind.@1</result>
+                </rule>
+
+                <rule>
+                  <pattern>io.jsonwebtoken.**</pattern>
+                  <result>com.clouway.security.internal.jwt.@1</result>
+                </rule>
+
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
