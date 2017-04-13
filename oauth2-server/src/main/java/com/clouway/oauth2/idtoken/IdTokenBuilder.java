@@ -2,10 +2,12 @@ package com.clouway.oauth2.idtoken;
 
 
 import com.clouway.oauth2.jws.Pem;
-import com.clouway.oauth2.jws.RsaJwsSignature;
+import com.clouway.oauth2.jws.RsaJwsSigner;
 import com.clouway.oauth2.jwt.Jwt.ClaimSet;
 import com.clouway.oauth2.jwt.Jwt.Header;
 import com.google.common.io.BaseEncoding;
+
+import static com.clouway.oauth2.jws.RsaJwsSigner.sign;
 
 /**
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
@@ -40,8 +42,7 @@ public class IdTokenBuilder {
     String claimsString = BaseEncoding.base64Url().omitPadding().encode(claims.toString().getBytes());
 
     String unsignedToken = String.format("%s.%s", headerString, claimsString);
-    RsaJwsSignature signature = new RsaJwsSignature(unsignedToken.getBytes());
 
-    return String.format("%s.%s", unsignedToken, signature.sign(unsignedToken.getBytes(), key));
+    return String.format("%s.%s", unsignedToken, RsaJwsSigner.sign(unsignedToken.getBytes(), key));
   }
 }

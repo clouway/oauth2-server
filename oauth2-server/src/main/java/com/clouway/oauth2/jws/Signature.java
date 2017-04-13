@@ -33,14 +33,4 @@ public interface Signature {
    */
   boolean verify(byte[] content, Block key);
 
-  /**
-   * Sign a token with a private key
-   * <p/>
-   *
-   * @param content of the token
-   * @param privateKey to sign the token with
-   * @return token signature to be added to the token header.claims
-   */
-  String sign(byte[] content, Pem.Block privateKey);
-
 }
