@@ -31,6 +31,7 @@ public class RsaJwsSignature implements com.clouway.oauth2.jws.Signature {
 
       PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKey.getBytes());
       KeyFactory kf = KeyFactory.getInstance("RSA");
+
       PrivateKey privKey = kf.generatePrivate(keySpec);
 
       Signature sig = Signature.getInstance("SHA256withRSA");

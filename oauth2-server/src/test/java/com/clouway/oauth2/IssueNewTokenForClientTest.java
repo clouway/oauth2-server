@@ -75,6 +75,7 @@ public class IssueNewTokenForClientTest {
     Response response = controller.execute(client, new ParamRequest(ImmutableMap.of("code", "::auth_code::", "redirect_uri", "::redirect_uri::")), anyTime);
     String body = new RsPrint(response).printBody();
 
+    assertThat(body,containsString("id_token"));
     assertThat(body, containsString("::token::"));
   }
 
@@ -107,7 +108,6 @@ public class IssueNewTokenForClientTest {
 
     assertThat(response.status().code, is(HttpURLConnection.HTTP_BAD_REQUEST));
     assertThat(body, containsString("invalid_request"));
-
   }
 
   @Test
