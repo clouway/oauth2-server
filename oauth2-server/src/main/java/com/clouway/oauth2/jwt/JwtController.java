@@ -55,7 +55,7 @@ public class JwtController implements InstantaneousRequest {
 
     // Error should be returned if any of the header parts is missing
     if (parts.size() != 3) {
-      return OAuthError.invalidRequest();
+      return OAuthError.invalidRequest("bad request was provided");
     }
 
     String headerContent = parts.get(0);
@@ -70,7 +70,7 @@ public class JwtController implements InstantaneousRequest {
     Optional<Pem.Block> possibleResponse = keyStore.findKey(header, claimSet);
 
     if (!possibleResponse.isPresent()) {
-      return OAuthError.invalidGrant();
+      return OAuthError.invalidGrant("unknown claims");
     }
 
     Pem.Block serviceAccountKey = possibleResponse.get();
@@ -91,7 +91,7 @@ public class JwtController implements InstantaneousRequest {
     Optional<Identity> possibleIdentity = identityFinder.findIdentity(claimSet.iss, GrantType.JWT, instant);
 
     if (!possibleIdentity.isPresent()) {
-      return OAuthError.invalidGrant();
+      return OAuthError.invalidGrant("unknown identity");
     }
 
     Identity identity = possibleIdentity.get();
