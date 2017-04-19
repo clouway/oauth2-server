@@ -1,5 +1,6 @@
 package com.clouway.oauth2.exampleapp.storage;
 
+import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
@@ -23,7 +24,7 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
   }
 
   @Override
-  public Optional<Authorization> findAuthorization(Client client, String authCode) {
+  public Optional<Authorization> findAuthorization(Client client, String authCode, DateTime instant) {
 
     Authorization authorization = authorizations.get(authCode);
     // No authorization was found for that code ?
