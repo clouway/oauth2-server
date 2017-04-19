@@ -27,11 +27,11 @@ public interface ClientKeyStore {
   Optional<Pem.Block> findKey(Jwt.Header header, Jwt.ClaimSet claimSet);
 
   /**
-   * Returns all available publicCertificates used in the authorisation server
+   * Returns all available private Certificates used by the authorisation server
    *
-   * @return A map containing all the publicCertificates in a pair with a string identifier as a key.
+   * @return A map containing all the privateCertificates in a pair with a string identifier as a key.
    */
-  Map<String, Pem.Block> publicCertificates();
+  Map<String, Pem.Block> privateCertificates();
 
 
 }

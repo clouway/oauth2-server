@@ -61,9 +61,13 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                     new BasicAuthenticationCredentialsRequest(
                                                             new ClientController(
                                                                     config.clientFinder(),
-                                                                    new IssueNewTokenActivity(
-                                                                            config.tokens(), config.identityFinder(), config.clientAuthorizationRepository(),
-                                                                            config.serviceAccountRepository()
+                                                                    new AuthCodeAuthorization(
+                                                                            config.clientAuthorizationRepository(),
+                                                                            config.identityFinder(),
+                                                                            new IssueNewTokenActivity(
+                                                                                    config.tokens(),
+                                                                                    config.serviceAccountRepository()
+                                                                            )
                                                                     )
                                                             )
                                                     ))
