@@ -56,7 +56,7 @@ class InMemoryClientRepository implements ClientRegistry, ClientFinder, ClientKe
   }
 
   @Override
-  public Map<String, Block> publicCertificates() {
+  public Map<String, Block> privateCertificates() {
     return null;
   }
 
