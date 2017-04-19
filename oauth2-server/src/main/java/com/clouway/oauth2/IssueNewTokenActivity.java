@@ -17,7 +17,6 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.DefaultJwtBuilder;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -53,17 +52,17 @@ class IssueNewTokenActivity implements ClientActivity {
   public Response execute(Client client, Request request, DateTime instant) {
     String authCode = request.param("code");
 
-    Optional<Authorization> possibleResponse = clientAuthorizationRepository.findAuthorization(client, authCode);
+    Optional<Authorization> possibleResponse = clientAuthorizationRepository.findAuthorization(client, authCode, instant);
 
     if (!possibleResponse.isPresent()) {
-      return OAuthError.invalidGrant();
+      return OAuthError.invalidGrant("authorization code was not valid");
     }
 
     Authorization authorization = possibleResponse.get();
 
     Optional<Identity> possibleIdentity = identityFinder.findIdentity(authorization.identityId, GrantType.AUTHORIZATION_CODE, instant);
     if (!possibleIdentity.isPresent()) {
-      return OAuthError.invalidGrant();
+      return OAuthError.invalidGrant("identity was not found");
     }
 
     Identity identity = possibleIdentity.get();

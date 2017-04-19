@@ -57,7 +57,7 @@ public class IssueNewTokenForClientTest {
     final Identity identity = aNewIdentity().withId("::user_id::").build();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
+      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, Collections.<String>emptySet(), anyTime);
@@ -87,7 +87,7 @@ public class IssueNewTokenForClientTest {
     final Identity identity = aNewIdentity().withId("::user_id::").build();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
+      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(new Authorization("", "", "::user_id::", "::auth_code::", Collections.<String>emptySet(), Collections.singleton("::redirect_uri::")))));
 
       oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, Collections.<String>emptySet(), anyTime);
@@ -115,7 +115,7 @@ public class IssueNewTokenForClientTest {
     final Client anyClient = aNewClient().build();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).findAuthorization(anyClient, "::auth code::");
+      oneOf(clientAuthorizationRepository).findAuthorization(anyClient, "::auth code::", null);
       will(returnValue(Optional.absent()));
     }});
 
@@ -132,7 +132,7 @@ public class IssueNewTokenForClientTest {
     final DateTime anyTime = new DateTime();
 
     context.checking(new Expectations() {{
-      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)));
+      oneOf(clientAuthorizationRepository).findAuthorization(with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.absent()));
     }});
 
