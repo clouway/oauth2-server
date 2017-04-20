@@ -52,7 +52,7 @@ class InMemoryClientRepository implements ClientRegistry, ClientFinder, ClientKe
 
   @Override
   public Optional<Block> findKey(Header header, ClaimSet claimSet) {
-    return null;
+    return Optional.fromNullable(serviceAccountKeys.get(claimSet.iss));
   }
 
   @Override
