@@ -53,7 +53,7 @@ public class IssueNewTokenForClientTest {
       oneOf(keyStore).privateCertificates();
       will(returnValue(Collections.singletonMap("53r7IfiCaT3", generatePrivateKey())));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
+        oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
     }});
 

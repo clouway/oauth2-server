@@ -10,7 +10,6 @@ import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
-import com.google.gson.JsonObject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -20,7 +19,7 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -57,14 +56,21 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
       Pem.Block key = certificates.get(certKey);
       String host = request.header("Host");
 
+      Map<String, Object> claims = new LinkedHashMap<String, Object>();
+      claims.put("iss", host);
+      claims.put("aud", client.id);
+      claims.put("sub", identity.id());
+      claims.put("iat", (instant.timestamp() / 1000));
+      claims.put("exp", accessToken.ttlSeconds(instant));
+      claims.put("name", identity.name());
+      claims.put("email", identity.email());
+      claims.put("given_name", identity.givenName());
+      claims.put("family_name", identity.familyName());
+      claims.putAll(identity.claims());
+
       idToken = Jwts.builder()
               .setHeaderParam("cid", certKey)//CertificateId - the ID of the certificate that the token was signed with.
-              .setIssuer(host)
-              .setAudience(client.id)
-              .setSubject(identity.id())
-              .setIssuedAt(instant.asDate())
-              .setExpiration(new Date(accessToken.expirationTimestamp()))
-              .claim("identity", identityAsJson(identity).toString())
+              .setClaims(claims)
               .signWith(SignatureAlgorithm.RS256, parsePem(key))
               .compact();
     }
@@ -86,33 +92,5 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
       e.printStackTrace();
     }
     return null;
-  }
-
-  private JsonObject identityAsJson(Identity identity) {
-    JsonObject o = new JsonObject();
-
-    o.addProperty("id", identity.id());
-    o.addProperty("name", identity.name());
-    o.addProperty("email", identity.email());
-    o.addProperty("given_name", identity.givenName());
-    o.addProperty("family_name", identity.familyName());
-
-    Map<String, Object> claims = identity.claims();
-
-    for (String key : claims.keySet()) {
-      Object value = claims.get(key);
-
-      if (value instanceof String) {
-        o.addProperty(key, (String) value);
-      }
-      if (value instanceof Number) {
-        o.addProperty(key, (Number) value);
-      }
-
-      if (value instanceof Boolean) {
-        o.addProperty(key, (Boolean) value);
-      }
-    }
-    return o;
   }
 }
