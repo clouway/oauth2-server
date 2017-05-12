@@ -60,8 +60,8 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
       claims.put("iss", host);
       claims.put("aud", client.id);
       claims.put("sub", identity.id());
-      claims.put("iat", (instant.timestamp() / 1000));
-      claims.put("exp", accessToken.ttlSeconds(instant));
+      claims.put("iat", (instant.timestamp()));
+      claims.put("exp", accessToken.expirationTimestamp());
       claims.put("name", identity.name());
       claims.put("email", identity.email());
       claims.put("given_name", identity.givenName());
