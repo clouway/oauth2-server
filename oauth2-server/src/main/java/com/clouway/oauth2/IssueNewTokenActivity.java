@@ -19,6 +19,7 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +61,6 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
       claims.put("iss", host);
       claims.put("aud", client.id);
       claims.put("sub", identity.id());
-      claims.put("iat", (instant.timestamp()));
-      claims.put("exp", accessToken.expirationTimestamp());
       claims.put("name", identity.name());
       claims.put("email", identity.email());
       claims.put("given_name", identity.givenName());
@@ -71,6 +70,8 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
       idToken = Jwts.builder()
               .setHeaderParam("cid", certKey)//CertificateId - the ID of the certificate that the token was signed with.
               .setClaims(claims)
+              .setIssuedAt(new Date(instant.timestamp()))
+              .setExpiration(new Date(accessToken.expirationTimestamp()))
               .signWith(SignatureAlgorithm.RS256, parsePem(key))
               .compact();
     }
