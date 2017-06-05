@@ -75,7 +75,7 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
               .signWith(SignatureAlgorithm.RS256, parsePem(key))
               .compact();
     }
-    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.refreshToken, idToken);
+    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken, idToken);
   }
 
   private String randomKey(Map<String, Block> map) {

@@ -2,13 +2,16 @@ package com.clouway.oauth2;
 
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.RsPrint;
+import com.google.common.collect.Sets;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -22,10 +25,11 @@ public class SerializeBearerTokensTest {
             "{\"access_token\":\"mF_9.B5f-4.1JqM\"," +
             "\"token_type\":\"Bearer\"," +
             "\"expires_in\":3600," +
+            "\"scope\":\"scope1 scope2\"," +
             "\"refresh_token\":\"tGzv3JOkF0XG5Qx2TlKWIA\"," +
             "\"id_token\":\"::id token::\"}";
 
-    assertThat(contentOf(new BearerTokenResponse("mF_9.B5f-4.1JqM", 3600L, "tGzv3JOkF0XG5Qx2TlKWIA","::id token::")), is(equalTo(expectedResponse)));
+    assertThat(contentOf(new BearerTokenResponse("mF_9.B5f-4.1JqM", 3600L, Sets.newTreeSet(Arrays.asList("scope1", "scope2")), "tGzv3JOkF0XG5Qx2TlKWIA", "::id token::")), is(equalTo(expectedResponse)));
   }
 
   @Test
@@ -36,10 +40,10 @@ public class SerializeBearerTokensTest {
             "\"token_type\":\"Bearer\"," +
             "\"expires_in\":2400," +
             "\"refresh_token\":" +
-            "\"::refresh_token::2\","+
+            "\"::refresh_token::2\"," +
             "\"id_token\":\"::id token::\"}";
 
-    assertThat(contentOf(new BearerTokenResponse("::token2::", 2400L, "::refresh_token::2","::id token::")), is(equalTo(expectedResponse)));
+    assertThat(contentOf(new BearerTokenResponse("::token2::", 2400L, Collections.<String>emptySet(), "::refresh_token::2", "::id token::")), is(equalTo(expectedResponse)));
   }
 
   private String contentOf(Response response) throws IOException {
