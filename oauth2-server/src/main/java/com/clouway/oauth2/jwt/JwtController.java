@@ -106,7 +106,7 @@ public class JwtController implements InstantaneousRequest {
     
     BearerToken accessToken = response.accessToken;
     
-    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.refreshToken);
+    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken);
   }
 
 }

@@ -29,6 +29,6 @@ class RefreshTokenActivity implements ClientActivity {
 
     BearerToken accessToken = response.accessToken;
 
-    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.refreshToken);
+    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.accessToken.scopes, response.refreshToken);
   }
 }
