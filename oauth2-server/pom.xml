@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.clouway.security</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-RC24-SNAPSHOT</version>
+    <version>1.0-RC24</version>
   </parent>
   <groupId>com.clouway.security</groupId>
   <artifactId>oauth2-server</artifactId>
-  <version>1.0-RC24-SNAPSHOT</version>
+  <version>1.0-RC24</version>
   <name>oauth2-server</name>
   <url>http://github.com/clouway/oauth2-server</url>
 
@@ -111,6 +111,7 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>jarjar-maven-plugin</artifactId>
+        <version>1.9</version>
         <executions>
           <execution>
             <phase>package</phase>
