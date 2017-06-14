@@ -5,10 +5,10 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.IdTokenBuilder;
-import com.clouway.oauth2.token.TokenBuilder;
+import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.google.common.base.Optional;
 
 import java.util.Set;
 
@@ -20,11 +20,11 @@ import java.util.Set;
  */
 class IssueNewTokenActivity implements AuthorizedClientActivity {
   private final Tokens tokens;
-  private final TokenBuilder idTokenBuilder;
+  private final IdTokenFactory idIdTokenFactory;
 
-  IssueNewTokenActivity(Tokens tokens, TokenBuilder idTokenBuilder) {
+  IssueNewTokenActivity(Tokens tokens, IdTokenFactory idIdTokenFactory) {
     this.tokens = tokens;
-    this.idTokenBuilder = idTokenBuilder;
+    this.idIdTokenFactory = idIdTokenFactory;
   }
 
   @Override
@@ -35,8 +35,18 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
     }
 
     BearerToken accessToken = response.accessToken;
-    String idToken = idTokenBuilder.issueToken(request.header("Host"),client.id,identity,accessToken.ttlSeconds(instant),instant);
+    Optional<String> possibleIdToken = idIdTokenFactory.create(
+            request.header("Host"),
+            client.id,
+            identity,
+            accessToken.ttlSeconds(instant),
+            instant
+    );
 
-    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken, idToken);
+    if (possibleIdToken.isPresent()) {
+      return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken, possibleIdToken.get());
+    }
+    
+    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken);
   }
 }

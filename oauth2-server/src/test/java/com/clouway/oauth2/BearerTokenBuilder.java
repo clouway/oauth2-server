@@ -10,11 +10,10 @@ import java.util.Collections;
  */
 public class BearerTokenBuilder {
 
-
   public static BearerTokenBuilder aNewToken() {
     return new BearerTokenBuilder();
   }
-
+  
   private String clientId = "";
   private DateTime expiresAt = new DateTime();
   private String value;

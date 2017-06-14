@@ -6,11 +6,11 @@ import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.TokenBuilder;
+import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.google.common.base.Optional;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -23,13 +23,12 @@ import java.util.Set;
 
 import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
-import static com.clouway.oauth2.PemKeyGenerator.generatePrivateKey;
 import static com.clouway.oauth2.authorization.AuthorizationBuilder.newAuthorization;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -41,11 +40,11 @@ public class IssueNewTokenForClientTest {
 
   private Tokens tokens = context.mock(Tokens.class);
 
-  private TokenBuilder tokenBuilder = context.mock(TokenBuilder.class);
+  private IdTokenFactory idTokenFactory = context.mock(IdTokenFactory.class);
 
-  private Request request=context.mock(Request.class);
+  private Request request = context.mock(Request.class);
 
-  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, tokenBuilder);
+  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, idTokenFactory);
 
   @Test
   @SuppressWarnings("unchecked")
@@ -59,9 +58,9 @@ public class IssueNewTokenForClientTest {
       oneOf(request).header("Host");
       will(returnValue("::host::"));
 
-      oneOf(tokenBuilder).issueToken(with(any(String.class)),with(any(String.class)),with(any(Identity.class)),
-              with(any(Long.class)),with(any(DateTime.class)));
-      will(returnValue("::base64.encoded.idToken::"));
+      oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)),
+              with(any(Long.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.of("::base64.encoded.idToken::")));
 
       oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
@@ -71,6 +70,33 @@ public class IssueNewTokenForClientTest {
     String body = new RsPrint(response).printBody();
 
     assertThat(body, containsString("id_token"));
+    assertThat(body, containsString("::token::"));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void idTokenWasNotAvailable() throws IOException {
+    final DateTime anyTime = new DateTime();
+    final Identity identity = aNewIdentity().withId("::user_id::").build();
+    final Authorization anyAuhtorization = newAuthorization().build();
+
+    context.checking(new Expectations() {{
+
+      oneOf(request).header("Host");
+      will(returnValue("::host::"));
+
+      oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)),
+              with(any(Long.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.absent()));
+
+      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
+      will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
+    }});
+
+    Response response = controller.execute(aNewClient().withId("::client id::").build(), identity, anyAuhtorization.scopes, request, anyTime);
+    String body = new RsPrint(response).printBody();
+
+    assertThat(body, not(containsString("id_token")));
     assertThat(body, containsString("::token::"));
   }
 

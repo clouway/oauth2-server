@@ -7,7 +7,7 @@ import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.token.TokenBuilder;
+import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
@@ -24,7 +24,7 @@ import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -38,11 +38,11 @@ public class GetTokenInfoTest {
 
   private IdentityFinder identityFinder = context.mock(IdentityFinder.class);
 
-  private TokenBuilder tokenBuilder = context.mock(TokenBuilder.class);
+  private IdTokenFactory idTokenFactory = context.mock(IdTokenFactory.class);
 
   private Request request = context.mock(Request.class);
 
-  private TokenInfoController tokenInfoController = new TokenInfoController(tokens, identityFinder, tokenBuilder);
+  private TokenInfoController tokenInfoController = new TokenInfoController(tokens, identityFinder, idTokenFactory);
 
   @Test
   public void availableToken() throws Exception {
@@ -61,8 +61,8 @@ public class GetTokenInfoTest {
       will(returnValue(Optional.of(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
-      oneOf(tokenBuilder).issueToken(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));
-      will(returnValue("::base64.encoded.idToken::"));
+      oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.of("::base64.encoded.idToken::")));
     }});
 
     Response response = tokenInfoController.handleAsOf(request, anyTime);
@@ -77,6 +77,36 @@ public class GetTokenInfoTest {
     assertThat(o.get("email").getAsString(), equalTo(anyToken.email));
     assertThat(o.get("id_token").getAsString(), equalTo("::base64.encoded.idToken::"));
   }
+
+  @Test
+  public void idTokenWasNotAvailable() throws Exception {
+    final DateTime anyTime = new DateTime();
+    final BearerToken anyToken = aNewToken().withValue("::identity id::").forClient("::client id::")
+            .withEmail("email@mail.com").expiresAt(anyTime.plusSeconds(200)).build();
+    final Identity anIdentity = aNewIdentity().build();
+
+    context.checking(new Expectations() {{
+      oneOf(request).param("access_token");
+      will(returnValue("::access token::"));
+      oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.of(anyToken)));
+
+      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.of(anIdentity)));
+      oneOf(request).header("Host");
+      will(returnValue("::host::"));
+      oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));
+      will(returnValue(Optional.absent()));
+    }});
+
+    Response response = tokenInfoController.handleAsOf(request, anyTime);
+    JsonObject o = new RsPrint(response).asJson();
+
+    assertThat(response.status().code, is(HttpURLConnection.HTTP_OK));
+
+    assertThat(o.has("id_token"), is(false));
+  }
+
 
   @Test
   public void tokenWasExpired() throws Exception {
