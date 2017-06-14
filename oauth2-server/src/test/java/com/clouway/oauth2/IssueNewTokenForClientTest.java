@@ -1,5 +1,6 @@
 package com.clouway.oauth2;
 
+import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
@@ -7,6 +8,7 @@ import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientKeyStore;
 import com.clouway.oauth2.token.GrantType;
+import com.clouway.oauth2.token.TokenBuilder;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import org.jmock.Expectations;
@@ -19,9 +21,9 @@ import java.net.HttpURLConnection;
 import java.util.Collections;
 import java.util.Set;
 
+import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
 import static com.clouway.oauth2.PemKeyGenerator.generatePrivateKey;
-import static com.clouway.oauth2.TokenBuilder.aNewToken;
 import static com.clouway.oauth2.authorization.AuthorizationBuilder.newAuthorization;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
@@ -38,9 +40,12 @@ public class IssueNewTokenForClientTest {
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   private Tokens tokens = context.mock(Tokens.class);
-  private ClientKeyStore keyStore = context.mock(ClientKeyStore.class);
 
-  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, keyStore);
+  private TokenBuilder tokenBuilder = context.mock(TokenBuilder.class);
+
+  private Request request=context.mock(Request.class);
+
+  private IssueNewTokenActivity controller = new IssueNewTokenActivity(tokens, tokenBuilder);
 
   @Test
   @SuppressWarnings("unchecked")
@@ -50,39 +55,22 @@ public class IssueNewTokenForClientTest {
     final Authorization anyAuhtorization = newAuthorization().build();
 
     context.checking(new Expectations() {{
-      oneOf(keyStore).privateCertificates();
-      will(returnValue(Collections.singletonMap("53r7IfiCaT3", generatePrivateKey())));
 
-        oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
-      will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
-    }});
+      oneOf(request).header("Host");
+      will(returnValue("::host::"));
 
-    Response response = controller.execute(aNewClient().build(), identity, anyAuhtorization.scopes, new ParamRequest(Collections.<String, String>emptyMap()), anyTime);
-    String body = new RsPrint(response).printBody();
-
-    assertThat(body, containsString("id_token"));
-    assertThat(body, containsString("::token::"));
-  }
-
-  @Test
-  @SuppressWarnings("unchecked")
-  public void noPrivateCertsAreConfigured() throws Exception {
-    final DateTime anyTime = new DateTime();
-    final Identity identity = aNewIdentity().withId("::user_id::").build();
-    final Authorization anyAuhtorization = newAuthorization().build();
-
-    context.checking(new Expectations() {{
-      oneOf(keyStore).privateCertificates();
-      will(returnValue(Collections.emptyMap()));
+      oneOf(tokenBuilder).issueToken(with(any(String.class)),with(any(String.class)),with(any(Identity.class)),
+              with(any(Long.class)),with(any(DateTime.class)));
+      will(returnValue("::base64.encoded.idToken::"));
 
       oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
     }});
 
-    Response response = controller.execute(aNewClient().build(), identity, anyAuhtorization.scopes, new ParamRequest(Collections.<String, String>emptyMap()), anyTime);
+    Response response = controller.execute(aNewClient().withId("::client id::").build(), identity, anyAuhtorization.scopes, request, anyTime);
     String body = new RsPrint(response).printBody();
 
-    assertThat(body, not(containsString("id_token")));
+    assertThat(body, containsString("id_token"));
     assertThat(body, containsString("::token::"));
   }
 

@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.clouway.oauth2.TokenBuilder.aNewToken;
+import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;

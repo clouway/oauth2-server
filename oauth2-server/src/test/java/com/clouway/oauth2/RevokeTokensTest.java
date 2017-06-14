@@ -15,7 +15,7 @@ import org.junit.Test;
 import java.net.HttpURLConnection;
 import java.util.Collections;
 
-import static com.clouway.oauth2.TokenBuilder.aNewToken;
+import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;

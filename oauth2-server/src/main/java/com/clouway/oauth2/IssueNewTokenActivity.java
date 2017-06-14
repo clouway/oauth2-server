@@ -3,27 +3,13 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientKeyStore;
-import com.clouway.oauth2.jws.Pem;
-import com.clouway.oauth2.jws.Pem.Block;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
+import com.clouway.oauth2.token.IdTokenBuilder;
+import com.clouway.oauth2.token.TokenBuilder;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 
@@ -34,11 +20,11 @@ import java.util.Set;
  */
 class IssueNewTokenActivity implements AuthorizedClientActivity {
   private final Tokens tokens;
-  private final ClientKeyStore keyStore;
+  private final TokenBuilder idTokenBuilder;
 
-  IssueNewTokenActivity(Tokens tokens, ClientKeyStore keyStore) {
+  IssueNewTokenActivity(Tokens tokens, TokenBuilder idTokenBuilder) {
     this.tokens = tokens;
-    this.keyStore = keyStore;
+    this.idTokenBuilder = idTokenBuilder;
   }
 
   @Override
@@ -49,49 +35,8 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
     }
 
     BearerToken accessToken = response.accessToken;
-    Map<String, Block> certificates = keyStore.privateCertificates();
-    String idToken = "";
+    String idToken = idTokenBuilder.issueToken(request.header("Host"),client.id,identity,accessToken.ttlSeconds(instant),instant);
 
-    if (certificates != null && !certificates.isEmpty()) {
-      String certKey = randomKey(certificates);
-      Pem.Block key = certificates.get(certKey);
-      String host = request.header("Host");
-
-      Map<String, Object> claims = new LinkedHashMap<String, Object>();
-      claims.put("iss", host);
-      claims.put("aud", client.id);
-      claims.put("sub", identity.id());
-      claims.put("name", identity.name());
-      claims.put("email", identity.email());
-      claims.put("given_name", identity.givenName());
-      claims.put("family_name", identity.familyName());
-      claims.putAll(identity.claims());
-
-      idToken = Jwts.builder()
-              .setHeaderParam("cid", certKey)//CertificateId - the ID of the certificate that the token was signed with.
-              .setClaims(claims)
-              .setIssuedAt(new Date(instant.timestamp()))
-              .setExpiration(new Date(accessToken.expirationTimestamp()))
-              .signWith(SignatureAlgorithm.RS256, parsePem(key))
-              .compact();
-    }
     return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken, idToken);
-  }
-
-  private String randomKey(Map<String, Block> map) {
-    Random random = new Random();
-    List<String> certId = new ArrayList<>(map.keySet());
-    return certId.get(random.nextInt(certId.size()));
-  }
-
-  private PrivateKey parsePem(Pem.Block privateKey) {
-    try {
-      PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKey.getBytes());
-      KeyFactory kf = KeyFactory.getInstance("RSA");
-      return kf.generatePrivate(keySpec);
-    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-      e.printStackTrace();
-    }
-    return null;
   }
 }

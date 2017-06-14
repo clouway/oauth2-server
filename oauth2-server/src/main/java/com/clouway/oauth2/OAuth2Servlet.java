@@ -11,6 +11,8 @@ import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.jwt.Jwt.Header;
 import com.clouway.oauth2.jwt.JwtController;
+import com.clouway.oauth2.token.IdTokenBuilder;
+import com.clouway.oauth2.token.TokenBuilder;
 import com.google.common.base.Optional;
 
 import javax.servlet.ServletConfig;
@@ -66,7 +68,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                                             config.identityFinder(),
                                                                             new IssueNewTokenActivity(
                                                                                     config.tokens(),
-                                                                                    config.serviceAccountRepository()
+                                                                                    new IdTokenBuilder(config.serviceAccountRepository())
                                                                             )
                                                                     )
                                                             )
@@ -105,7 +107,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
             new FkRegex(".*/tokenInfo",
                     new RequiresParam("access_token",
                             new InstantaneousRequestController(
-                                    new TokenInfoController(config.tokens())
+                                    new TokenInfoController(config.tokens(), config.identityFinder(), new IdTokenBuilder(config.serviceAccountRepository()))
                             )
                     )
             ),

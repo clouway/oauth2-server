@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
-import static com.clouway.oauth2.TokenBuilder.aNewToken;
+import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 

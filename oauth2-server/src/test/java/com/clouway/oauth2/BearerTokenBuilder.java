@@ -8,11 +8,11 @@ import java.util.Collections;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class TokenBuilder {
+public class BearerTokenBuilder {
 
 
-  public static TokenBuilder aNewToken() {
-    return new TokenBuilder();
+  public static BearerTokenBuilder aNewToken() {
+    return new BearerTokenBuilder();
   }
 
   private String clientId = "";
@@ -20,17 +20,17 @@ public class TokenBuilder {
   private String value;
   private String email = "";
 
-  public TokenBuilder withValue(String value) {
+  public BearerTokenBuilder withValue(String value) {
     this.value = value;
     return this;
   }
 
-  public TokenBuilder expiresAt(DateTime expiresAt) {
+  public BearerTokenBuilder expiresAt(DateTime expiresAt) {
     this.expiresAt = expiresAt;
     return this;
   }
 
-  public TokenBuilder withEmail(String email) {
+  public BearerTokenBuilder withEmail(String email) {
     this.email = email;
     return this;
   }
@@ -39,7 +39,7 @@ public class TokenBuilder {
     return new BearerToken(value, GrantType.AUTHORIZATION_CODE, "", clientId, email, Collections.<String>emptySet(), expiresAt);
   }
 
-  public TokenBuilder forClient(String clientId) {
+  public BearerTokenBuilder forClient(String clientId) {
     this.clientId = clientId;
     return this;
   }
