@@ -50,5 +50,11 @@ public interface Tokens {
    */
   void revokeToken(String token);
 
+  /**
+   * Remove the tokens that are expired before the given time
+   * @param when the time of the request
+   * @return A Set of token values that were removed
+   */
+  Set<String> removeTokensExpiredAfter(DateTime when);
 
 }

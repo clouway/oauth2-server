@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -85,5 +86,17 @@ class InMemoryTokens implements Tokens {
   @Override
   public void revokeToken(String token) {
     tokens.remove(token);
+  }
+
+  @Override
+  public Set<String> removeTokensExpiredAfter(DateTime when) {
+    Set<String> removedTokens = new TreeSet<>();
+    for (String tokenValue : tokens.keySet()) {
+      if (tokens.get(tokenValue).expiresAt(when)) {
+        tokens.remove(tokenValue);
+        removedTokens.add(tokenValue);
+      }
+    }
+    return removedTokens;
   }
 }
