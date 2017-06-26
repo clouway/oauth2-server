@@ -107,6 +107,31 @@ public class AuthorizeClientsTest {
     assertThat(body, containsString("unauthorized_client"));
   }
 
+  @Test
+  public void publicClient() throws IOException {
+    final Client anyRegisteredClient = aNewClient().withId("::client id::").publicOne().build();
+
+    final Request anyRequest = new ParamRequest(ImmutableMap.<String, String>of());
+    final DateTime anyInstantTime = new DateTime();
+
+    context.checking(new Expectations() {{
+      oneOf(clientFinder).findClient("::client id::");
+      will(returnValue(Optional.of(anyRegisteredClient)));
+
+      oneOf(clientActivity).execute(anyRegisteredClient, anyRequest, anyInstantTime);
+      will(returnValue(new RsText("::body::")));
+    }});
+
+    Response response = handler.handleAsOf(
+            anyRequest, new ClientCredentials("::client id::", ""),
+            anyInstantTime
+    );
+
+    String body = new RsPrint(response).printBody();
+
+    assertThat(body, containsString("::body::"));
+  }
+
   private Client newClient(String clientId, String secret) {
     return aNewClient().withId(clientId).withSecret(secret).build();
   }

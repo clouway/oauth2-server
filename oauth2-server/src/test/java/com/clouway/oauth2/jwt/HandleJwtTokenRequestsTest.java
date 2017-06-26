@@ -99,7 +99,7 @@ public class HandleJwtTokenRequestsTest {
   public void scopesArePassed() throws IOException {
     final Signature anySignatureThatWillVerifies = context.mock(Signature.class);
     final DateTime anyInstantTime = new DateTime();
-    final Client jwtClient = new Client("xxx@developer.com", "", "", Collections.<String>emptySet());
+    final Client jwtClient = new Client("xxx@developer.com", "", "", Collections.<String>emptySet(), false);
     final Identity identity = aNewIdentity().withId("xxx@developer.com").build();
 
     context.checking(new Expectations() {{

@@ -40,7 +40,7 @@ class InMemoryClientRepository implements ClientRegistry, ClientFinder, ClientKe
   public Client register(ClientRegistrationRequest request) {
     String randomId = UUID.randomUUID().toString();
     Client client =
-            new Client(randomId, request.secret, request.description, request.redirectURLs);
+            new Client(randomId, request.secret, request.description, request.redirectURLs, false);
     clients.put(client.id, client);
     return client;
   }

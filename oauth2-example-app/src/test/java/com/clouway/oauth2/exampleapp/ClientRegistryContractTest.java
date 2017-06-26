@@ -27,7 +27,7 @@ public class ClientRegistryContractTest {
 
   @Test
   public void registerClientByClientObject() throws Exception {
-      Client client = new Client("id", "secrets", "description", Collections.<String>emptySet());
+      Client client = new Client("id", "secrets", "description", Collections.<String>emptySet(), true);
       repository.register(client);
 
       Optional<Client> actualClient = repository.findClient("id");

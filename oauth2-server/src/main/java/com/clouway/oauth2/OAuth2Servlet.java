@@ -59,7 +59,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             new RequestHandlerMatchingParam("grant_type", "authorization_code",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
-                                                    new BasicAuthenticationCredentialsRequest(
+                                                    new ClientAuthenticationCredentialsRequest(
                                                             new ClientController(
                                                                     config.clientFinder(),
                                                                     new AuthCodeAuthorization(
@@ -76,7 +76,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             new RequestHandlerMatchingParam("grant_type", "refresh_token",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
-                                                    new BasicAuthenticationCredentialsRequest(
+                                                    new ClientAuthenticationCredentialsRequest(
                                                             new ClientController(
                                                                     config.clientFinder(),
                                                                     new RefreshTokenActivity(config.tokens())
@@ -97,7 +97,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
             new FkRegex(".*/revoke",
                     new RequiresParam("token",
                             new InstantaneousRequestController(
-                                    new BasicAuthenticationCredentialsRequest(
+                                    new ClientAuthenticationCredentialsRequest(
                                             new RevokeTokenController(config.clientFinder(), config.tokens())
                                     )
                             )
