@@ -14,6 +14,7 @@ public class ClientBuilder {
   private String clientId;
   private String redirectUrl = "::redirect_url::";
   private String clientSecret;
+  private boolean publicOne = false;
 
   public ClientBuilder withId(String clientId) {
     this.clientId = clientId;
@@ -30,7 +31,12 @@ public class ClientBuilder {
     return this;
   }
 
+  public ClientBuilder publicOne() {
+    this.publicOne = true;
+    return this;
+  }
+
   public Client build() {
-    return new Client(clientId, clientSecret, "::desc::", Collections.singleton(redirectUrl));
+    return new Client(clientId, clientSecret, "::desc::", Collections.singleton(redirectUrl), publicOne);
   }
 }

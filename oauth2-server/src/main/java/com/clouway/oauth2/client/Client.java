@@ -1,6 +1,7 @@
 package com.clouway.oauth2.client;
 
 import com.clouway.oauth2.ClientCredentials;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
@@ -17,12 +18,14 @@ public class Client {
   public final String secret;
   public final String description;
   public final Set<String> redirectURLs;
+  public final boolean publicOne;
 
-  public Client(String id, String secret, String description, Set<String> redirectURLs) {
+  public Client(String id, String secret, String description, Set<String> redirectURLs, boolean publicOne) {
     this.id = id;
     this.secret = secret;
     this.description = description;
     this.redirectURLs = redirectURLs;
+    this.publicOne = publicOne;
   }
 
   public Optional<String> determineRedirectUrl(String requestedUrl) {
@@ -38,6 +41,13 @@ public class Client {
   }
 
   public boolean credentialsMatch(ClientCredentials credentials) {
+    // Just compare the ID as public clients are not exposing secrets to
+    // the apps (android, osx and etc).
+    // Described in: https://tools.ietf.org/html/rfc6749#section-2.3
+    if (publicOne) {
+      return id.equalsIgnoreCase(credentials.clientId());
+    }
+
     return secret.equalsIgnoreCase(credentials.clientSecret());
   }
 
@@ -49,7 +59,8 @@ public class Client {
     return Objects.equals(id, client.id) &&
             Objects.equals(secret, client.secret) &&
             Objects.equals(description, client.description) &&
-            Objects.equals(redirectURLs, client.redirectURLs);
+            Objects.equals(redirectURLs, client.redirectURLs) &&
+            Objects.equals(publicOne, client.publicOne);
   }
 
   @Override
@@ -57,4 +68,14 @@ public class Client {
     return Objects.hash(id, secret, description, redirectURLs);
   }
 
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+            .add("id", id)
+            .add("secret", secret)
+            .add("description", description)
+            .add("redirectURLs", redirectURLs)
+            .add("publicOne", publicOne)
+            .toString();
+  }
 }

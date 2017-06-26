@@ -38,7 +38,7 @@
     <dependency>
       <groupId>com.clouway.fserve</groupId>
       <artifactId>fserve</artifactId>
-      <version>0.1.1</version>
+      <version>0.1.3</version>
     </dependency>
 
     <!-- Serializing -->
@@ -99,7 +99,7 @@
     <dependency>
       <groupId>com.clouway.fserve</groupId>
       <artifactId>testing</artifactId>
-      <version>0.1.1</version>
+      <version>0.1.3</version>
       <scope>test</scope>
     </dependency>
 

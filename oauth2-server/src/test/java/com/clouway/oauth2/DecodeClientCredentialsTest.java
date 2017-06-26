@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.net.HttpURLConnection;
 
+import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -17,14 +18,14 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-public class DecodeClientCredentialsFromAuthorizationHeaderTest {
+public class DecodeClientCredentialsTest {
 
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   private ClientRequest clientRequest = context.mock(ClientRequest.class);
 
-  BasicAuthenticationCredentialsRequest handler = new BasicAuthenticationCredentialsRequest(clientRequest);
+  private ClientAuthenticationCredentialsRequest handler = new ClientAuthenticationCredentialsRequest(clientRequest);
 
   @Test
   public void happyPath() {
@@ -70,6 +71,22 @@ public class DecodeClientCredentialsFromAuthorizationHeaderTest {
     );
     Response response = handler.handleAsOf(clientAuthRequest, anyInstantTime());
     assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_BAD_REQUEST)));
+  }
+
+  @Test
+  public void authenticatePublicClient() throws Exception {
+    final Request clientAuthRequest = aNewRequest().param("client_id", "::client id::").build();
+    final DateTime anyInstantTime = new DateTime();
+
+    context.checking(new Expectations() {{
+      oneOf(clientRequest).handleAsOf(
+              clientAuthRequest, new ClientCredentials(
+                      "::client id::",
+                      ""
+              ), anyInstantTime);
+    }});
+
+    handler.handleAsOf(clientAuthRequest, anyInstantTime);
   }
 
   private DateTime anyInstantTime() {

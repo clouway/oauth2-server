@@ -97,7 +97,7 @@ public class JwtController implements InstantaneousRequest {
     Identity identity = possibleIdentity.get();
 
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
-    Client client = new Client(claimSet.iss, "", "", Collections.<String>emptySet());
+    Client client = new Client(claimSet.iss, "", "", Collections.<String>emptySet(), false);
     TokenResponse response = tokens.issueToken(GrantType.JWT, client, identity, scopes, instant);
     
     if (!response.isSuccessful()) {
