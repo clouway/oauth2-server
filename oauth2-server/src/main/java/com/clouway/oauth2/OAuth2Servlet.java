@@ -57,22 +57,21 @@ public abstract class OAuth2Servlet extends HttpServlet {
             new FkRegex(".*/token",
                     new TkFork(
                             new RequestHandlerMatchingParam("grant_type", "authorization_code",
-                                    new RequiresHeader("Authorization",
-                                            new InstantaneousRequestController(
-                                                    new ClientAuthenticationCredentialsRequest(
-                                                            new ClientController(
-                                                                    config.clientFinder(),
-                                                                    new AuthCodeAuthorization(
-                                                                            config.clientAuthorizationRepository(),
-                                                                            config.identityFinder(),
-                                                                            new IssueNewTokenActivity(
-                                                                                    config.tokens(),
-                                                                                    new JjwtIdTokenFactory(config.serviceAccountRepository())
-                                                                            )
+                                    new InstantaneousRequestController(
+                                            new ClientAuthenticationCredentialsRequest(
+                                                    new ClientController(
+                                                            config.clientFinder(),
+                                                            new AuthCodeAuthorization(
+                                                                    config.clientAuthorizationRepository(),
+                                                                    config.identityFinder(),
+                                                                    new IssueNewTokenActivity(
+                                                                            config.tokens(),
+                                                                            new JjwtIdTokenFactory(config.serviceAccountRepository())
                                                                     )
                                                             )
-                                                    ))
-                                    )),
+                                                    )
+                                            ))
+                            ),
                             new RequestHandlerMatchingParam("grant_type", "refresh_token",
                                     new RequiresHeader("Authorization",
                                             new InstantaneousRequestController(
