@@ -114,7 +114,8 @@ public abstract class OAuth2Servlet extends HttpServlet {
                             new InstantaneousRequestController(
                                     new UserInfoController(config.identityFinder(), config.tokens())
                             ))
-            )
+            ),
+            new FkRegex(".*/certs", new PublicCertsController(config.publicKeys()))
     );
 
     servletApiSupport = new ServletApiSupport(fork);

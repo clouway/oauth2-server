@@ -31,6 +31,7 @@ public final class OAuth2Config {
     private ClientFinder clientFinder;
     private String loginPageUrl;
     private ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
+    private PublicKeys publicKeys;
 
     public Builder tokens(Tokens tokens) {
       this.tokens = tokens;
@@ -66,6 +67,11 @@ public final class OAuth2Config {
       return this;
     }
 
+    public Builder publicKeys(PublicKeys publicKeys) {
+      this.publicKeys = publicKeys;
+      return this;
+    }
+
     public OAuth2Config build() {
       return new OAuth2Config(this);
     }
@@ -80,6 +86,7 @@ public final class OAuth2Config {
   private final ClientAuthorizationRepository clientAuthorizationRepository;
   private final ClientKeyStore clientKeyStore;
   private final String loginPageUrl;
+  private final PublicKeys publicKeys;
 
   private OAuth2Config(Builder builder) {
     this.tokens = builder.tokens;
@@ -89,6 +96,7 @@ public final class OAuth2Config {
     this.clientAuthorizationRepository = builder.clientAuthorizationRepository;
     this.clientKeyStore = builder.clientKeyStore;
     this.loginPageUrl = builder.loginPageUrl;
+    this.publicKeys = builder.publicKeys;
   }
 
   public ClientAuthorizationRepository clientAuthorizationRepository() {
@@ -117,6 +125,10 @@ public final class OAuth2Config {
 
   public String loginPageUrl() {
     return this.loginPageUrl;
+  }
+
+  public PublicKeys publicKeys() {
+    return this.publicKeys;
   }
 
 }
