@@ -18,6 +18,10 @@ import java.util.Collections;
 public class PemKeyGenerator {
   private static KeyPair keyPair = getKeyPair(1024);
 
+  public static KeyPair generatePair() {
+    return getKeyPair(1024);
+  }
+
   public static Pem.Block generatePublicKey() {
     PublicKey publicKey = keyPair.getPublic();
     return new Pem.Block("PUBLIC KEY", Collections.<String, String>emptyMap(), publicKey.getEncoded());

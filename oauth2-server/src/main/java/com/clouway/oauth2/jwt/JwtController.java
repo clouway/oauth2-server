@@ -8,7 +8,7 @@ import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.InstantaneousRequest;
 import com.clouway.oauth2.OAuthError;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientKeyStore;
+import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
@@ -36,10 +36,10 @@ public class JwtController implements InstantaneousRequest {
 
   private final SignatureFactory signatureFactory;
   private final Tokens tokens;
-  private final ClientKeyStore keyStore;
+  private final JwtKeyStore keyStore;
   private final IdentityFinder identityFinder;
 
-  public JwtController(SignatureFactory signatureFactory, Tokens tokens, ClientKeyStore keyStore, IdentityFinder identityFinder) {
+  public JwtController(SignatureFactory signatureFactory, Tokens tokens, JwtKeyStore keyStore, IdentityFinder identityFinder) {
     this.signatureFactory = signatureFactory;
     this.tokens = tokens;
     this.keyStore = keyStore;

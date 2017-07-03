@@ -66,7 +66,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                                     config.identityFinder(),
                                                                     new IssueNewTokenActivity(
                                                                             config.tokens(),
-                                                                            new JjwtIdTokenFactory(config.serviceAccountRepository())
+                                                                            new JjwtIdTokenFactory(config.keyStore())
                                                                     )
                                                             )
                                                     )
@@ -89,7 +89,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                             new JwtController(
                                                     signatureFactory,
                                                     config.tokens(),
-                                                    config.serviceAccountRepository(),
+                                                    config.jwtKeyStore(),
                                                     config.identityFinder())))
                             ))
             ),
@@ -105,7 +105,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
             new FkRegex(".*/tokenInfo",
                     new RequiresParam("access_token",
                             new InstantaneousRequestController(
-                                    new TokenInfoController(config.tokens(), config.identityFinder(), new JjwtIdTokenFactory(config.serviceAccountRepository()))
+                                    new TokenInfoController(config.tokens(), config.identityFinder(), new JjwtIdTokenFactory(config.keyStore()))
                             )
                     )
             ),
@@ -115,7 +115,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                     new UserInfoController(config.identityFinder(), config.tokens())
                             ))
             ),
-            new FkRegex(".*/certs", new PublicCertsController(config.publicKeys()))
+            new FkRegex(".*/certs", new PublicCertsController(config.keyStore()))
     );
 
     servletApiSupport = new ServletApiSupport(fork);

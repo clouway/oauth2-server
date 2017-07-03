@@ -2,7 +2,7 @@ package com.clouway.oauth2;
 
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientFinder;
-import com.clouway.oauth2.client.ClientKeyStore;
+import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
@@ -10,12 +10,10 @@ import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 /**
  * OAuth2Config is a configuration class which is used to pass configuration from apps to the oauth2-server flow.
  *
+ * @author Miroslav Genov (miroslav.genov@clouway.com) 
  * @see {@link OAuth2Servlet#config()}
- *
- * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
 public final class OAuth2Config {
-
 
 
   public static OAuth2Config.Builder newConfig() {
@@ -26,17 +24,18 @@ public final class OAuth2Config {
 
     private Tokens tokens;
     private IdentityFinder identityFinder;
-    private ClientKeyStore clientKeyStore;
+    private JwtKeyStore jwtKeyStore;
     private ClientAuthorizationRepository clientAuthorizationRepository;
     private ClientFinder clientFinder;
     private String loginPageUrl;
     private ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
-    private PublicKeys publicKeys;
+    private KeyStore keyStore;
 
     public Builder tokens(Tokens tokens) {
       this.tokens = tokens;
       return this;
     }
+
     public Builder identityFinder(IdentityFinder identityFinder) {
       this.identityFinder = identityFinder;
       return this;
@@ -47,8 +46,8 @@ public final class OAuth2Config {
       return this;
     }
 
-    public Builder serviceAccountRepository(ClientKeyStore clientKeyStore) {
-      this.clientKeyStore = clientKeyStore;
+    public Builder jwtKeyStore(JwtKeyStore jwtKeyStore) {
+      this.jwtKeyStore = jwtKeyStore;
       return this;
     }
 
@@ -67,8 +66,8 @@ public final class OAuth2Config {
       return this;
     }
 
-    public Builder publicKeys(PublicKeys publicKeys) {
-      this.publicKeys = publicKeys;
+    public Builder keyStore(KeyStore keyStore) {
+      this.keyStore = keyStore;
       return this;
     }
 
@@ -84,9 +83,9 @@ public final class OAuth2Config {
 
   private final Tokens tokens;
   private final ClientAuthorizationRepository clientAuthorizationRepository;
-  private final ClientKeyStore clientKeyStore;
+  private final JwtKeyStore jwtKeyStore;
   private final String loginPageUrl;
-  private final PublicKeys publicKeys;
+  private final KeyStore keyStore;
 
   private OAuth2Config(Builder builder) {
     this.tokens = builder.tokens;
@@ -94,17 +93,17 @@ public final class OAuth2Config {
     this.resourceOwnerIdentityFinder = builder.resourceOwnerIdentityFinder;
     this.clientFinder = builder.clientFinder;
     this.clientAuthorizationRepository = builder.clientAuthorizationRepository;
-    this.clientKeyStore = builder.clientKeyStore;
+    this.jwtKeyStore = builder.jwtKeyStore;
     this.loginPageUrl = builder.loginPageUrl;
-    this.publicKeys = builder.publicKeys;
+    this.keyStore = builder.keyStore;
   }
 
   public ClientAuthorizationRepository clientAuthorizationRepository() {
     return this.clientAuthorizationRepository;
   }
 
-  public ClientKeyStore serviceAccountRepository() {
-    return this.clientKeyStore;
+  public JwtKeyStore jwtKeyStore() {
+    return this.jwtKeyStore;
   }
 
   public Tokens tokens() {
@@ -127,8 +126,8 @@ public final class OAuth2Config {
     return this.loginPageUrl;
   }
 
-  public PublicKeys publicKeys() {
-    return this.publicKeys;
+  public KeyStore keyStore() {
+    return this.keyStore;
   }
 
 }

@@ -1,24 +1,20 @@
 package com.clouway.oauth2.token;
 
 import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.KeyStore;
 import com.clouway.oauth2.PemKeyGenerator;
-import com.clouway.oauth2.client.ClientKeyStore;
-import com.clouway.oauth2.jws.Pem.Block;
-import com.clouway.oauth2.jws.RsaJwsSignature;
+import com.clouway.oauth2.client.IdentityKeyPair;
 import com.google.common.base.Optional;
-import com.google.common.io.BaseEncoding;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
+import java.security.KeyPair;
 import java.util.Collections;
-import java.util.Map;
 
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
 import static com.clouway.oauth2.util.CalendarUtil.newDateTime;
@@ -26,7 +22,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -38,50 +33,55 @@ public class JjwtIdTokenFactoryTest {
 
   @Test
   public void createNewIdToken() throws Exception {
-    final ClientKeyStore clientKeyStore = context.mock(ClientKeyStore.class);
-    final DateTime instant = newDateTime(2017, 6, 14, 10, 0, 0);
-    final Block privateKey = PemKeyGenerator.generatePrivateKey();
+    final KeyStore keyStore = context.mock(KeyStore.class);
+    final DateTime instant = new DateTime().plusSeconds(60);
+    final KeyPair keyPair = PemKeyGenerator.generatePair();
 
     context.checking(new Expectations() {{
-      oneOf(clientKeyStore).privateCertificates();
-
-      will(returnValue(Collections.singletonMap("::any key::", privateKey)));
+      oneOf(keyStore).getKeys();
+      will(returnValue(Collections.singletonList(new IdentityKeyPair("::any key::", keyPair.getPrivate(), keyPair.getPublic()))));
     }});
 
-    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(clientKeyStore);
+    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
     Optional<String> possibleIdToken = factory.create(
             "::any host::", "::any client::",
             aNewIdentity().withId("123").build(), 10L, instant
     );
 
-    Map<String, Object> values = parseIdToken(possibleIdToken.get());
-    assertTokenSignature(possibleIdToken.get(), privateKey);
-    assertThat(values.containsValue("::any host::"), is(true));
-    assertThat(values.containsValue("::any client::"), is(true));
-    assertThat(values.containsValue("123"), is(true));
+    Jws<Claims> jwt = Jwts.parser().setSigningKey(keyPair.getPublic()).parseClaimsJws(possibleIdToken.get());
+
+    assertThat(jwt.getBody().getAudience(), is(equalTo("::any client::")));
+    assertThat(jwt.getBody().getIssuer(), is(equalTo("::any host::")));
+    assertThat(jwt.getBody().getSubject(), is(equalTo("123")));
   }
 
   @Test
   public void idTokensAreDifferentForEachClient() throws Exception {
-    final ClientKeyStore clientKeyStore = context.mock(ClientKeyStore.class);
-    final DateTime instant = newDateTime(2017, 5, 14, 11, 0, 0);
-    final Block privateKey = PemKeyGenerator.generatePrivateKey();
+    final KeyStore keyStore = context.mock(KeyStore.class);
+    final DateTime anyInstantTime = newDateTime(2017, 5, 14, 11, 0, 0);
+    final KeyPair firstKeyPair = PemKeyGenerator.generatePair();
+    final KeyPair secondKeyPair = PemKeyGenerator.generatePair();
 
     context.checking(new Expectations() {{
-      exactly(2).of(clientKeyStore).privateCertificates();
-      will(returnValue(Collections.singletonMap("::any key::", privateKey)));
+      oneOf(keyStore).getKeys();
+      will(returnValue(Collections.singletonList(
+              new IdentityKeyPair("::first key::", firstKeyPair.getPrivate(), firstKeyPair.getPublic()))));
+
+      oneOf(keyStore).getKeys();
+      will(returnValue(Collections.singletonList(
+              new IdentityKeyPair("::second key::", secondKeyPair.getPrivate(), secondKeyPair.getPublic()))));
     }});
 
-    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(clientKeyStore);
+    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
 
     Optional<String> firstIdToken = factory.create(
             "::any host::", "::client 1::",
-            aNewIdentity().withId("123").build(), 10L, instant
+            aNewIdentity().withId("123").build(), 10L, anyInstantTime
     );
 
     Optional<String> secondIdToken = factory.create(
             "::any host::", "::client 2::",
-            aNewIdentity().withId("123").build(), 10L, instant
+            aNewIdentity().withId("123").build(), 10L, anyInstantTime
     );
 
     assertThat(firstIdToken.get(), is(not(equalTo(secondIdToken.get()))));
@@ -89,33 +89,17 @@ public class JjwtIdTokenFactoryTest {
 
   @Test
   public void noCertificatesAreAvailableForSigningOfKey() throws Exception {
-    final ClientKeyStore clientKeyStore = context.mock(ClientKeyStore.class);
-
+    final KeyStore keyStore = context.mock(KeyStore.class);
+    
     context.checking(new Expectations() {{
-      oneOf(clientKeyStore).privateCertificates();
-      will(returnValue(Collections.emptyMap()));
+      oneOf(keyStore).getKeys();
+      will(returnValue(Collections.emptyList()));
     }});
 
-    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(clientKeyStore);
+    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
     Optional<String> possibleIdToken = factory.create("::any host::", "::any client::", aNewIdentity().withId("123").build(), 10L, new DateTime());
 
     assertThat(possibleIdToken.isPresent(), is(false));
-  }
-
-  private Map<String, Object> parseIdToken(String idToken) {
-    String parts[] = idToken.split("\\.");
-    Type type = new TypeToken<Map<String, Object>>() {
-    }.getType();
-    return new Gson().fromJson(new InputStreamReader(new ByteArrayInputStream(BaseEncoding.base64Url().decode(parts[1]))), type);
-  }
-
-  private void assertTokenSignature(String idToken, Block key) {
-    String parts[] = idToken.split("\\.");
-    String tokenWithoutSignature = String.format("%s.%s", parts[0], parts[1]);
-    RsaJwsSignature rsaJwsSignature = new RsaJwsSignature(BaseEncoding.base64Url().decode(parts[2]));
-
-    boolean tokenIsValid = rsaJwsSignature.verifyWithPrivateKey(tokenWithoutSignature.getBytes(), key);
-    assertTrue(tokenIsValid);
   }
 
 }

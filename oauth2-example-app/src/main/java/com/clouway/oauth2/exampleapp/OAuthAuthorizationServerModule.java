@@ -1,11 +1,13 @@
 package com.clouway.oauth2.exampleapp;
 
 import com.clouway.oauth2.Duration;
+import com.clouway.oauth2.KeyStore;
 import com.clouway.oauth2.OAuth2Config;
 import com.clouway.oauth2.OAuth2Servlet;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientFinder;
-import com.clouway.oauth2.client.ClientKeyStore;
+import com.clouway.oauth2.client.IdentityKeyPair;
+import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
@@ -23,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.List;
 
 public class OAuthAuthorizationServerModule extends AbstractModule {
 
@@ -34,16 +38,16 @@ public class OAuthAuthorizationServerModule extends AbstractModule {
     private final Tokens tokens;
     private final IdentityFinder identityFinder;
     private final ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
-    private final ClientKeyStore clientKeyStore;
+    private final JwtKeyStore jwtKeyStore;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientFinder clientFinder, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, ClientKeyStore clientKeyStore) {
+    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientFinder clientFinder, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, JwtKeyStore jwtKeyStore) {
       this.clientAuthorizationRepository = clientAuthorizationRepository;
       this.clientFinder = clientFinder;
       this.tokens = tokens;
       this.identityFinder = identityFinder;
       this.resourceOwnerIdentityFinder = resourceOwnerIdentityFinder;
-      this.clientKeyStore = clientKeyStore;
+      this.jwtKeyStore = jwtKeyStore;
     }
 
     @Override
@@ -55,7 +59,13 @@ public class OAuthAuthorizationServerModule extends AbstractModule {
               .tokens(tokens)
               .identityFinder(identityFinder)
               .resourceOwnerIdentityFinder(resourceOwnerIdentityFinder)
-              .serviceAccountRepository(clientKeyStore)
+              .jwtKeyStore(jwtKeyStore)
+              .keyStore(new KeyStore() {
+                @Override
+                public List<IdentityKeyPair> getKeys() {
+                  return Collections.emptyList();
+                }
+              })
               .build();
     }
   }
