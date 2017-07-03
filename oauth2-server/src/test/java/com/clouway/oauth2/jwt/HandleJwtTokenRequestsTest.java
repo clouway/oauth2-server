@@ -7,7 +7,7 @@ import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.client.ClientKeyStore;
+import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
@@ -46,7 +46,7 @@ public class HandleJwtTokenRequestsTest {
   private final String signature = "WBAzzss3J8Ea6-xxOCVS2OZ2HoqpiLdfCLhIJEevaPck377qTpiM__lHta_S8dSCuTl5FjREqixIiwGrJVJEIkfExUwS5YWekdJRniSKdqLjmXussePaCSgco3reJDqNcRCGiv9DSLH0GfZFdv11Ik5nyaHjNnS4ykEi76guaY8-T3uVFjOH4e2o8Wm0vBbq9hzo9UHdgnsI2BLrzDVoydGWM7uZW8MQNKTuGWY_Ywyj1hilr9rw4yy2FvBe7G-56qaq8--IlVNZ6ocJX2dYhZPqDtZUYwLRqwFyM_F53Kt81I8Qht6HBgH-fgrfbd7Ms67BeLGsupFvuM9sF-hGOQ";
 
   @Mock
-  ClientKeyStore repository;
+  JwtKeyStore repository;
 
   @Mock
   Tokens tokens;

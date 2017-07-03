@@ -6,7 +6,7 @@ import com.clouway.oauth2.client.ClientRegistrationRequest;
 import com.clouway.oauth2.exampleapp.ResourceOwnerStore;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientFinder;
-import com.clouway.oauth2.client.ClientKeyStore;
+import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.exampleapp.ResourceOwnerAuthentication;
 import com.clouway.oauth2.exampleapp.SessionSecurity;
 import com.clouway.oauth2.exampleapp.UserLoader;
@@ -66,7 +66,7 @@ public class InMemoryModule extends AbstractModule {
             "UqgbFBNjeedWV+Hm6ftwxw==\n" +
             "-----END PRIVATE KEY-----");
 
-    bind(ClientKeyStore.class).toInstance(clientRepository);
+    bind(JwtKeyStore.class).toInstance(clientRepository);
     bind(ClientFinder.class).toInstance(clientRepository);
 
     InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository(new UrlSafeTokenGenerator());
