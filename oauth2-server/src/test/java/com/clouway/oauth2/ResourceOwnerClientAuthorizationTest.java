@@ -63,7 +63,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
-    Response response = activity.execute("user1", authRequest);
+    Response response = activity.execute(new ResourceOwnerIdentity("user1", Sets.<String>newHashSet()), authRequest);
     Status status = response.status();
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
@@ -92,7 +92,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
-    Response response = activity.execute("user1", authRequest);
+    Response response = activity.execute(new ResourceOwnerIdentity("user1", Sets.<String>newHashSet()), authRequest);
     Status status = response.status();
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
@@ -115,11 +115,11 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.singleton("abc"), "code");
+      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Sets.newHashSet("abc"), "code");
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
-    activity.execute("user1", authRequest);
+    activity.execute(new ResourceOwnerIdentity("user1", Sets.newHashSet("abc")), authRequest);
   }
 
   @Test
@@ -138,11 +138,11 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), "code");
+      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "::user1::", Sets.<String>newHashSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), "code");
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
-    activity.execute("user1", authRequest);
+    activity.execute(new ResourceOwnerIdentity("::user1::", Sets.newHashSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ"))), authRequest);
   }
 
   @Test
@@ -160,7 +160,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
-    Response response = activity.execute("user1", authRequest);
+    Response response = activity.execute(new ResourceOwnerIdentity("user1", Sets.<String>newHashSet()), authRequest);
     Status status = response.status();
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
@@ -183,7 +183,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(Optional.absent()));
     }});
 
-    Response response = activity.execute("::identity_id::", authRequest);
+    Response response = activity.execute(new ResourceOwnerIdentity("::identity_id::", Sets.<String>newHashSet()), authRequest);
     Status status = response.status();
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
@@ -200,7 +200,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(Optional.absent()));
     }});
 
-    Response response = activity.execute("::any_identity_id::", authRequest);
+    Response response = activity.execute(new ResourceOwnerIdentity("::any_identity_id::", Sets.<String>newHashSet()), authRequest);
     Status status = response.status();
     assertThat(status.code, is(HttpURLConnection.HTTP_BAD_REQUEST));
   }
@@ -222,7 +222,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(Optional.of(anyExistingClient)));
     }});
 
-    Response response = activity.execute("::identity_id::", authRequest);
+    Response response = activity.execute(new ResourceOwnerIdentity("::identity_id::", Sets.<String>newHashSet()), authRequest);
     Status status = response.status();
     assertThat(status.code, is(HttpURLConnection.HTTP_BAD_REQUEST));
   }

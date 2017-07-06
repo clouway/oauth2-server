@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.clouway.security</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-RC30-SNAPSHOT</version>
+    <version>1.0-RC31-SNAPSHOT</version>
   </parent>
   <groupId>com.clouway.security</groupId>
   <artifactId>oauth2-server</artifactId>

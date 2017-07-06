@@ -10,6 +10,6 @@ import com.clouway.friendlyserve.Response;
  */
 interface IdentityActivity {
 
-  Response execute(String identityId, Request request);
+  Response execute(ResourceOwnerIdentity ownerIdentity, Request request);
 
 }

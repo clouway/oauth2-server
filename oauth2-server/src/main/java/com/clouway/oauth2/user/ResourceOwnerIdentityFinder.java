@@ -2,6 +2,7 @@ package com.clouway.oauth2.user;
 
 import com.clouway.friendlyserve.Request;
 import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.ResourceOwnerIdentity;
 import com.google.common.base.Optional;
 
 /**
@@ -26,5 +27,5 @@ public interface ResourceOwnerIdentityFinder {
    * @param instantTime the time on which request was executed
    * @return an optional value with the identity id if it's associated with the provided request or absent value if not
    */
-  Optional<String> find(Request request, DateTime instantTime);
+  Optional<ResourceOwnerIdentity> find(Request request, DateTime instantTime);
 }

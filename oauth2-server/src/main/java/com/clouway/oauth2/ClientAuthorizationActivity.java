@@ -27,7 +27,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
   }
 
   @Override
-  public Response execute(String identityId, Request request) {
+  public Response execute(ResourceOwnerIdentity identity, Request request) {
     String responseType = request.param("response_type");
     String clientId = request.param("client_id");
     String requestedUrl = request.param("redirect_uri");
@@ -49,7 +49,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     }
 
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
-    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(client, identityId, scopes, responseType);
+    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(client, identity.idenityId, identity.scopes, responseType);
 
     // RFC-6749 - Section: 4.2.2.1
     // The authorization server redirects the user-agent by
