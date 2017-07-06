@@ -5,6 +5,7 @@ import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.client.Client;
 import com.google.common.base.Optional;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -39,9 +40,10 @@ public interface Tokens {
    * @param identity   the identity for which token was issued
    * @param scopes     requested scopes
    * @param when       the requested time on which it should be issued
+   * @param params
    * @return the newly issued token
    */
-  TokenResponse issueToken(GrantType grantType, Client client, Identity identity, Set<String> scopes, DateTime when);
+  TokenResponse issueToken(GrantType grantType, Client client, Identity identity, Set<String> scopes, DateTime when, Map<String, String> params);
 
   /**
    * Revokes token from repository.

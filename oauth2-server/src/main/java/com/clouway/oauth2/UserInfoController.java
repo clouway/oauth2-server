@@ -36,7 +36,7 @@ class UserInfoController implements InstantaneousRequest {
 
     BearerToken token = possibleTokenResponse.get();
 
-    Optional<Identity> possibleIdentityResponse = identityFinder.findIdentity(token.identityId, token.grantType, instantTime);
+    Optional<Identity> possibleIdentityResponse = identityFinder.findIdentity(token.identityId, token.grantType, instantTime, token.params);
     if (!possibleIdentityResponse.isPresent()) {
       return OAuthError.unknownClient();
     }

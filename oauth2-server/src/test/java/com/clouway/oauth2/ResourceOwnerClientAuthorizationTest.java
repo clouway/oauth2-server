@@ -1,8 +1,8 @@
 package com.clouway.oauth2;
 
+import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.Status;
-import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
+import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -50,9 +51,9 @@ public class ResourceOwnerClientAuthorizationTest {
 
   @Test
   public void happyPath() throws IOException {
-    ParamRequest authRequest = new ParamRequest(
+    Request authRequest = aNewRequest().params(
             ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "http://example.com/callback")
-    );
+    ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
@@ -74,14 +75,14 @@ public class ResourceOwnerClientAuthorizationTest {
   @Test
   @SuppressWarnings("unchecked")
   public void stateIsPassedToCallbackWhenProvided() throws Exception {
-    ParamRequest authRequest = new ParamRequest(
+    Request authRequest = aNewRequest().params(
             ImmutableMap.of(
                     "response_type", "code",
                     "client_id", "::client_id::",
                     "redirect_uri", "http://example.com/callback",
                     "state", "abc"
             )
-    );
+    ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
@@ -101,14 +102,14 @@ public class ResourceOwnerClientAuthorizationTest {
 
   @Test
   public void singleScopeIsPassed() throws Exception {
-    ParamRequest authRequest = new ParamRequest(
+    Request authRequest = aNewRequest().params(
             ImmutableMap.of(
                     "response_type", "code",
                     "client_id", "::client_id::",
                     "redirect_uri", "http://example.com/callback",
                     "scope", "abc"
             )
-    );
+    ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
@@ -124,14 +125,14 @@ public class ResourceOwnerClientAuthorizationTest {
 
   @Test
   public void multipleScopesArePassed() throws Exception {
-    ParamRequest authRequest = new ParamRequest(
+    Request authRequest = aNewRequest().params(
             ImmutableMap.of(
                     "response_type", "code",
                     "client_id", "::client_id::",
                     "redirect_uri", "http://example.com/callback",
                     "scope", "CanDoX CanDoY CanDoZ"
             )
-    );
+    ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
@@ -147,9 +148,9 @@ public class ResourceOwnerClientAuthorizationTest {
 
   @Test
   public void redirectUrlWasNotRequested() throws Exception {
-    ParamRequest authRequest = new ParamRequest(
+    Request authRequest = aNewRequest().params(
             ImmutableMap.of("response_type", "code", "client_id", "::another client::")
-    );
+    ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
     context.checking(new Expectations() {{
@@ -169,9 +170,9 @@ public class ResourceOwnerClientAuthorizationTest {
 
   @Test
   public void clientWasNotAuthorized() {
-    ParamRequest authRequest = new ParamRequest(
+    Request authRequest = aNewRequest().params(
             ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "https://example.com/callback")
-    );
+    ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("https://example.com/callback").build();
 
     context.checking(new Expectations() {{
@@ -192,9 +193,9 @@ public class ResourceOwnerClientAuthorizationTest {
 
   @Test
   public void unknownClient() {
-    ParamRequest authRequest = new ParamRequest(
+    Request authRequest = aNewRequest().params(
             ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "https://example.com")
-    );
+    ).build();
     context.checking(new Expectations() {{
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.absent()));
@@ -207,13 +208,13 @@ public class ResourceOwnerClientAuthorizationTest {
 
   @Test
   public void clientRedirectUrlIsNotMatching() throws Exception {
-    ParamRequest authRequest = new ParamRequest(
+    Request authRequest = aNewRequest().params(
             ImmutableMap.of(
                     "response_type", "code",
                     "client_id", "::client_id::",
                     "redirect_uri", "https://example.com"
             )
-    );
+    ).build();
 
     final Client anyExistingClient = aNewClient().withRedirectUrl("https://example.com/callback").build();
 

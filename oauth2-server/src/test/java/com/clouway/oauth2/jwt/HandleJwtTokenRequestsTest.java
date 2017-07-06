@@ -2,7 +2,6 @@ package com.clouway.oauth2.jwt;
 
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
-import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
@@ -17,6 +16,7 @@ import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -29,8 +29,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
-import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
+import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
 import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
+import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -80,10 +81,10 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
+      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
       will(returnValue(Optional.of(aNewIdentity().build())));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
+      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyInstantTime.plusSeconds(1000)).build(), "::refresh_token::")));
     }});
 
@@ -112,16 +113,46 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
+      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
       will(returnValue(Optional.of(identity)));
 
       oneOf(tokens).issueToken(
-              GrantType.JWT, jwtClient, identity, Sets.newHashSet("CanDoX", "CanDoY"), anyInstantTime
-      );
+              GrantType.JWT, jwtClient, identity, Sets.newHashSet("CanDoX", "CanDoY"), anyInstantTime, Maps.<String, String>newHashMap());
       will(returnValue(new TokenResponse(true, aNewToken().build(), "")));
     }});
 
     controller.handleAsOf(newJwtRequest(String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature), "CanDoX CanDoY"), anyInstantTime);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void customRequestParamsArePassed() throws IOException {
+    final Signature anySignatureThatWillVerifies = context.mock(Signature.class);
+    final DateTime anyInstantTime = new DateTime();
+    final Client jwtClient = new Client("xxx@developer.com", "", "", Collections.<String>emptySet(), false);
+    final Identity identity = aNewIdentity().withId("xxx@developer.com").build();
+
+    context.checking(new Expectations() {{
+      oneOf(repository).findKey(with(any(Jwt.Header.class)), with(any(Jwt.ClaimSet.class)));
+      will(returnValue(Optional.of(new Pem.Block("", ImmutableMap.<String, String>of(), new byte[]{}))));
+
+      oneOf(signatureFactory).createSignature(with(any(byte[].class)), with(any(Jwt.Header.class)));
+      will(returnValue(Optional.of(anySignatureThatWillVerifies)));
+
+      oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
+      will(returnValue(true));
+
+      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
+      will(returnValue(Optional.of(identity)));
+
+      oneOf(tokens).issueToken(
+              GrantType.JWT, jwtClient, identity, Sets.newHashSet("CanDoX", "CanDoY"), anyInstantTime, ImmutableMap.of("::index::", "::1::"));
+      will(returnValue(new TokenResponse(true, aNewToken().build(), "")));
+    }});
+
+    controller.handleAsOf(aNewRequest().params(ImmutableMap.of("assertion", String.format("%s.%s.%s", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9", body, signature),
+            "scope", "CanDoX CanDoY", "::index::", "::1::")).build(),
+            anyInstantTime);
   }
 
   @Test
@@ -137,10 +168,11 @@ public class HandleJwtTokenRequestsTest {
   }
 
   private Request newJwtRequest(String assertion) {
-    return new ParamRequest(ImmutableMap.of("assertion", assertion));
+    return aNewRequest().param("assertion", assertion).build();
   }
 
   private Request newJwtRequest(String assertion, String scope) {
-    return new ParamRequest(ImmutableMap.of("assertion", assertion, "scope", scope));
+    return aNewRequest().param("assertion", assertion).param("scope", scope).build();
   }
+
 }

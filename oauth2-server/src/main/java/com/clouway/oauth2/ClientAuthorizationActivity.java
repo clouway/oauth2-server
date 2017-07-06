@@ -7,11 +7,13 @@ import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientFinder;
+import com.clouway.oauth2.util.Params;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -33,6 +35,8 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String requestedUrl = request.param("redirect_uri");
     String state = request.param("state");
     String scope = request.param("scope") == null ? "" : request.param("scope");
+
+    Map<String, String> params = new Params().parse(request, "response_type", "client_id", "redirect_uri", "state", "scope");
 
     Optional<Client> possibleClientResponse = clientFinder.findClient(clientId);
 
@@ -63,13 +67,21 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String callback = possibleRedirectUrl.get();
 
     Authorization authorization = possibleAuthorizationResponse.get();
-    return new RsRedirect(createCallbackUrl(callback, authorization.code, state));
+    return new RsRedirect(createCallbackUrl(callback, authorization.code, state, params));
   }
 
-  private String createCallbackUrl(String callback, String code, String state) {
+  private String createCallbackUrl(String callback, String code, String state, Map<String, String> params) {
+    String url;
     if (Strings.isNullOrEmpty(state)) {
-      return String.format("%s?code=%s", callback, code);
+      url = String.format("%s?code=%s", callback, code);
+    } else {
+      url = String.format("%s?code=%s&state=%s", callback, code, state);
     }
-    return String.format("%s?code=%s&state=%s", callback, code, state);
+
+    for (String key : params.keySet()) {
+      url = url + "&" + key + "=" + params.get(key);
+    }
+
+    return url;
   }
 }
