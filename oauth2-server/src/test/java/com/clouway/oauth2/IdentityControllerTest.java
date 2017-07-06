@@ -9,6 +9,7 @@ import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -47,9 +48,9 @@ public class IdentityControllerTest {
 
     context.checking(new Expectations() {{
       oneOf(identityFinder).find(request, anyInstantTime);
-      will(returnValue(Optional.of("::identity_id::")));
+      will(returnValue(Optional.of(new ResourceOwnerIdentity("::identity_id::", Sets.newHashSet("read:something")))));
 
-      oneOf(identityActivity).execute("::identity_id::", request);
+      oneOf(identityActivity).execute(new ResourceOwnerIdentity("::identity_id::", Sets.newHashSet("read:something")), request);
       will(returnValue(new RsText("test response")));
     }});
 
