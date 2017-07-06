@@ -3,7 +3,6 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsText;
-import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
@@ -11,13 +10,15 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Collections;
+import java.util.HashMap;
 
+import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
 import static com.clouway.oauth2.authorization.AuthorizationBuilder.newAuthorization;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
@@ -47,16 +48,16 @@ public class AuthorizeClientWithAuthCodeTest {
     final Authorization anyAuth = newAuthorization().build();
     final Identity identity = aNewIdentity().withId("::user_id::").build();
 
-    final Request request = new ParamRequest(Collections.singletonMap("code", "::any code::"));
+    final Request request = aNewRequest().param("code", "::any code::").build();
 
     context.checking(new Expectations() {{
       oneOf(repository).findAuthorization(with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(anyAuth)));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
+      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
       will(returnValue(Optional.of(identity)));
 
-      oneOf(clientActivity).execute(anyClient, identity, anyAuth.scopes, request, anyInstantTime);
+      oneOf(clientActivity).execute(anyClient, identity, anyAuth.scopes, request, anyInstantTime, Maps.<String, String>newHashMap());
       will(returnValue(new RsText("::response::")));
 
     }});
@@ -72,7 +73,7 @@ public class AuthorizeClientWithAuthCodeTest {
     final Client anyClient = aNewClient().build();
     final DateTime anyInstantTime = new DateTime();
 
-    final Request request = new ParamRequest(Collections.singletonMap("code", "::any code::"));
+    final Request request = aNewRequest().param("code", "::any code::").build();
 
     context.checking(new Expectations() {{
       oneOf(repository).findAuthorization(with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
@@ -90,13 +91,13 @@ public class AuthorizeClientWithAuthCodeTest {
     final DateTime anyInstantTime = new DateTime();
     final Authorization anyAuth = newAuthorization().build();
 
-    final Request request = new ParamRequest(Collections.singletonMap("code", "::any code::"));
+    final Request request = aNewRequest().param("code", "::any code::").build();
 
     context.checking(new Expectations() {{
       oneOf(repository).findAuthorization(with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(anyAuth)));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)));
+      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
       will(returnValue(Optional.absent()));
     }});
 
@@ -115,7 +116,7 @@ public class AuthorizeClientWithAuthCodeTest {
       will(returnValue(Optional.absent()));
     }});
 
-    authCodeAuthorization.execute(anyClient, new ParamRequest(Collections.singletonMap("code", "::any code::")), anyInstantTime);
+    authCodeAuthorization.execute(anyClient, aNewRequest().param("code", "::any code::").build(), anyInstantTime);
   }
 
   @Test
@@ -128,10 +129,13 @@ public class AuthorizeClientWithAuthCodeTest {
       oneOf(repository).findAuthorization(with(any(Client.class)), with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(anyAuth)));
 
-      oneOf(identityFinder).findIdentity(anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime);
+      HashMap<String, String> params = Maps.<String, String>newHashMap();
+      params.put("index", "1");
+      oneOf(identityFinder).findIdentity(anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime, params);
       will(returnValue(Optional.absent()));
     }});
 
-    authCodeAuthorization.execute(anyClient, new ParamRequest(Collections.singletonMap("code", "::any code::")), anyInstantTime);
+
+    authCodeAuthorization.execute(anyClient, aNewRequest().param("code", "::any code::").param("index", "1").build(), anyInstantTime);
   }
 }

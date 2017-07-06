@@ -4,6 +4,7 @@ import com.clouway.oauth2.DateTime;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -15,14 +16,15 @@ public final class BearerToken implements Serializable {
   public final String identityId;
   public final String clientId;
   public final String email;
+  public final Map<String, String> params;
   public final Set<String> scopes;
   private final DateTime expiresAt;
 
   public BearerToken() {
-    this(null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null, null);
   }
 
-  public BearerToken(String value, GrantType grantType, String identityId, String clientId, String email, Set<String> scopes, DateTime expiresAt) {
+  public BearerToken(String value, GrantType grantType, String identityId, String clientId, String email, Set<String> scopes, DateTime expiresAt, Map<String, String> params) {
     this.value = value;
     this.grantType = grantType;
     this.identityId = identityId;
@@ -30,6 +32,7 @@ public final class BearerToken implements Serializable {
     this.email = email;
     this.scopes = scopes;
     this.expiresAt = expiresAt;
+    this.params = params;
   }
 
   /**

@@ -3,6 +3,7 @@ package com.clouway.oauth2.jwt;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.BearerTokenResponse;
+import com.clouway.oauth2.util.Params;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.InstantaneousRequest;
@@ -26,6 +27,7 @@ import com.google.gson.Gson;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -88,7 +90,9 @@ public class JwtController implements InstantaneousRequest {
       return OAuthError.invalidGrant();
     }
 
-    Optional<Identity> possibleIdentity = identityFinder.findIdentity(claimSet.iss, GrantType.JWT, instant);
+    Map<String, String> params = new Params().parse(request, "assertion", "scope");
+
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(claimSet.iss, GrantType.JWT, instant, params);
 
     if (!possibleIdentity.isPresent()) {
       return OAuthError.invalidGrant("unknown identity");
@@ -98,14 +102,14 @@ public class JwtController implements InstantaneousRequest {
 
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
     Client client = new Client(claimSet.iss, "", "", Collections.<String>emptySet(), false);
-    TokenResponse response = tokens.issueToken(GrantType.JWT, client, identity, scopes, instant);
-    
+    TokenResponse response = tokens.issueToken(GrantType.JWT, client, identity, scopes, instant, params);
+
     if (!response.isSuccessful()) {
       return OAuthError.invalidRequest("tokens issuing is temporary unavailable");
     }
-    
+
     BearerToken accessToken = response.accessToken;
-    
+
     return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken);
   }
 

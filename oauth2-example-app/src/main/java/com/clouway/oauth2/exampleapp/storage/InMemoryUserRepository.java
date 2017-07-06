@@ -11,6 +11,7 @@ import com.clouway.oauth2.user.User;
 import com.google.common.base.Optional;
 
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)
@@ -29,7 +30,7 @@ class InMemoryUserRepository implements IdentityFinder, ResourceOwnerIdentityFin
   }
 
   @Override
-  public Optional<Identity> findIdentity(String identityId, GrantType grantType, DateTime instantTime) {
+  public Optional<Identity> findIdentity(String identityId, GrantType grantType, DateTime instantTime, Map<String, String> params) {
     if (grantType == GrantType.AUTHORIZATION_CODE) {
       return Optional.of(new Identity("testUserID", "testUser", "test User", "User Family", "test@clouway.com", null, Collections.<String, Object>emptyMap()));
     } else {

@@ -9,7 +9,10 @@ import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
+
+import java.util.Map;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -35,7 +38,8 @@ class TokenInfoController implements InstantaneousRequest {
     }
 
     BearerToken token = possibleToken.get();
-    Optional<Identity> possibleIdentity = identityFinder.findIdentity(token.identityId, token.grantType, instantTime);
+    Map<String, String> params = token.params != null ? token.params : Maps.<String, String>newHashMap();
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(token.identityId, token.grantType, instantTime, params);
     Identity identity = possibleIdentity.get();
     String host = request.header("Host");
     Optional<String> possibleIdToken = idIdTokenFactory.create(host, token.clientId, identity,

@@ -40,7 +40,7 @@ class InMemoryTokens implements Tokens {
         //remove the current token
         tokens.remove(tokenValue);
         // new instance
-        BearerToken updatedToken = new BearerToken(token.value, token.grantType, token.identityId, token.clientId, token.email, Collections.<String>emptySet(), instant);
+        BearerToken updatedToken = new BearerToken(token.value, token.grantType, token.identityId, token.clientId, token.email, Collections.<String>emptySet(), instant, Maps.<String, String>newHashMap());
         //add the new token
         tokens.put(tokenValue, updatedToken);
 
@@ -59,7 +59,7 @@ class InMemoryTokens implements Tokens {
       tokens.remove(accessToken);
 
       String newTokenValue = tokenGenerator.generate();
-      BearerToken updatedToken = new BearerToken(newTokenValue, oldToken.grantType, oldToken.identityId, oldToken.clientId, oldToken.email, Collections.<String>emptySet(), instant);
+      BearerToken updatedToken = new BearerToken(newTokenValue, oldToken.grantType, oldToken.identityId, oldToken.clientId, oldToken.email, Collections.<String>emptySet(), instant, oldToken.params);
 
       tokens.put(newTokenValue, updatedToken);
       refreshTokenToAccessToken.put(refreshToken, newTokenValue);
@@ -72,11 +72,11 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public TokenResponse issueToken(GrantType grantType, Client client, Identity identity, Set<String> scopes, DateTime when) {
+  public TokenResponse issueToken(GrantType grantType, Client client, Identity identity, Set<String> scopes, DateTime when, Map<String, String> params) {
     String token = tokenGenerator.generate();
     String refreshTokenValue = tokenGenerator.generate();
 
-    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identity.id(), client.id, identity.email(), scopes, when);
+    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identity.id(), client.id, identity.email(), scopes, when, params);
     tokens.put(token, bearerToken);
 
     return new TokenResponse(true, bearerToken, refreshTokenValue);

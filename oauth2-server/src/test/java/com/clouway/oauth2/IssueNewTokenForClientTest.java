@@ -11,6 +11,7 @@ import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -62,11 +63,11 @@ public class IssueNewTokenForClientTest {
               with(any(Long.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of("::base64.encoded.idToken::")));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
+      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
     }});
 
-    Response response = controller.execute(aNewClient().withId("::client id::").build(), identity, anyAuhtorization.scopes, request, anyTime);
+    Response response = controller.execute(aNewClient().withId("::client id::").build(), identity, anyAuhtorization.scopes, request, anyTime, ImmutableMap.of("::index::", "::1::"));
     String body = new RsPrint(response).printBody();
 
     assertThat(body, containsString("id_token"));
@@ -89,11 +90,11 @@ public class IssueNewTokenForClientTest {
               with(any(Long.class)), with(any(DateTime.class)));
       will(returnValue(Optional.absent()));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
+      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
     }});
 
-    Response response = controller.execute(aNewClient().withId("::client id::").build(), identity, anyAuhtorization.scopes, request, anyTime);
+    Response response = controller.execute(aNewClient().withId("::client id::").build(), identity, anyAuhtorization.scopes, request, anyTime, ImmutableMap.of("::index::", "::1::"));
     String body = new RsPrint(response).printBody();
 
     assertThat(body, not(containsString("id_token")));
@@ -108,11 +109,11 @@ public class IssueNewTokenForClientTest {
     final Identity identity = aNewIdentity().withId("::user_id::").build();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)));
+      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
       will(returnValue(new TokenResponse(false, null, "")));
     }});
 
-    Response response = controller.execute(client, identity, Collections.<String>emptySet(), new ParamRequest(Collections.<String, String>emptyMap()), anyTime);
+    Response response = controller.execute(client, identity, Collections.<String>emptySet(), new ParamRequest(Collections.<String, String>emptyMap()), anyTime, ImmutableMap.of("::index::", "::1::"));
     String body = new RsPrint(response).printBody();
 
     assertThat(response.status().code, is(HttpURLConnection.HTTP_BAD_REQUEST));
@@ -127,11 +128,11 @@ public class IssueNewTokenForClientTest {
     final Authorization authorization = newAuthorization().build();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, authorization.scopes, anyTime);
+      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, authorization.scopes, anyTime, ImmutableMap.of("::index::", "::1::"));
       will(returnValue(new TokenResponse(false, null, "")));
     }});
 
-    controller.execute(client, identity, authorization.scopes, new ParamRequest(Collections.<String, String>emptyMap()), anyTime);
+    controller.execute(client, identity, authorization.scopes, new ParamRequest(Collections.<String, String>emptyMap()), anyTime, ImmutableMap.of("::index::", "::1::"));
   }
 
 }

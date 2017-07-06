@@ -10,6 +10,7 @@ import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 
+import java.util.Map;
 import java.util.Set;
 
 
@@ -28,8 +29,8 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
   }
 
   @Override
-  public Response execute(Client client, Identity identity, Set<String> scopes, Request request, DateTime instant) {
-    TokenResponse response = tokens.issueToken(GrantType.AUTHORIZATION_CODE, client, identity, scopes, instant);
+  public Response execute(Client client, Identity identity, Set<String> scopes, Request request, DateTime instant, Map<String, String> params) {
+    TokenResponse response = tokens.issueToken(GrantType.AUTHORIZATION_CODE, client, identity, scopes, instant, params);
     if (!response.isSuccessful()) {
       return OAuthError.invalidRequest("Token cannot be issued.");
     }
