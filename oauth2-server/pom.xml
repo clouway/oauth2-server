@@ -134,17 +134,17 @@
 
                 <rule>
                   <pattern>com.fasterxml.jackson.core.**</pattern>
-                  <result>com.clouway.security.internal.jackson-core.@1</result>
+                  <result>com.clouway.security.internal.jackson.core.@1</result>
                 </rule>
 
                 <rule>
-                  <pattern>com.fasterxml.jackson.core.**</pattern>
-                  <result>com.clouway.security.internal.jackson-annotations.@1</result>
+                  <pattern>com.fasterxml.jackson.annotation.**</pattern>
+                  <result>com.clouway.security.internal.jackson.annotations.@1</result>
                 </rule>
 
                 <rule>
-                  <pattern>com.fasterxml.jackson.core.**</pattern>
-                  <result>com.clouway.security.internal.jackson-databind.@1</result>
+                  <pattern>com.fasterxml.jackson.databind.**</pattern>
+                  <result>com.clouway.security.internal.jackson.databind.@1</result>
                 </rule>
 
                 <rule>
