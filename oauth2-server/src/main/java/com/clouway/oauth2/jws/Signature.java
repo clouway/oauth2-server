@@ -23,14 +23,4 @@ public interface Signature {
    */
   boolean verifyWithPrivateKey(byte[] content, Pem.Block privateKey);
 
-  /**
-   * Verify is veryfying Signature using the provided publicKey as PEM file
-   * <p/>
-   *
-   * @param content to be verified
-   * @param key The public key to verify the content with
-   * @return
-   */
-  boolean verify(byte[] content, Block key);
-
 }

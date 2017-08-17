@@ -1,16 +1,10 @@
 package com.clouway.oauth2.jws;
 
-import com.clouway.oauth2.jws.Pem.Block;
-
 import java.security.KeyFactory;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
-
-import static com.google.common.io.BaseEncoding.base64;
 
 /**
  * RsaJwsSignature is an implementation of {@link com.clouway.oauth2.jws.Signature} that uses
@@ -48,21 +42,4 @@ public class RsaJwsSignature implements com.clouway.oauth2.jws.Signature {
     }
   }
 
-  @Override
-  public boolean verify(byte[] content, Block key) {
-    try {
-      X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key.getBytes());
-      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-      PublicKey publicKey = keyFactory.generatePublic(keySpec);
-      Signature sig = Signature.getInstance("SHA256withRSA");
-
-      sig.initVerify(publicKey);
-      sig.update(content);
-
-      return sig.verify(signature);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return false;
-  }
 }
