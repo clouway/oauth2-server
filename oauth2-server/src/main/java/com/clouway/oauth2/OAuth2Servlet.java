@@ -46,6 +46,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
 
     OAuth2Config config = config();
 
+    JjwtIdTokenFactory idTokenFactory = new JjwtIdTokenFactory(config.keyStore());
     TkFork fork = new TkFork(
             new FkRegex(".*/auth",
                     new InstantaneousRequestController(
@@ -66,7 +67,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                                     config.identityFinder(),
                                                                     new IssueNewTokenActivity(
                                                                             config.tokens(),
-                                                                            new JjwtIdTokenFactory(config.keyStore())
+                                                                            idTokenFactory
                                                                     )
                                                             )
                                                     )
@@ -78,7 +79,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                     new ClientAuthenticationCredentialsRequest(
                                                             new ClientController(
                                                                     config.clientFinder(),
-                                                                    new RefreshTokenActivity(config.tokens())
+                                                                    new RefreshTokenActivity(config.tokens(),idTokenFactory,config.identityFinder())
                                                             ))
 
                                             )
@@ -105,7 +106,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
             new FkRegex(".*/tokenInfo",
                     new RequiresParam("access_token",
                             new InstantaneousRequestController(
-                                    new TokenInfoController(config.tokens(), config.identityFinder(), new JjwtIdTokenFactory(config.keyStore()))
+                                    new TokenInfoController(config.tokens(), config.identityFinder(), idTokenFactory)
                             )
                     )
             ),

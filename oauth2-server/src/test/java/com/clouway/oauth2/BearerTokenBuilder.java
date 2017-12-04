@@ -16,10 +16,12 @@ public class BearerTokenBuilder {
   }
 
   private String clientId = "";
+  private String identityId = "";
+  private GrantType grantType = GrantType.AUTHORIZATION_CODE;
   private DateTime expiresAt = new DateTime();
   private String value;
   private String email = "";
-  private Map<String, String> params;
+  private Map<String, String> params = Collections.emptyMap();
 
   public BearerTokenBuilder withValue(String value) {
     this.value = value;
@@ -41,8 +43,18 @@ public class BearerTokenBuilder {
     return this;
   }
 
+  public BearerTokenBuilder identityId(String identityId){
+    this.identityId = identityId;
+    return this;
+  }
+
+  public BearerTokenBuilder grantType(GrantType grantType){
+    this.grantType = grantType;
+    return this;
+  }
+
   public BearerToken build() {
-    return new BearerToken(value, GrantType.AUTHORIZATION_CODE, "", clientId, email, Collections.<String>emptySet(), expiresAt, params);
+    return new BearerToken(value, grantType, identityId, clientId, email, Collections.<String>emptySet(), expiresAt, params);
   }
 
   public BearerTokenBuilder forClient(String clientId) {

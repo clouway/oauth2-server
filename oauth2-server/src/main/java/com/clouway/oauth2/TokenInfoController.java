@@ -20,12 +20,12 @@ import java.util.Map;
 class TokenInfoController implements InstantaneousRequest {
   private final Tokens tokens;
   private final IdentityFinder identityFinder;
-  private final IdTokenFactory idIdTokenFactory;
+  private final IdTokenFactory idTokenFactory;
 
-  TokenInfoController(Tokens tokens, IdentityFinder identityFinder, IdTokenFactory idIdTokenFactory) {
+  TokenInfoController(Tokens tokens, IdentityFinder identityFinder, IdTokenFactory idTokenFactory) {
     this.tokens = tokens;
     this.identityFinder = identityFinder;
-    this.idIdTokenFactory = idIdTokenFactory;
+    this.idTokenFactory = idTokenFactory;
   }
 
   @Override
@@ -42,7 +42,7 @@ class TokenInfoController implements InstantaneousRequest {
     Optional<Identity> possibleIdentity = identityFinder.findIdentity(token.identityId, token.grantType, instantTime, params);
     Identity identity = possibleIdentity.get();
     String host = request.header("Host");
-    Optional<String> possibleIdToken = idIdTokenFactory.create(host, token.clientId, identity,
+    Optional<String> possibleIdToken = idTokenFactory.create(host, token.clientId, identity,
             token.ttlSeconds(instantTime), instantTime);
 
     JsonObject o = new JsonObject();
