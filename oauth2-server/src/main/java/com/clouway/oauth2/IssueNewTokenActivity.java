@@ -21,11 +21,11 @@ import java.util.Set;
  */
 class IssueNewTokenActivity implements AuthorizedClientActivity {
   private final Tokens tokens;
-  private final IdTokenFactory idIdTokenFactory;
+  private final IdTokenFactory idTokenFactory;
 
-  IssueNewTokenActivity(Tokens tokens, IdTokenFactory idIdTokenFactory) {
+  IssueNewTokenActivity(Tokens tokens, IdTokenFactory idTokenFactory) {
     this.tokens = tokens;
-    this.idIdTokenFactory = idIdTokenFactory;
+    this.idTokenFactory = idTokenFactory;
   }
 
   @Override
@@ -36,7 +36,7 @@ class IssueNewTokenActivity implements AuthorizedClientActivity {
     }
 
     BearerToken accessToken = response.accessToken;
-    Optional<String> possibleIdToken = idIdTokenFactory.create(
+    Optional<String> possibleIdToken = idTokenFactory.create(
             request.header("Host"),
             client.id,
             identity,
