@@ -91,7 +91,9 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                     signatureFactory,
                                                     config.tokens(),
                                                     config.jwtKeyStore(),
-                                                    config.identityFinder())))
+                                                    config.identityFinder(),
+                                                    idTokenFactory
+                                            )))
                             ))
             ),
             new FkRegex(".*/revoke",
