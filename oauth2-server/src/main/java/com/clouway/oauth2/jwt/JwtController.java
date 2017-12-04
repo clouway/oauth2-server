@@ -3,6 +3,7 @@ package com.clouway.oauth2.jwt;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.BearerTokenResponse;
+import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.util.Params;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
@@ -40,12 +41,14 @@ public class JwtController implements InstantaneousRequest {
   private final Tokens tokens;
   private final JwtKeyStore keyStore;
   private final IdentityFinder identityFinder;
+  private final IdTokenFactory idTokenFactory;
 
-  public JwtController(SignatureFactory signatureFactory, Tokens tokens, JwtKeyStore keyStore, IdentityFinder identityFinder) {
+  public JwtController(SignatureFactory signatureFactory, Tokens tokens, JwtKeyStore keyStore, IdentityFinder identityFinder, IdTokenFactory idTokenFactory) {
     this.signatureFactory = signatureFactory;
     this.tokens = tokens;
     this.keyStore = keyStore;
     this.identityFinder = identityFinder;
+    this.idTokenFactory = idTokenFactory;
   }
 
   @Override
@@ -109,8 +112,10 @@ public class JwtController implements InstantaneousRequest {
     }
 
     BearerToken accessToken = response.accessToken;
-
+    Optional<String> possibleIdToken = idTokenFactory.create(request.header("Host"), client.id, identity, accessToken.ttlSeconds(instant), instant);
+    if (possibleIdToken.isPresent()) {
+      return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken, possibleIdToken.get());
+    }
     return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken);
   }
-
 }
