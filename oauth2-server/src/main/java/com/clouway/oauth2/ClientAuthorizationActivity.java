@@ -5,8 +5,10 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsRedirect;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.authorization.AuthorizationRequest;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientFinder;
+import com.clouway.oauth2.codechallenge.CodeChallenge;
 import com.clouway.oauth2.util.Params;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -35,6 +37,9 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String requestedUrl = request.param("redirect_uri");
     String state = request.param("state");
     String scope = request.param("scope") == null ? "" : request.param("scope");
+    String codeChallengeValue = request.param("code_challenge") == null ? "" : request.param("code_challenge");
+    String codeVerifierMethod = request.param("code_challenge_method") == null ? "" : request.param("code_challenge_method");
+    CodeChallenge codeChallenge = new CodeChallenge(codeChallengeValue, codeVerifierMethod);
 
     Map<String, String> params = new Params().parse(request, "response_type", "client_id", "redirect_uri", "state", "scope");
 
@@ -53,7 +58,8 @@ class ClientAuthorizationActivity implements IdentityActivity {
     }
 
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
-    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(client, identityId, scopes, responseType);
+
+    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(new AuthorizationRequest(client, identityId, responseType, scopes, codeChallenge));
 
     // RFC-6749 - Section: 4.2.2.1
     // The authorization server redirects the user-agent by

@@ -19,7 +19,7 @@ import java.util.Set;
  *
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-class IssueNewTokenActivity implements AuthorizedClientActivity {
+class IssueNewTokenActivity implements AuthorizedIdentityActivity {
   private final Tokens tokens;
   private final IdTokenFactory idTokenFactory;
 

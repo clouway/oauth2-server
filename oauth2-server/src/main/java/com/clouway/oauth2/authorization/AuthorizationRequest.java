@@ -1,38 +1,44 @@
 package com.clouway.oauth2.authorization;
 
+import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.codechallenge.CodeChallenge;
+import com.google.common.base.Objects;
+
+import java.util.Set;
+
 /**
- * @author Ivan Stefanov <ivan.stefanov@clouway.com>
+ * @author Vasil Mitov <vasil.mitov@clouway.com>
  */
 public class AuthorizationRequest {
+  public final Client client;
+  public final String identityId;
   public final String responseType;
-  public final String clientId;
-  public final String sessionId;
+  public final Set<String> scopes;
+  //Nullable
+  public final CodeChallenge codeChallenge;
 
-  public AuthorizationRequest(String responseType, String clientId, String sessionId) {
+  public AuthorizationRequest(Client client, String identityId, String responseType, Set<String> scopes, CodeChallenge codeChallenge) {
+    this.client = client;
+    this.identityId = identityId;
     this.responseType = responseType;
-    this.clientId = clientId;
-    this.sessionId = sessionId;
+    this.scopes = scopes;
+    this.codeChallenge = codeChallenge;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof AuthorizationRequest)) return false;
-
+    if (o == null || getClass() != o.getClass()) return false;
     AuthorizationRequest that = (AuthorizationRequest) o;
-
-    if (clientId != null ? !clientId.equals(that.clientId) : that.clientId != null) return false;
-    if (responseType != null ? !responseType.equals(that.responseType) : that.responseType != null) return false;
-    if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
-
-    return true;
+    return Objects.equal(client, that.client) &&
+            Objects.equal(identityId, that.identityId) &&
+            Objects.equal(responseType, that.responseType) &&
+            Objects.equal(scopes, that.scopes) &&
+            Objects.equal(codeChallenge, that.codeChallenge);
   }
 
   @Override
   public int hashCode() {
-    int result = responseType != null ? responseType.hashCode() : 0;
-    result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
-    result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
-    return result;
+    return Objects.hashCode(client, identityId, responseType, scopes, codeChallenge);
   }
 }

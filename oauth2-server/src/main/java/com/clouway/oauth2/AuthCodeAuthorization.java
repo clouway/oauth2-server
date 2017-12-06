@@ -5,26 +5,18 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
-import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.util.Params;
 import com.google.common.base.Optional;
 
-import java.util.Map;
-
 /**
- * @author Miroslav Genov (miroslav.genov@clouway.com)
+ * @author Vasil Mitov <vasil.mitov@clouway.com>
  */
-class AuthCodeAuthorization implements ClientActivity {
-
+public class AuthCodeAuthorization implements ClientActivity {
   private final ClientAuthorizationRepository clientAuthorizationRepository;
-  private final IdentityFinder identityFinder;
-  private final AuthorizedClientActivity authorizedClientActivity;
+  private final AuthorizedClientActivity clientActivity;
 
-  AuthCodeAuthorization(ClientAuthorizationRepository clientAuthorizationRepository, IdentityFinder identityFinder, AuthorizedClientActivity authorizedClientActivity) {
+  public AuthCodeAuthorization(ClientAuthorizationRepository clientAuthorizationRepository, AuthorizedClientActivity clientActivity) {
     this.clientAuthorizationRepository = clientAuthorizationRepository;
-    this.identityFinder = identityFinder;
-    this.authorizedClientActivity = authorizedClientActivity;
+    this.clientActivity = clientActivity;
   }
 
   @Override
@@ -39,14 +31,6 @@ class AuthCodeAuthorization implements ClientActivity {
 
     Authorization authorization = possibleAuthorization.get();
 
-    Map<String, String> params  = new Params().parse(request, "code");
-
-    Optional<Identity> possibleIdentity = identityFinder.findIdentity(authorization.identityId, GrantType.AUTHORIZATION_CODE, instant, params);
-    if (!possibleIdentity.isPresent()) {
-      return OAuthError.invalidGrant("identity was not found");
-    }
-
-    Identity identity = possibleIdentity.get();
-    return authorizedClientActivity.execute(client, identity, authorization.scopes, request, instant, params);
+    return clientActivity.execute(authorization, client, request, instant);
   }
 }
