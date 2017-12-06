@@ -3,6 +3,7 @@ package com.clouway.oauth2.exampleapp.storage;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.authorization.AuthorizationRequest;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.token.TokenGenerator;
 import com.google.common.base.Optional;
@@ -10,7 +11,6 @@ import com.google.common.collect.Maps;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -45,10 +45,17 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
   }
 
   @Override
-  public Optional<Authorization> authorize(Client client, String identityId, Set<String> scopes, String responseType) {
+  public Optional<Authorization> authorize(AuthorizationRequest authorizationRequest) {
     String code = tokenGenerator.generate();
 
-    Authorization authorization = new Authorization(responseType, client.id, identityId, code, scopes, client.redirectURLs);
+    Authorization authorization = new Authorization(
+            authorizationRequest.responseType,
+            authorizationRequest.client.id,
+            authorizationRequest.identityId,
+            code,
+            authorizationRequest.scopes,
+            authorizationRequest.client.redirectURLs,
+            authorizationRequest.codeChallenge);
     register(authorization);
 
     return Optional.of(authorization);

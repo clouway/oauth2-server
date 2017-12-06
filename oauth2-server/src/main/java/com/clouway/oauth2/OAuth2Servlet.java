@@ -6,6 +6,7 @@ import com.clouway.friendlyserve.RequiresHeader;
 import com.clouway.friendlyserve.RequiresParam;
 import com.clouway.friendlyserve.TkFork;
 import com.clouway.friendlyserve.servlets.ServletApiSupport;
+import com.clouway.oauth2.codechallenge.AuthorizationCodeVerifier;
 import com.clouway.oauth2.jws.RsaJwsSignature;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
@@ -64,12 +65,17 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                             config.clientFinder(),
                                                             new AuthCodeAuthorization(
                                                                     config.clientAuthorizationRepository(),
-                                                                    config.identityFinder(),
-                                                                    new IssueNewTokenActivity(
-                                                                            config.tokens(),
-                                                                            idTokenFactory
+                                                                    new CodeExchangeVerificationFlow(
+                                                                            new AuthorizationCodeVerifier(),
+                                                                            new IdentityAuthorizationActivity(
+                                                                                    config.identityFinder(),
+                                                                                    new IssueNewTokenActivity(
+                                                                                            config.tokens(),
+                                                                                            idTokenFactory)
+                                                                            )
                                                                     )
                                                             )
+
                                                     )
                                             ))
                             ),
@@ -79,7 +85,7 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                                     new ClientAuthenticationCredentialsRequest(
                                                             new ClientController(
                                                                     config.clientFinder(),
-                                                                    new RefreshTokenActivity(config.tokens(),idTokenFactory,config.identityFinder())
+                                                                    new RefreshTokenActivity(config.tokens(), idTokenFactory, config.identityFinder())
                                                             ))
 
                                             )

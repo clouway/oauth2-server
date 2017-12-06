@@ -1,5 +1,7 @@
 package com.clouway.oauth2.authorization;
 
+import com.clouway.oauth2.codechallenge.CodeChallenge;
+
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -14,8 +16,19 @@ public class Authorization {
   public final Set<String> scopes;
   public final Set<String> redirectUrls;
   public final String identityId;
+  public final CodeChallenge codeChallenge;
 
   private Date usageDate = null;
+
+  public Authorization(String responseType, String clientId, String identityId, String code, Set<String> scopes, Set<String> redirectUrls, CodeChallenge codeChallenge) {
+    this.responseType = responseType;
+    this.clientId = clientId;
+    this.code = code;
+    this.scopes = scopes;
+    this.redirectUrls = redirectUrls;
+    this.identityId = identityId;
+    this.codeChallenge = codeChallenge;
+  }
 
   public Authorization(String responseType, String clientId, String identityId, String code, Set<String> scopes, Set<String> redirectUrls) {
     this.responseType = responseType;
@@ -24,6 +37,7 @@ public class Authorization {
     this.scopes = scopes;
     this.redirectUrls = redirectUrls;
     this.identityId = identityId;
+    this.codeChallenge = null;
   }
 
   public void usedOn(Date date) {

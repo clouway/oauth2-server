@@ -5,8 +5,10 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.Status;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.authorization.AuthorizationRequest;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientFinder;
+import com.clouway.oauth2.codechallenge.CodeChallenge;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -21,7 +23,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Set;
 
 import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
@@ -49,6 +50,8 @@ public class ResourceOwnerClientAuthorizationTest {
     activity = new ClientAuthorizationActivity(clientFinder, clientAuthorizationRepository);
   }
 
+  private final CodeChallenge emptyCodeChallenge = new CodeChallenge("", "");
+
   @Test
   public void happyPath() throws IOException {
     Request authRequest = aNewRequest().params(
@@ -60,7 +63,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.<String>emptySet(), "code");
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge));
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
@@ -89,7 +92,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(with(any(Client.class)), with(any(String.class)), with(any(Set.class)), with(any(String.class)));
+      oneOf(clientAuthorizationRepository).authorize(with(any(AuthorizationRequest.class)));
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
@@ -116,7 +119,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.singleton("abc"), "code");
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.singleton("abc"), emptyCodeChallenge));
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
@@ -139,7 +142,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), "code");
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), emptyCodeChallenge));
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
@@ -157,7 +160,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "user1", Collections.<String>emptySet(), "code");
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge));
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
     }});
 
@@ -180,7 +183,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(anyExistingClient, "::identity_id::", Collections.<String>emptySet(), "code");
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "::identity_id::", "code", Collections.<String>emptySet(), emptyCodeChallenge));
       will(returnValue(Optional.absent()));
     }});
 
@@ -228,4 +231,21 @@ public class ResourceOwnerClientAuthorizationTest {
     assertThat(status.code, is(HttpURLConnection.HTTP_BAD_REQUEST));
   }
 
+  @Test
+  public void authorizeWithCodeChallenge() throws Exception {
+    Request authRequest = aNewRequest().params(
+            ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "http://example.com/callback", "code_challenge", "::code_challenge::", "code_challenge_method", "::chosenMethod::")
+    ).build();
+    final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
+
+    context.checking(new Expectations() {{
+      oneOf(clientFinder).findClient("::client_id::");
+      will(returnValue(Optional.of(anyExistingClient)));
+
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), new CodeChallenge("::code_challenge::", "::chosenMethod::")));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), new CodeChallenge("::code_challenge::", "::chosenMethod::")))));
+    }});
+
+    activity.execute("user1", authRequest);
+  }
 }
