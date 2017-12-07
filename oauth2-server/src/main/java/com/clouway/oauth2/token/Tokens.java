@@ -35,15 +35,16 @@ public interface Tokens {
   /**
    * Issues a new token for the provided identity.
    *
-   * @param grantType  type of the taken to be issued - JWT or Bearer
-   * @param client     the client to which token will be issued
-   * @param identity   the identity for which token was issued
-   * @param scopes     requested scopes
-   * @param when       the requested time on which it should be issued
-   * @param params
+   * @param tokenRequest:
+   *  grantType  type of the taken to be issued - JWT or Bearer
+   *  client     the client to which token will be issued
+   *  identity   the identity for which token was issued
+   *  scopes     requested scopes
+   *  when       the requested time on which it should be issued
+   *  params
    * @return the newly issued token
    */
-  TokenResponse issueToken(GrantType grantType, Client client, Identity identity, Set<String> scopes, DateTime when, Map<String, String> params);
+  TokenResponse issueToken(TokenRequest tokenRequest);
 
   /**
    * Revokes token from repository.

@@ -8,6 +8,7 @@ import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.IdTokenFactory;
+import com.clouway.oauth2.token.TokenRequest;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
@@ -26,6 +27,7 @@ import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
 import static com.clouway.oauth2.authorization.AuthorizationBuilder.newAuthorization;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
+import static com.clouway.oauth2.token.TokenRequest.newTokenRequest;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -63,7 +65,7 @@ public class IssueNewTokenForClientTest {
               with(any(Long.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of("::base64.encoded.idToken::")));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
+      oneOf(tokens).issueToken(with(any(TokenRequest.class)));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
     }});
 
@@ -90,7 +92,7 @@ public class IssueNewTokenForClientTest {
               with(any(Long.class)), with(any(DateTime.class)));
       will(returnValue(Optional.absent()));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
+      oneOf(tokens).issueToken(with(any(TokenRequest.class)));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::token::").build(), "::refresh token::")));
     }});
 
@@ -109,7 +111,7 @@ public class IssueNewTokenForClientTest {
     final Identity identity = aNewIdentity().withId("::user_id::").build();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
+      oneOf(tokens).issueToken(with(any(TokenRequest.class)));
       will(returnValue(new TokenResponse(false, null, "")));
     }});
 
@@ -128,7 +130,15 @@ public class IssueNewTokenForClientTest {
     final Authorization authorization = newAuthorization().build();
 
     context.checking(new Expectations() {{
-      oneOf(tokens).issueToken(GrantType.AUTHORIZATION_CODE, client, identity, authorization.scopes, anyTime, ImmutableMap.of("::index::", "::1::"));
+      oneOf(tokens).issueToken(
+              newTokenRequest()
+                      .grantType(GrantType.AUTHORIZATION_CODE)
+                      .client(client)
+                      .identity(identity)
+                      .scopes(authorization.scopes)
+                      .when(anyTime)
+                      .params(ImmutableMap.of("::index::", "::1::"))
+                      .build());
       will(returnValue(new TokenResponse(false, null, "")));
     }});
 

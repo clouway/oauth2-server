@@ -7,6 +7,7 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenGenerator;
+import com.clouway.oauth2.token.TokenRequest;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
@@ -72,11 +73,11 @@ class InMemoryTokens implements Tokens {
   }
 
   @Override
-  public TokenResponse issueToken(GrantType grantType, Client client, Identity identity, Set<String> scopes, DateTime when, Map<String, String> params) {
+  public TokenResponse issueToken(TokenRequest tokenRequest) {
     String token = tokenGenerator.generate();
     String refreshTokenValue = tokenGenerator.generate();
 
-    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, identity.id(), client.id, identity.email(), scopes, when, params);
+    BearerToken bearerToken = new BearerToken(token, GrantType.JWT, tokenRequest.identity.id(), tokenRequest.client.id, tokenRequest.identity.email(), tokenRequest.scopes, tokenRequest.when, tokenRequest.params);
     tokens.put(token, bearerToken);
 
     return new TokenResponse(true, bearerToken, refreshTokenValue);

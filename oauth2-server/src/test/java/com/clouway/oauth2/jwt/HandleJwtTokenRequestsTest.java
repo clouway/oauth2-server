@@ -12,6 +12,7 @@ import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.IdTokenFactory;
+import com.clouway.oauth2.token.TokenRequest;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
@@ -33,6 +34,7 @@ import java.util.Set;
 import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
 import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
 import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
+import static com.clouway.oauth2.token.TokenRequest.newTokenRequest;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -92,7 +94,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(idTokenFactory).create(with(any(String.class)),with(any(String.class)),with(any(Identity.class)),with(any(Long.class)),with(any(DateTime.class)));
       will(returnValue(Optional.of("::id_token::")));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
+      oneOf(tokens).issueToken(with(any(TokenRequest.class)));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyInstantTime.plusSeconds(1000)).build(), "::refresh_token::")));
     }});
 
@@ -125,7 +127,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(idTokenFactory).create(with(any(String.class)),with(any(String.class)),with(any(Identity.class)),with(any(Long.class)),with(any(DateTime.class)));
       will(returnValue(Optional.absent()));
 
-      oneOf(tokens).issueToken(with(any(GrantType.class)), with(any(Client.class)), with(any(Identity.class)), with(any(Set.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
+      oneOf(tokens).issueToken(with(any(TokenRequest.class)));
       will(returnValue(new TokenResponse(true, aNewToken().withValue("::access_token::").expiresAt(anyInstantTime.plusSeconds(1000)).build(), "::refresh_token::")));
     }});
 
@@ -184,7 +186,14 @@ public class HandleJwtTokenRequestsTest {
       will(returnValue(Optional.of(identity)));
 
       oneOf(tokens).issueToken(
-              GrantType.JWT, jwtClient, identity, Sets.newHashSet("CanDoX", "CanDoY"), anyInstantTime, Maps.<String, String>newHashMap());
+              newTokenRequest()
+                      .grantType(GrantType.JWT)
+                      .client(jwtClient)
+                      .identity(identity)
+                      .scopes(Sets.newHashSet("CanDoX", "CanDoY"))
+                      .when(anyInstantTime)
+                      .params(Maps.<String, String>newHashMap())
+                      .build());
       will(returnValue(new TokenResponse(true, aNewToken().build(), "")));
 
       oneOf(idTokenFactory).create(with(any(String.class)),with(any(String.class)),with(any(Identity.class)),with(any(Long.class)),with(any(DateTime.class)));
@@ -216,7 +225,14 @@ public class HandleJwtTokenRequestsTest {
       will(returnValue(Optional.of(identity)));
 
       oneOf(tokens).issueToken(
-              GrantType.JWT, jwtClient, identity, Sets.newHashSet("CanDoX", "CanDoY"), anyInstantTime, ImmutableMap.of("::index::", "::1::"));
+              newTokenRequest()
+                      .grantType(GrantType.JWT)
+                      .client(jwtClient)
+                      .identity(identity)
+                      .scopes(Sets.newHashSet("CanDoX", "CanDoY"))
+                      .when(anyInstantTime)
+                      .params(ImmutableMap.of("::index::", "::1::"))
+                      .build());
       will(returnValue(new TokenResponse(true, aNewToken().build(), "")));
 
       oneOf(idTokenFactory).create(with(any(String.class)),with(any(String.class)),with(any(Identity.class)),with(any(Long.class)),with(any(DateTime.class)));

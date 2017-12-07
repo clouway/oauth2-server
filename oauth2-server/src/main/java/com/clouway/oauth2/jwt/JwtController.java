@@ -3,8 +3,6 @@ package com.clouway.oauth2.jwt;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.BearerTokenResponse;
-import com.clouway.oauth2.token.IdTokenFactory;
-import com.clouway.oauth2.util.Params;
 import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.InstantaneousRequest;
@@ -16,9 +14,11 @@ import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
+import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.util.Params;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.clouway.oauth2.token.TokenRequest.newTokenRequest;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -105,7 +107,16 @@ public class JwtController implements InstantaneousRequest {
 
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
     Client client = new Client(claimSet.iss, "", "", Collections.<String>emptySet(), false);
-    TokenResponse response = tokens.issueToken(GrantType.JWT, client, identity, scopes, instant, params);
+
+    TokenResponse response = tokens.issueToken(
+            newTokenRequest()
+                    .grantType(GrantType.JWT)
+                    .client(client)
+                    .identity(identity)
+                    .scopes(scopes)
+                    .when(instant)
+                    .params(params)
+                    .build());
 
     if (!response.isSuccessful()) {
       return OAuthError.invalidRequest("tokens issuing is temporary unavailable");
