@@ -13,6 +13,8 @@ import com.google.common.base.Optional;
 import java.util.Map;
 import java.util.Set;
 
+import static com.clouway.oauth2.token.TokenRequest.newTokenRequest;
+
 
 /**
  * IssueNewTokenActivity is representing the activity which is performed for issuing of new token.
@@ -30,7 +32,16 @@ class IssueNewTokenActivity implements AuthorizedIdentityActivity {
 
   @Override
   public Response execute(Client client, Identity identity, Set<String> scopes, Request request, DateTime instant, Map<String, String> params) {
-    TokenResponse response = tokens.issueToken(GrantType.AUTHORIZATION_CODE, client, identity, scopes, instant, params);
+    TokenResponse response = tokens.issueToken(
+            newTokenRequest()
+                    .grantType(GrantType.AUTHORIZATION_CODE)
+                    .client(client)
+                    .identity(identity)
+                    .scopes(scopes)
+                    .when(instant)
+                    .params(params)
+                    .build());
+
     if (!response.isSuccessful()) {
       return OAuthError.invalidRequest("Token cannot be issued.");
     }
@@ -47,7 +58,7 @@ class IssueNewTokenActivity implements AuthorizedIdentityActivity {
     if (possibleIdToken.isPresent()) {
       return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken, possibleIdToken.get());
     }
-    
+
     return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), accessToken.scopes, response.refreshToken);
   }
 }

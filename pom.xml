@@ -59,6 +59,15 @@
     </dependencies>
   </dependencyManagement>
 
+  <dependencies>
+    <dependency>
+      <groupId>nl.jqno.equalsverifier</groupId>
+      <artifactId>equalsverifier</artifactId>
+      <version>2.4</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
   <build>
     <pluginManagement>
       <plugins>
