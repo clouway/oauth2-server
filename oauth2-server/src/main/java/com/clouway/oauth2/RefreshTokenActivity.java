@@ -31,7 +31,7 @@ class RefreshTokenActivity implements ClientActivity {
 
     TokenResponse response = tokens.refreshToken(refreshToken, instant);
     if (!response.isSuccessful()) {
-      return OAuthError.invalidGrant();
+      return OAuthError.invalidGrant("Provided refresh_token was not found.");
     }
     BearerToken accessToken = response.accessToken;
 

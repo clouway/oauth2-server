@@ -28,18 +28,18 @@ class RevokeTokenController implements ClientRequest {
 
     Optional<BearerToken> possibleToken = tokens.findTokenAvailableAt(token, instant);
     if (!possibleToken.isPresent()) {
-      return OAuthError.invalidRequest();
+      return OAuthError.invalidRequest("Token was not found.");
     }
 
     Optional<Client> possibleClient = clientFinder.findClient(possibleToken.get().clientId);
     if (!possibleClient.isPresent()) {
-      return OAuthError.invalidClient();
+      return OAuthError.unauthorizedClient("A client with id:" + possibleToken.get().clientId + " was either not found or is not authorized.");
     }
 
     Client client = possibleClient.get();
 
     if (!client.credentialsMatch(credentials)) {
-      return OAuthError.invalidClient();
+      return OAuthError.unauthorizedClient("Client credentials mismatch.");
     }
 
     tokens.revokeToken(token);

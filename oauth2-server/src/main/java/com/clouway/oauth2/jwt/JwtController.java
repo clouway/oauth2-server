@@ -86,13 +86,13 @@ public class JwtController implements InstantaneousRequest {
 
     // Unknown signture was provided, so we are returning request as invalid.
     if (!optSignature.isPresent()) {
-      return OAuthError.invalidRequest();
+      return OAuthError.invalidRequest("Unknown signature was provided.");
     }
 
     byte[] headerAndContentAsBytes = String.format("%s.%s", parts.get(0), parts.get(1)).getBytes();
 
     if (!optSignature.get().verifyWithPrivateKey(headerAndContentAsBytes, serviceAccountKey)) {
-      return OAuthError.invalidGrant();
+      return OAuthError.invalidGrant("Invalid signature was provided.");
     }
 
     Map<String, String> params = new Params().parse(request, "assertion", "scope");

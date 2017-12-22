@@ -4,8 +4,8 @@ import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsRedirect;
 import com.clouway.oauth2.authorization.Authorization;
-import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.authorization.AuthorizationRequest;
+import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.codechallenge.CodeChallenge;
@@ -46,7 +46,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     Optional<Client> possibleClientResponse = clientFinder.findClient(clientId);
 
     if (!possibleClientResponse.isPresent()) {
-      return OAuthError.unauthorizedClient();
+      return OAuthError.unauthorizedClient(String.format("Unknown client '%s'", clientId));
     }
 
     Client client = possibleClientResponse.get();

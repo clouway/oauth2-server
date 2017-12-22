@@ -64,7 +64,7 @@ public class RevokeTokensTest {
     Response response = controller.handleAsOf(
             newTokenRequest("::any token::"), new ClientCredentials("::client x::", "::client secret::"), anyInstantenousTime);
 
-    assertThat(new RsPrint(response).print(), is(equalTo(new RsPrint(OAuthError.invalidRequest()).print())));
+    assertThat(new RsPrint(response).print(), is(equalTo(new RsPrint(OAuthError.invalidRequest("Token was not found.")).print())));
   }
 
   @Test
@@ -80,7 +80,7 @@ public class RevokeTokensTest {
     Response response = controller.handleAsOf(
             newTokenRequest("::any token::"), new ClientCredentials("::client x::", "::broken client secret::"), anyInstantenousTime);
 
-    assertThat(new RsPrint(response).print(), is(equalTo(new RsPrint(OAuthError.invalidClient()).print())));
+    assertThat(new RsPrint(response).print(), is(equalTo(new RsPrint(OAuthError.unauthorizedClient("A client with id:::client x:: was either not found or is not authorized.")).print())));
   }
 
   @Test
@@ -96,7 +96,7 @@ public class RevokeTokensTest {
     Response response = controller.handleAsOf(
             newTokenRequest("::any token::"), new ClientCredentials("::client x::", "::broken client secret::"), anyInstantenousTime);
 
-    assertThat(new RsPrint(response).print(), is(equalTo(new RsPrint(OAuthError.invalidClient()).print())));
+    assertThat(new RsPrint(response).print(), is(equalTo(new RsPrint(OAuthError.unauthorizedClient("Client credentials mismatch.")).print())));
   }
 
 
