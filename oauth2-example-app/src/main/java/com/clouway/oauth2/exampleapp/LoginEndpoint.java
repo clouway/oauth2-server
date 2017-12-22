@@ -6,6 +6,9 @@ import com.google.inject.Inject;
 import com.google.sitebricks.Show;
 import com.google.sitebricks.http.Post;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginEndpoint {
   private String username;
   private String password;
+  private String errormessage;
 
   private ResourceOwnerAuthentication authentication;
 
@@ -24,7 +28,7 @@ public class LoginEndpoint {
   public LoginEndpoint(ResourceOwnerAuthentication authentication) {
     this.authentication = authentication;
   }
-
+  
   @Post
   public String login(HttpServletRequest request, HttpServletResponse response) {
     Optional<Session> session = authentication.auth(username, password, request.getRemoteAddr());
@@ -37,9 +41,19 @@ public class LoginEndpoint {
       sid.setPath("/");
 
       response.addCookie(sid);
+      
+      return continueUrl;
+    } else {
+        try {
+			return request.getRequestURI() +					
+					"?continue="+URLEncoder.encode(continueUrl,"UTF-8")+
+				  "&errormessage="+URLEncoder.encode("Invalid username or password","UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return request.getRequestURI() +
+					"?continue="+URLEncoder.encode(continueUrl)+
+					  "&errormessage="+URLEncoder.encode("Invalid username or password");
+		}
     }
-
-    return continueUrl;
   }
 
   public void setUsername(String username) {
@@ -50,4 +64,11 @@ public class LoginEndpoint {
     this.password = password;
   }
 
+  public String getErrormessage() {
+	return errormessage;
+  }
+
+  public void setErrormessage(String errormessage) {
+	this.errormessage = errormessage;
+  }
 }

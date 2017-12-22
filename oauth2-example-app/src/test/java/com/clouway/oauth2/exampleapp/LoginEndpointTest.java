@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
@@ -59,6 +61,7 @@ public class LoginEndpointTest {
       will(Expectations.returnValue(remoteAddress));
       oneOf(request).getParameter("continue");
       will(returnValue("/xxx"));
+      oneOf(request).getRequestURI();
       oneOf(authentication).auth("Grigor", "dimitrov", remoteAddress);
       will(Expectations.returnValue(Optional.absent()));
     }});
@@ -68,7 +71,8 @@ public class LoginEndpointTest {
     String redirectPage = endpoint.login(request, response);
 
     response.assertDoesNotExist("SID");
-    assertThat(redirectPage, is("/xxx"));
+    assertTrue(redirectPage.contains("?continue"));
+    assertTrue(redirectPage.endsWith("&errormessage=Invalid+username+or+password"));
   }
 
   private void pretendThatUserIsAuthorisedWith(String username, String password) {
