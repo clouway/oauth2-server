@@ -34,7 +34,7 @@ class TokenInfoController implements InstantaneousRequest {
 
     Optional<BearerToken> possibleToken = tokens.findTokenAvailableAt(accessToken, instantTime);
     if (!possibleToken.isPresent()) {
-      return OAuthError.invalidRequest();
+      return OAuthError.invalidRequest("Access token not found");
     }
 
     BearerToken token = possibleToken.get();

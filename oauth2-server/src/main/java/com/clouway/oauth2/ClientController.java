@@ -25,14 +25,14 @@ class ClientController implements ClientRequest {
 
     // Client was not authorized
     if (!possibleResponse.isPresent()) {
-      return OAuthError.unauthorizedClient();
+      return OAuthError.unauthorizedClient(String.format("Unknown client '%s'", credentials.clientId()));
     }
 
     Client client = possibleResponse.get();
 
     // Client credentials did not match?
     if (!client.credentialsMatch(credentials)) {
-      return OAuthError.unauthorizedClient();
+      return OAuthError.unauthorizedClient(String.format("Unknown client '%s'", credentials.clientId()));
     }
 
     return clientActivity.execute(client, request, instant);

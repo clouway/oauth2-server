@@ -25,6 +25,10 @@ public final class OAuthError extends RsWrap {
     return new OAuthError("invalid_client", HttpURLConnection.HTTP_BAD_REQUEST);
   }
 
+  public static OAuthError invalidClient(String description) {
+    return new OAuthError(HttpURLConnection.HTTP_BAD_REQUEST,"invalid_client",description);
+  }
+
   public static OAuthError unauthorizedClient() {
     return new OAuthError("unauthorized_client", HttpURLConnection.HTTP_BAD_REQUEST);
   }
@@ -47,6 +51,10 @@ public final class OAuthError extends RsWrap {
 
   public static OAuthError invalidToken() {
     return new OAuthError(HttpURLConnection.HTTP_UNAUTHORIZED, "invalid_token", "Invalid Credentials");
+  }
+
+  public static OAuthError invalidToken(String description) {
+    return new OAuthError(HttpURLConnection.HTTP_UNAUTHORIZED, "invalid_token", description);
   }
 
   private OAuthError(String errorName, int responseCode) {

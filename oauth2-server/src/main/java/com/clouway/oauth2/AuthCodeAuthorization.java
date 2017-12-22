@@ -26,7 +26,7 @@ public class AuthCodeAuthorization implements ClientActivity {
     Optional<Authorization> possibleAuthorization = clientAuthorizationRepository.findAuthorization(client, authCode, instant);
 
     if (!possibleAuthorization.isPresent()) {
-      return OAuthError.invalidGrant();
+      return OAuthError.invalidGrant("Authorization was not found.");
     }
 
     Authorization authorization = possibleAuthorization.get();

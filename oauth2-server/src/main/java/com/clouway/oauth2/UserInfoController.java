@@ -31,14 +31,14 @@ class UserInfoController implements InstantaneousRequest {
     Optional<BearerToken> possibleTokenResponse = tokens.findTokenAvailableAt(accessToken, instantTime);
 
     if (!possibleTokenResponse.isPresent()) {
-      return OAuthError.invalidToken();
+      return OAuthError.invalidToken("Access token was not found.");
     }
 
     BearerToken token = possibleTokenResponse.get();
 
     Optional<Identity> possibleIdentityResponse = identityFinder.findIdentity(token.identityId, token.grantType, instantTime, token.params);
     if (!possibleIdentityResponse.isPresent()) {
-      return OAuthError.unknownClient();
+      return OAuthError.invalidGrant("Identity was not found.");
     }
 
     Identity identity = possibleIdentityResponse.get();
