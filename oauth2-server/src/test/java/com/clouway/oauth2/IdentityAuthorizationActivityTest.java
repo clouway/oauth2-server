@@ -54,7 +54,7 @@ public class IdentityAuthorizationActivityTest {
       oneOf(identityFinder).findIdentity("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap());
       will(returnValue(Optional.of(identity)));
 
-      oneOf(authorizedIdentityActivity).execute(anyClient, identity, anyAuth.scopes, request, anyInstantTime, Maps.<String, String>newHashMap());
+      oneOf(authorizedIdentityActivity).execute(anyClient, identity, anyAuth.scopes, request, anyInstantTime, anyAuth.params);
       will(returnValue(new RsText("::response::")));
 
     }});
@@ -88,15 +88,13 @@ public class IdentityAuthorizationActivityTest {
   public void identityParamsArePassed() throws Exception {
     final Client anyClient = aNewClient().build();
     final DateTime anyInstantTime = new DateTime();
-    final Authorization anyAuth = newAuthorization().build();
+    final Authorization anyAuth = newAuthorization().addParam("index", "1").build();
 
     context.checking(new Expectations() {{
-      HashMap<String, String> params = Maps.<String, String>newHashMap();
-      params.put("index", "1");
-      oneOf(identityFinder).findIdentity(anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime, params);
+      oneOf(identityFinder).findIdentity(anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime, anyAuth.params);
       will(returnValue(Optional.absent()));
     }});
 
-    identityAuthorizationActivity.execute(anyAuth, anyClient, aNewRequest().param("code", "::any code::").param("index", "1").build(), anyInstantTime);
+    identityAuthorizationActivity.execute(anyAuth, anyClient, aNewRequest().param("code", "::any code::").build(), anyInstantTime);
   }
 }

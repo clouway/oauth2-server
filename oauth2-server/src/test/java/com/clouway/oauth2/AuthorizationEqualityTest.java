@@ -15,32 +15,40 @@ import static org.junit.Assert.assertThat;
 public class AuthorizationEqualityTest {
   @Test
   public void areEqual() {
-    Authorization authorization1 = new Authorization("code", "id", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
-    Authorization authorization2 = new Authorization("code", "id", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
+    Authorization authorization1 = new Authorization("code", "id", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex::"));
+    Authorization authorization2 = new Authorization("code", "id", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex::"));
 
     assertThat(authorization1, is(authorization2));
   }
 
   @Test
   public void idIsNotMatching() {
-    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
-    Authorization authorization2 = new Authorization("code", "id2", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
+    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex::"));
+    Authorization authorization2 = new Authorization("code", "id2", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex::"));
 
     assertThat(authorization1, is(not(authorization2)));
   }
 
   @Test
   public void scopesAreNotMatching() {
-    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
-    Authorization authorization2 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope2"), Collections.singleton("redirectURI"));
+    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex::"));
+    Authorization authorization2 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope2"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex::"));
 
     assertThat(authorization1, is(not(authorization2)));
   }
 
   @Test
   public void redirectURIsAreNotMatching() throws Exception {
-    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"));
-    Authorization authorization2 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI2"));
+    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex::"));
+    Authorization authorization2 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI2"), Collections.singletonMap("customer", "::customerIndex::"));
+
+    assertThat(authorization1, is(not(authorization2)));
+  }
+
+  @Test
+  public void paramsAreNotMatching() throws Exception {
+    Authorization authorization1 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex1::"));
+    Authorization authorization2 = new Authorization("code", "id1", "identityId", "123456", Collections.singleton("scope1"), Collections.singleton("redirectURI"), Collections.singletonMap("customer", "::customerIndex2::"));
 
     assertThat(authorization1, is(not(authorization2)));
   }

@@ -41,7 +41,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String codeVerifierMethod = request.param("code_challenge_method") == null ? "" : request.param("code_challenge_method");
     CodeChallenge codeChallenge = new CodeChallenge(codeChallengeValue, codeVerifierMethod);
 
-    Map<String, String> params = new Params().parse(request, "response_type", "client_id", "redirect_uri", "state", "scope");
+    Map<String, String> params = new Params().parse(request, "response_type", "client_id", "redirect_uri", "state", "scope", "code_challenge", "code_challenge_method");
 
     Optional<Client> possibleClientResponse = clientFinder.findClient(clientId);
 
@@ -59,7 +59,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
 
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
 
-    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(new AuthorizationRequest(client, identityId, responseType, scopes, codeChallenge));
+    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(new AuthorizationRequest(client, identityId, responseType, scopes, codeChallenge, params));
 
     // RFC-6749 - Section: 4.2.2.1
     // The authorization server redirects the user-agent by
@@ -73,19 +73,15 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String callback = possibleRedirectUrl.get();
 
     Authorization authorization = possibleAuthorizationResponse.get();
-    return new RsRedirect(createCallbackUrl(callback, authorization.code, state, params));
+    return new RsRedirect(createCallbackUrl(callback, authorization.code, state));
   }
 
-  private String createCallbackUrl(String callback, String code, String state, Map<String, String> params) {
+  private String createCallbackUrl(String callback, String code, String state) {
     String url;
     if (Strings.isNullOrEmpty(state)) {
       url = String.format("%s?code=%s", callback, code);
     } else {
       url = String.format("%s?code=%s&state=%s", callback, code, state);
-    }
-
-    for (String key : params.keySet()) {
-      url = url + "&" + key + "=" + params.get(key);
     }
 
     return url;
