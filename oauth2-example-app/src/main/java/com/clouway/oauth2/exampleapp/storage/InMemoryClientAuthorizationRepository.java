@@ -55,7 +55,8 @@ class InMemoryClientAuthorizationRepository implements ClientAuthorizationReposi
             code,
             authorizationRequest.scopes,
             authorizationRequest.client.redirectURLs,
-            authorizationRequest.codeChallenge);
+            authorizationRequest.codeChallenge,
+            authorizationRequest.params);
     register(authorization);
 
     return Optional.of(authorization);

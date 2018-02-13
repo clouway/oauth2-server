@@ -3,6 +3,7 @@ package com.clouway.oauth2.authorization;
 import com.clouway.oauth2.codechallenge.CodeChallenge;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,10 +18,11 @@ public class Authorization {
   public final Set<String> redirectUrls;
   public final String identityId;
   public final CodeChallenge codeChallenge;
+  public final Map<String, String> params;
 
   private Date usageDate = null;
 
-  public Authorization(String responseType, String clientId, String identityId, String code, Set<String> scopes, Set<String> redirectUrls, CodeChallenge codeChallenge) {
+  public Authorization(String responseType, String clientId, String identityId, String code, Set<String> scopes, Set<String> redirectUrls, CodeChallenge codeChallenge, Map<String, String> params) {
     this.responseType = responseType;
     this.clientId = clientId;
     this.code = code;
@@ -28,9 +30,10 @@ public class Authorization {
     this.redirectUrls = redirectUrls;
     this.identityId = identityId;
     this.codeChallenge = codeChallenge;
+    this.params = params;
   }
 
-  public Authorization(String responseType, String clientId, String identityId, String code, Set<String> scopes, Set<String> redirectUrls) {
+  public Authorization(String responseType, String clientId, String identityId, String code, Set<String> scopes, Set<String> redirectUrls,  Map<String, String> params) {
     this.responseType = responseType;
     this.clientId = clientId;
     this.code = code;
@@ -38,6 +41,7 @@ public class Authorization {
     this.redirectUrls = redirectUrls;
     this.identityId = identityId;
     this.codeChallenge = null;
+    this.params = params;
   }
 
   public void usedOn(Date date) {
@@ -67,7 +71,9 @@ public class Authorization {
             Objects.equals(scopes, that.scopes) &&
             Objects.equals(redirectUrls, that.redirectUrls) &&
             Objects.equals(identityId, that.identityId) &&
-            Objects.equals(usageDate, that.usageDate);
+            Objects.equals(usageDate, that.usageDate) &&
+            Objects.equals(params, that.params);
+
   }
 
   @Override

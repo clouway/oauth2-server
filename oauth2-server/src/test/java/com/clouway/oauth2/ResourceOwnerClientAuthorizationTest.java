@@ -55,7 +55,7 @@ public class ResourceOwnerClientAuthorizationTest {
   @Test
   public void happyPath() throws IOException {
     Request authRequest = aNewRequest().params(
-            ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "http://example.com/callback")
+            ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "http://example.com/callback", "customer", "::customerIndex::")
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
@@ -63,8 +63,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge, Collections.singletonMap("customer", "::customerIndex::")));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
     }});
 
     Response response = activity.execute("user1", authRequest);
@@ -83,7 +83,8 @@ public class ResourceOwnerClientAuthorizationTest {
                     "response_type", "code",
                     "client_id", "::client_id::",
                     "redirect_uri", "http://example.com/callback",
-                    "state", "abc"
+                    "state", "abc",
+                    "customer", "::customerIndex::"
             )
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
@@ -93,7 +94,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(Optional.of(anyExistingClient)));
 
       oneOf(clientAuthorizationRepository).authorize(with(any(AuthorizationRequest.class)));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
     }});
 
     Response response = activity.execute("user1", authRequest);
@@ -110,7 +111,8 @@ public class ResourceOwnerClientAuthorizationTest {
                     "response_type", "code",
                     "client_id", "::client_id::",
                     "redirect_uri", "http://example.com/callback",
-                    "scope", "abc"
+                    "scope", "abc",
+                    "customer", "::customerIndex::"
             )
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
@@ -119,8 +121,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.singleton("abc"), emptyCodeChallenge));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.singleton("abc"), emptyCodeChallenge, Collections.singletonMap("customer", "::customerIndex::")));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
     }});
 
     activity.execute("user1", authRequest);
@@ -133,7 +135,8 @@ public class ResourceOwnerClientAuthorizationTest {
                     "response_type", "code",
                     "client_id", "::client_id::",
                     "redirect_uri", "http://example.com/callback",
-                    "scope", "CanDoX CanDoY CanDoZ"
+                    "scope", "CanDoX CanDoY CanDoZ",
+                    "customer", "::customerIndex::"
             )
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
@@ -142,8 +145,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), emptyCodeChallenge));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), emptyCodeChallenge, Collections.singletonMap("customer", "::customerIndex::")));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
     }});
 
     activity.execute("user1", authRequest);
@@ -152,7 +155,7 @@ public class ResourceOwnerClientAuthorizationTest {
   @Test
   public void redirectUrlWasNotRequested() throws Exception {
     Request authRequest = aNewRequest().params(
-            ImmutableMap.of("response_type", "code", "client_id", "::another client::")
+            ImmutableMap.of("response_type", "code", "client_id", "::another client::", "customer", "::customerIndex::")
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
 
@@ -160,8 +163,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback")))));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge, Collections.singletonMap("customer", "::customerIndex::")));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
     }});
 
     Response response = activity.execute("user1", authRequest);
@@ -174,7 +177,7 @@ public class ResourceOwnerClientAuthorizationTest {
   @Test
   public void clientWasNotAuthorized() {
     Request authRequest = aNewRequest().params(
-            ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "https://example.com/callback")
+            ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "https://example.com/callback", "customer", "::customerIndex::")
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("https://example.com/callback").build();
 
@@ -183,7 +186,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "::identity_id::", "code", Collections.<String>emptySet(), emptyCodeChallenge));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "::identity_id::", "code", Collections.<String>emptySet(), emptyCodeChallenge, Collections.singletonMap("customer", "::customerIndex::")));
       will(returnValue(Optional.absent()));
     }});
 
@@ -242,8 +245,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), new CodeChallenge("::code_challenge::", "::chosenMethod::")));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), new CodeChallenge("::code_challenge::", "::chosenMethod::")))));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), new CodeChallenge("::code_challenge::", "::chosenMethod::"), Collections.<String, String>emptyMap()));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), new CodeChallenge("::code_challenge::", "::chosenMethod::"), Collections.<String, String>emptyMap()))));
     }});
 
     activity.execute("user1", authRequest);

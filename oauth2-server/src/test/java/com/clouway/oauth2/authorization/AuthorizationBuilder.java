@@ -1,8 +1,10 @@
 package com.clouway.oauth2.authorization;
 
 import com.clouway.oauth2.codechallenge.CodeChallenge;
+import com.google.common.collect.Maps;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,6 +18,7 @@ public class AuthorizationBuilder {
   private Set<String> redirectURIs = Collections.singleton("redirectURI");
   private String identityId = "::any identity::";
   private CodeChallenge codeChallenge = new CodeChallenge("", "");
+  private Map<String, String> params = Maps.newHashMap();
 
   public static AuthorizationBuilder newAuthorization() {
     return new AuthorizationBuilder();
@@ -36,8 +39,13 @@ public class AuthorizationBuilder {
     return this;
   }
 
+  public AuthorizationBuilder addParam(String name, String value) {
+    this.params.put(name, value);
+    return this;
+  }
+
   public Authorization build() {
-    return new Authorization(responseType, clientId, identityId, code, scopes, redirectURIs, codeChallenge);
+    return new Authorization(responseType, clientId, identityId, code, scopes, redirectURIs, codeChallenge, params);
   }
 
 }

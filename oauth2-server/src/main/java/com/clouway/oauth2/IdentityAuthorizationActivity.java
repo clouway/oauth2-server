@@ -25,14 +25,13 @@ public class IdentityAuthorizationActivity implements AuthorizedClientActivity {
 
   @Override
   public Response execute(Authorization authorization, Client client, Request request, DateTime instant) {
-    Map<String, String> params = new Params().parse(request, "code", "code_verifier");
-    Optional<Identity> possibleIdentity = identityFinder.findIdentity(authorization.identityId, GrantType.AUTHORIZATION_CODE, instant, params);
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(authorization.identityId, GrantType.AUTHORIZATION_CODE, instant, authorization.params);
     if (!possibleIdentity.isPresent()) {
       return OAuthError.invalidGrant("identity was not found");
     }
 
     Identity identity = possibleIdentity.get();
 
-    return authorizedIdentityActivity.execute(client, identity, authorization.scopes, request, instant, params);
+    return authorizedIdentityActivity.execute(client, identity, authorization.scopes, request, instant, authorization.params);
   }
 }
