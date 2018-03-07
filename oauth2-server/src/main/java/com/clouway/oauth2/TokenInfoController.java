@@ -6,6 +6,7 @@ import com.clouway.friendlyserve.RsJson;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -39,7 +40,7 @@ class TokenInfoController implements InstantaneousRequest {
 
     BearerToken token = possibleToken.get();
     Map<String, String> params = token.params != null ? token.params : Maps.<String, String>newHashMap();
-    Optional<Identity> possibleIdentity = identityFinder.findIdentity(token.identityId, token.grantType, instantTime, params);
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(new FindIdentityRequest(token.identityId, token.grantType, instantTime, params, token.clientId));
     Identity identity = possibleIdentity.get();
     String host = request.header("Host");
     Optional<String> possibleIdToken = idTokenFactory.create(host, token.clientId, identity,

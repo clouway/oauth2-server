@@ -2,6 +2,7 @@ package com.clouway.oauth2.authorization;
 
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.codechallenge.CodeChallenge;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Set;
 /**
  * @author Vasil Mitov <vasil.mitov@clouway.com>
  */
-public class AuthorizationRequest {
+public final class AuthorizationRequest {
   public final Client client;
   public final String identityId;
   public final String responseType;
@@ -37,12 +38,12 @@ public class AuthorizationRequest {
             Objects.equal(identityId, that.identityId) &&
             Objects.equal(responseType, that.responseType) &&
             Objects.equal(scopes, that.scopes) &&
-            Objects.equal(codeChallenge, that.codeChallenge) &&
-            Objects.equal(params, that.params);
+            Objects.equal(params, that.params) &&
+            Objects.equal(codeChallenge, that.codeChallenge);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(client, identityId, responseType, scopes, codeChallenge);
+    return Objects.hashCode(client, identityId, responseType, scopes, params, codeChallenge);
   }
 }

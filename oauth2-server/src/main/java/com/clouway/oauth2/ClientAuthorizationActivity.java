@@ -41,7 +41,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String codeVerifierMethod = request.param("code_challenge_method") == null ? "" : request.param("code_challenge_method");
     CodeChallenge codeChallenge = new CodeChallenge(codeChallengeValue, codeVerifierMethod);
 
-    Map<String, String> params = new Params().parse(request, "response_type", "redirect_uri", "state", "scope", "code_challenge", "code_challenge_method");
+    Map<String, String> excludedParams = new Params().parse(request, "response_type", "client_id", "redirect_uri", "state", "scope", "code_challenge", "code_challenge_method");
 
     Optional<Client> possibleClientResponse = clientFinder.findClient(clientId);
 
@@ -58,8 +58,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     }
 
     Set<String> scopes = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope));
-
-    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(new AuthorizationRequest(client, identityId, responseType, scopes, codeChallenge, params));
+    Optional<Authorization> possibleAuthorizationResponse = clientAuthorizationRepository.authorize(new AuthorizationRequest(client, identityId, responseType, scopes, codeChallenge, excludedParams));
 
     // RFC-6749 - Section: 4.2.2.1
     // The authorization server redirects the user-agent by

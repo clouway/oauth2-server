@@ -15,6 +15,7 @@ import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.TokenRequest;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -88,7 +89,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
+      oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
       will(returnValue(Optional.of(aNewIdentity().build())));
 
       oneOf(idTokenFactory).create(with(any(String.class)),with(any(String.class)),with(any(Identity.class)),with(any(Long.class)),with(any(DateTime.class)));
@@ -121,7 +122,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
+      oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
       will(returnValue(Optional.of(aNewIdentity().build())));
 
       oneOf(idTokenFactory).create(with(any(String.class)),with(any(String.class)),with(any(Identity.class)),with(any(Long.class)),with(any(DateTime.class)));
@@ -154,7 +155,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
+      oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
       will(returnValue(Optional.absent()));
 
     }});
@@ -182,7 +183,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
+      oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
       will(returnValue(Optional.of(identity)));
 
       oneOf(tokens).issueToken(
@@ -221,7 +222,7 @@ public class HandleJwtTokenRequestsTest {
       oneOf(anySignatureThatWillVerifies).verifyWithPrivateKey(with(any(byte[].class)), with(any(Pem.Block.class)));
       will(returnValue(true));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
+      oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
       will(returnValue(Optional.of(identity)));
 
       oneOf(tokens).issueToken(
