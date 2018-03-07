@@ -41,7 +41,7 @@ class ClientAuthorizationActivity implements IdentityActivity {
     String codeVerifierMethod = request.param("code_challenge_method") == null ? "" : request.param("code_challenge_method");
     CodeChallenge codeChallenge = new CodeChallenge(codeChallengeValue, codeVerifierMethod);
 
-    Map<String, String> params = new Params().parse(request, "response_type", "client_id", "redirect_uri", "state", "scope", "code_challenge", "code_challenge_method");
+    Map<String, String> params = new Params().parse(request, "response_type", "redirect_uri", "state", "scope", "code_challenge", "code_challenge_method");
 
     Optional<Client> possibleClientResponse = clientFinder.findClient(clientId);
 
