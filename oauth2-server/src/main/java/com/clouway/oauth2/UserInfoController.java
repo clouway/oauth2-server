@@ -5,6 +5,7 @@ import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsJson;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
@@ -36,7 +37,7 @@ class UserInfoController implements InstantaneousRequest {
 
     BearerToken token = possibleTokenResponse.get();
 
-    Optional<Identity> possibleIdentityResponse = identityFinder.findIdentity(token.identityId, token.grantType, instantTime, token.params);
+    Optional<Identity> possibleIdentityResponse = identityFinder.findIdentity(new FindIdentityRequest(token.identityId, token.grantType, instantTime, token.params, token.clientId));
     if (!possibleIdentityResponse.isPresent()) {
       return OAuthError.invalidGrant("Identity was not found.");
     }

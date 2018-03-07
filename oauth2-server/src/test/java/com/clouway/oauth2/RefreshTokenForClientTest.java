@@ -9,6 +9,7 @@ import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -66,12 +67,13 @@ public class RefreshTokenForClientTest {
                               .withValue("::access_token::")
                               .identityId("::identityId::")
                               .grantType(GrantType.AUTHORIZATION_CODE)
+                              .forClient("::clientId::")
                               .expiresAt(anyTime.plusSeconds(600))
                               .build(),
                       "::refresh_token::")
       ));
 
-      oneOf(identityFinder).findIdentity("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap());
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap(), "::clientId::"));
       will(returnValue(Optional.of(identity)));
 
       oneOf(request).header("Host");
@@ -108,13 +110,14 @@ public class RefreshTokenForClientTest {
                       aNewToken()
                               .withValue("::access_token::")
                               .identityId("::identityId::")
+                              .forClient("::clientId::")
                               .grantType(GrantType.AUTHORIZATION_CODE)
                               .expiresAt(anyTime.plusSeconds(600))
                               .build(),
                       "::refresh_token::")
       ));
 
-      oneOf(identityFinder).findIdentity("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap());
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap(), "::clientId::"));
       will(returnValue(Optional.of(identity)));
 
       oneOf(request).header("Host");
@@ -150,13 +153,14 @@ public class RefreshTokenForClientTest {
                       aNewToken()
                               .withValue("::access_token::")
                               .identityId("::identityId::")
+                              .forClient("::clientId::")
                               .grantType(GrantType.AUTHORIZATION_CODE)
                               .expiresAt(anyTime.plusSeconds(600))
                               .build(),
                       "::refresh_token::")
       ));
 
-      oneOf(identityFinder).findIdentity("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap());
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap(), "::clientId::"));
       will(returnValue(Optional.absent()));
     }});
 

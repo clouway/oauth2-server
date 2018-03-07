@@ -7,6 +7,7 @@ import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 
@@ -35,7 +36,9 @@ class RefreshTokenActivity implements ClientActivity {
     }
     BearerToken accessToken = response.accessToken;
 
-    Optional<Identity> possibleIdentity = identityFinder.findIdentity(accessToken.identityId, accessToken.grantType, instant, accessToken.params);
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(
+            new FindIdentityRequest(accessToken.identityId, accessToken.grantType, instant, accessToken.params, accessToken.clientId));
+
     if (!possibleIdentity.isPresent()) {
       return OAuthError.invalidGrant("identity was not found");
     }

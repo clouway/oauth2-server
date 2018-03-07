@@ -9,6 +9,7 @@ import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -59,7 +60,7 @@ public class GetTokenInfoTest {
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(anyToken)));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(Maps.<String, String>newHashMap()));
+      oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
       will(returnValue(Optional.of(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
@@ -93,7 +94,7 @@ public class GetTokenInfoTest {
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(anyToken)));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
+      oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
       will(returnValue(Optional.of(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
@@ -117,7 +118,7 @@ public class GetTokenInfoTest {
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(anyToken)));
 
-      oneOf(identityFinder).findIdentity(with(any(String.class)), with(any(GrantType.class)), with(any(DateTime.class)), with(ImmutableMap.of("::index::", "::1::")));
+      oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
       will(returnValue(Optional.of(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));

@@ -8,6 +8,7 @@ import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.codechallenge.CodeChallenge;
 import com.clouway.oauth2.token.GrantType;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -51,7 +52,7 @@ public class IdentityAuthorizationActivityTest {
 
     context.checking(new Expectations() {{
 
-      oneOf(identityFinder).findIdentity("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap());
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap(), anyAuth.clientId));
       will(returnValue(Optional.of(identity)));
 
       oneOf(authorizedIdentityActivity).execute(anyClient, identity, anyAuth.scopes, request, anyInstantTime, anyAuth.params);
@@ -74,7 +75,7 @@ public class IdentityAuthorizationActivityTest {
 
     context.checking(new Expectations() {{
 
-      oneOf(identityFinder).findIdentity("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap());
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap(), anyAuth.clientId));
       will(returnValue(Optional.absent()));
 
     }});
@@ -91,7 +92,7 @@ public class IdentityAuthorizationActivityTest {
     final Authorization anyAuth = newAuthorization().addParam("index", "1").build();
 
     context.checking(new Expectations() {{
-      oneOf(identityFinder).findIdentity(anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime, anyAuth.params);
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime, anyAuth.params, anyAuth.clientId));
       will(returnValue(Optional.absent()));
     }});
 

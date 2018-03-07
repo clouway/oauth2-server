@@ -63,8 +63,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::", "client_id", "::client_id::")));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::")));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), ImmutableMap.of("customerIndex", "::customerIndex::")))));
     }});
 
     Response response = activity.execute("user1", authRequest);
@@ -121,8 +121,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.singleton("abc"), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::", "client_id", "::client_id::")));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.singleton("abc"), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::")));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), ImmutableMap.of("customerIndex", "::customerIndex::")))));
     }});
 
     activity.execute("user1", authRequest);
@@ -145,8 +145,8 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::", "client_id", "::client_id::")));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::")));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), ImmutableMap.of("customerIndex", "::customerIndex::")))));
     }});
 
     activity.execute("user1", authRequest);
@@ -163,9 +163,9 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient(with(any(String.class)));
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::", "client_id", "::another client::" +
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::" +
               "")));
-      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), Collections.singletonMap("customer", "::customerIndex::")))));
+      will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), ImmutableMap.of("customerIndex", "::customerIndex::")))));
     }});
 
     Response response = activity.execute("user1", authRequest);
@@ -187,7 +187,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "::identity_id::", "code", Collections.<String>emptySet(), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::", "client_id", "::client_id::")));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "::identity_id::", "code", Collections.<String>emptySet(), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::")));
       will(returnValue(Optional.absent()));
     }});
 
@@ -246,7 +246,7 @@ public class ResourceOwnerClientAuthorizationTest {
       oneOf(clientFinder).findClient("::client_id::");
       will(returnValue(Optional.of(anyExistingClient)));
 
-      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), new CodeChallenge("::code_challenge::", "::chosenMethod::"), ImmutableMap.of("client_id", "::client_id::")));
+      oneOf(clientAuthorizationRepository).authorize(new AuthorizationRequest(anyExistingClient, "user1", "code", Collections.<String>emptySet(), new CodeChallenge("::code_challenge::", "::chosenMethod::"), Collections.<String, String>emptyMap()));
       will(returnValue(Optional.of(new Authorization("code", "::client_id::", "identityId", "1234", Collections.<String>emptySet(), Collections.singleton("http://example.com/callback"), new CodeChallenge("::code_challenge::", "::chosenMethod::"), Collections.<String, String>emptyMap()))));
     }});
 

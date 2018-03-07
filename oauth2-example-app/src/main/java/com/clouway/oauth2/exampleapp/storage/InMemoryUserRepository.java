@@ -5,6 +5,7 @@ import com.clouway.oauth2.DateTime;
 import com.clouway.oauth2.Identity;
 import com.clouway.oauth2.exampleapp.UserRepository;
 import com.clouway.oauth2.token.GrantType;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 import com.clouway.oauth2.user.User;
@@ -30,8 +31,8 @@ class InMemoryUserRepository implements IdentityFinder, ResourceOwnerIdentityFin
   }
 
   @Override
-  public Optional<Identity> findIdentity(String identityId, GrantType grantType, DateTime instantTime, Map<String, String> params) {
-    if (grantType == GrantType.AUTHORIZATION_CODE) {
+  public Optional<Identity> findIdentity(FindIdentityRequest request) {
+    if (request.grantType == GrantType.AUTHORIZATION_CODE) {
       return Optional.of(new Identity("testUserID", "testUser", "test User", "User Family", "test@clouway.com", null, Collections.<String, Object>emptyMap()));
     } else {
       return Optional.of(new Identity("customerapp@testapp.com", "testapp@testapp.com", "Customer Portal", "", "", "", Collections.<String, Object>emptyMap()));

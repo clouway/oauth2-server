@@ -17,6 +17,7 @@ import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.TokenResponse;
 import com.clouway.oauth2.token.Tokens;
+import com.clouway.oauth2.user.FindIdentityRequest;
 import com.clouway.oauth2.user.IdentityFinder;
 import com.clouway.oauth2.util.Params;
 import com.google.common.base.Optional;
@@ -97,7 +98,7 @@ public class JwtController implements InstantaneousRequest {
 
     Map<String, String> params = new Params().parse(request, "assertion", "scope");
 
-    Optional<Identity> possibleIdentity = identityFinder.findIdentity(claimSet.iss, GrantType.JWT, instant, params);
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(new FindIdentityRequest(claimSet.iss, GrantType.JWT, instant, params, ""));
 
     if (!possibleIdentity.isPresent()) {
       return OAuthError.invalidGrant("unknown identity");
