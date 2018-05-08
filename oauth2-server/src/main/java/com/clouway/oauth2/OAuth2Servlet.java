@@ -2,7 +2,6 @@ package com.clouway.oauth2;
 
 import com.clouway.friendlyserve.FkRegex;
 import com.clouway.friendlyserve.RequestHandlerMatchingParam;
-import com.clouway.friendlyserve.RequiresHeader;
 import com.clouway.friendlyserve.RequiresParam;
 import com.clouway.friendlyserve.TkFork;
 import com.clouway.friendlyserve.servlets.ServletApiSupport;
@@ -80,16 +79,15 @@ public abstract class OAuth2Servlet extends HttpServlet {
                                             ))
                             ),
                             new RequestHandlerMatchingParam("grant_type", "refresh_token",
-                                    new RequiresHeader("Authorization",
-                                            new InstantaneousRequestController(
-                                                    new ClientAuthenticationCredentialsRequest(
-                                                            new ClientController(
-                                                                    config.clientFinder(),
-                                                                    new RefreshTokenActivity(config.tokens(), idTokenFactory, config.identityFinder())
-                                                            ))
+                                    new InstantaneousRequestController(
+                                            new ClientAuthenticationCredentialsRequest(
+                                                    new ClientController(
+                                                            config.clientFinder(),
+                                                            new RefreshTokenActivity(config.tokens(), idTokenFactory, config.identityFinder())
+                                                    ))
 
-                                            )
-                                    )),
+                                    )
+                            ),
                             // JWT Support
                             new RequestHandlerMatchingParam("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer", new RequiresParam("assertion",
                                     new InstantaneousRequestController(
