@@ -2,6 +2,7 @@ package com.clouway.oauth2;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -48,5 +49,18 @@ public final class DateTime implements Serializable {
 
   public Long timestamp() {
     return time.getTime();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    DateTime dateTime = (DateTime) o;
+    return Objects.equals(time, dateTime.time);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(time);
   }
 }
