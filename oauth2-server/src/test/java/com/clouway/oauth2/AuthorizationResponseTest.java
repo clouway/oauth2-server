@@ -23,4 +23,14 @@ public class AuthorizationResponseTest {
 
     assertThat(response.buildURI(), is("http://zazz.bg/?code=987654321"));
   }
+
+  @Test
+  public void codeIsUrlSafelyEncoded() throws Exception {
+    AuthorizationResponse response = new AuthorizationResponse(
+            "a test 23",
+            "http://zazz.bg/"
+    );
+
+    assertThat(response.buildURI(), is("http://zazz.bg/?code=a+test+23"));
+  }
 }

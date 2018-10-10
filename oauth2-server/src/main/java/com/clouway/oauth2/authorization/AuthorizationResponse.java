@@ -1,5 +1,8 @@
 package com.clouway.oauth2.authorization;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>
  */
@@ -13,6 +16,10 @@ public class AuthorizationResponse {
   }
 
   public String buildURI() {
-    return redirectURI + "?code=" + code;
+    try {
+      return redirectURI + "?code=" + URLEncoder.encode(code, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      return  redirectURI + "?code=" + code;
+    }
   }
 }
