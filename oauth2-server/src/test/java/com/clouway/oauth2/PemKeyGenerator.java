@@ -16,10 +16,10 @@ import java.util.Collections;
  * @author Vasil Mitov <v.mitov.clouway@gmail.com>
  */
 public class PemKeyGenerator {
-  private static KeyPair keyPair = getKeyPair(1024);
+  private static KeyPair keyPair = getKeyPair(2048);
 
   public static KeyPair generatePair() {
-    return getKeyPair(1024);
+    return getKeyPair(2048);
   }
 
   public static Pem.Block generatePublicKey() {
