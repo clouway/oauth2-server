@@ -1,6 +1,6 @@
 package com.clouway.oauth2.exampleapp;
 
-import com.clouway.oauth2.user.User;
+import com.clouway.oauth2.token.User;
 import com.google.common.base.Optional;
 
 /**

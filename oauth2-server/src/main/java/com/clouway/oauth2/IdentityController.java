@@ -3,7 +3,7 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsRedirect;
-import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
+import com.clouway.oauth2.common.DateTime;
 import com.google.common.base.Optional;
 
 import java.io.UnsupportedEncodingException;

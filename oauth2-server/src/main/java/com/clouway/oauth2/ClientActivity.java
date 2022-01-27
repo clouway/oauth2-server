@@ -3,6 +3,7 @@ package com.clouway.oauth2;
 import com.clouway.oauth2.client.Client;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
+import com.clouway.oauth2.common.DateTime;
 
 /**
  * ClientActivity is representing Activity for a single client (in the context of OAuth2).

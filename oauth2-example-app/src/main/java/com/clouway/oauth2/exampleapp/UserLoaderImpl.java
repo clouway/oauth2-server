@@ -1,9 +1,9 @@
 package com.clouway.oauth2.exampleapp;
 
-import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
-import com.clouway.oauth2.user.User;
+import com.clouway.oauth2.token.User;
 import com.google.common.base.Optional;
 
 /**

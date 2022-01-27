@@ -3,7 +3,9 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.FakeRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
+import com.clouway.oauth2.client.ClientCredentials;
 import com.clouway.oauth2.client.ClientFinder;
+import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -15,7 +17,7 @@ import org.junit.Test;
 import java.net.HttpURLConnection;
 import java.util.Collections;
 
-import static com.clouway.oauth2.BearerTokenBuilder.aNewToken;
+import static com.clouway.oauth2.token.BearerTokenBuilder.aNewToken;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;

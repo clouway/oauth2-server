@@ -1,7 +1,6 @@
 package com.clouway.oauth2.token;
 
-import com.clouway.oauth2.DateTime;
-import com.clouway.oauth2.Identity;
+import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.client.Client;
 import com.google.common.base.Objects;
 

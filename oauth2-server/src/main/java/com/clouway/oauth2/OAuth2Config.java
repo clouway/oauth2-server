@@ -3,9 +3,9 @@ package com.clouway.oauth2;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.client.JwtKeyStore;
+import com.clouway.oauth2.keystore.KeyStore;
 import com.clouway.oauth2.token.Tokens;
-import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
+import com.clouway.oauth2.token.IdentityFinder;
 
 /**
  * OAuth2Config is a configuration class which is used to pass configuration from apps to the oauth2-server flow.

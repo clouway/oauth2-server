@@ -2,8 +2,10 @@ package com.clouway.oauth2;
 
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.testing.RsPrint;
-import com.clouway.oauth2.client.IdentityKeyPair;
 import com.clouway.oauth2.jws.Pem;
+import com.clouway.oauth2.keystore.IdentityKeyPair;
+import com.clouway.oauth2.keystore.KeyStore;
+import com.clouway.oauth2.util.PemKeyGenerator;
 import com.google.gson.JsonObject;
 import org.junit.Test;
 

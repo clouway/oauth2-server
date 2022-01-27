@@ -1,9 +1,8 @@
 package com.clouway.oauth2.token;
 
-import com.clouway.oauth2.DateTime;
-import com.clouway.oauth2.Identity;
-import com.clouway.oauth2.KeyStore;
-import com.clouway.oauth2.client.IdentityKeyPair;
+import com.clouway.oauth2.common.DateTime;
+import com.clouway.oauth2.keystore.KeyStore;
+import com.clouway.oauth2.keystore.IdentityKeyPair;
 import com.google.common.base.Optional;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -4,9 +4,10 @@ import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsJson;
 import com.clouway.friendlyserve.Take;
-import com.clouway.oauth2.client.IdentityKeyPair;
+import com.clouway.oauth2.keystore.IdentityKeyPair;
 import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Pem.Block;
+import com.clouway.oauth2.keystore.KeyStore;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;

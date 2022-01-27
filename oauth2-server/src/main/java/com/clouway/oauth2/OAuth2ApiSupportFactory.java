@@ -10,7 +10,6 @@ import com.clouway.oauth2.jws.RsaJwsSignature;
 import com.clouway.oauth2.jws.Signature;
 import com.clouway.oauth2.jws.SignatureFactory;
 import com.clouway.oauth2.jwt.Jwt.Header;
-import com.clouway.oauth2.jwt.JwtController;
 import com.clouway.oauth2.token.JjwtIdTokenFactory;
 import com.google.common.base.Optional;
 

@@ -1,15 +1,14 @@
 package com.clouway.oauth2.jws;
 
-import com.google.common.base.Charsets;
-import java.nio.charset.Charset;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -21,8 +20,7 @@ public class ReadPemFilesTest {
   @Test
   public void happyPath() throws IOException {
     Pem pem = new Pem();
-    Pem.Block block = pem.parse(ReadPemFilesTest.class.getResourceAsStream("secret.pem"));
-
+    Pem.Block block = pem.parse(new FileInputStream("oauth2-server/src/test/java/com/clouway/oauth2/jws/testdata/secret.pem"));
     assertThat(block, is(equalTo(new Pem.Block("PRIVATE KEY", Collections.<String, String>emptyMap(), EXPECTED_BYTES))));
   }
 

@@ -78,11 +78,16 @@ For example if you bind your OAuth2Servlet to *`/o/oauth2/v1/*`*
 ## id_token
 Our library supports the OpenID id_token (http://openid.net/specs/openid-connect-core-1_0.html) which could be obtained on the tokenInfo endpoint. Note that for optimisation purposes to lower round trips an id_token is also returned with the refresh token response and jwt token response. The id_token uses a custom header CID (Certificate ID) that can be used to recognise which certificate was used to sign the token.
 
+## Releasing
+```
+bazel run --stamp --define "maven_repo=https://oss.sonatype.org/content/repositories/snapshots/" --define "maven_user=youruser" --define "maven_password=yourpassword"  --define gpg_sign=true //oauth2-server:exported_lib.publish`
+```
+
 # ToDo
  * dependency clean up
 
 # License
-Copyright 2017 clouWay ood.
+Copyright 2022 clouWay ood.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

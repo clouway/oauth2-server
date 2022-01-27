@@ -1,0 +1,13 @@
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
+
+package(default_visibility = ["//visibility:public"])
+
+kt_jvm_library(
+    name = "client",
+    srcs = glob(["*.kt", "*.java"]),
+    deps = [
+        "@maven//:com_google_guava_guava",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/jwt",
+    ],
+)

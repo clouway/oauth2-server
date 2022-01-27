@@ -1,6 +1,6 @@
 package com.clouway.oauth2.authorization;
 
-import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.client.Client;
 import com.google.common.base.Optional;
 

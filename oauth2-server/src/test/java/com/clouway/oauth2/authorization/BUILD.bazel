@@ -1,0 +1,16 @@
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
+
+package(default_visibility = ["//visibility:public"])
+
+kt_jvm_library(
+    name = "authorization",
+    srcs = glob([
+        "*.kt",
+        "*.java",
+    ]),
+    deps = [
+        "//oauth2-server/src/main/java/com/clouway/oauth2/authorization",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/codechallenge",
+        "@maven//:com_google_guava_guava",
+    ],
+)

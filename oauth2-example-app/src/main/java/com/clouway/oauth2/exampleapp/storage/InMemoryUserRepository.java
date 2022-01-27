@@ -1,18 +1,17 @@
 package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.friendlyserve.Request;
-import com.clouway.oauth2.DateTime;
-import com.clouway.oauth2.Identity;
+import com.clouway.oauth2.ResourceOwnerIdentityFinder;
+import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.exampleapp.UserRepository;
+import com.clouway.oauth2.token.FindIdentityRequest;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.user.FindIdentityRequest;
-import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
-import com.clouway.oauth2.user.User;
+import com.clouway.oauth2.token.Identity;
+import com.clouway.oauth2.token.IdentityFinder;
+import com.clouway.oauth2.token.User;
 import com.google.common.base.Optional;
 
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * @author Mihail Lesikov (mlesikov@gmail.com)

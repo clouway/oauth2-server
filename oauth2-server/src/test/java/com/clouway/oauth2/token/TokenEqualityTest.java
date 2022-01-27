@@ -1,6 +1,6 @@
 package com.clouway.oauth2.token;
 
-import com.clouway.oauth2.DateTime;
+import com.clouway.oauth2.common.DateTime;
 import org.junit.Test;
 
 import java.util.Collections;

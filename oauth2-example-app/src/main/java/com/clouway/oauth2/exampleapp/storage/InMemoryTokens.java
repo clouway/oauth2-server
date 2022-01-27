@@ -1,9 +1,7 @@
 package com.clouway.oauth2.exampleapp.storage;
 
-import com.clouway.oauth2.DateTime;
-import com.clouway.oauth2.Duration;
-import com.clouway.oauth2.Identity;
-import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.common.DateTime;
+import com.clouway.oauth2.common.Duration;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.TokenGenerator;
@@ -16,7 +14,6 @@ import com.google.inject.Inject;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Ivan Stefanov <ivan.stefanov@clouway.com>

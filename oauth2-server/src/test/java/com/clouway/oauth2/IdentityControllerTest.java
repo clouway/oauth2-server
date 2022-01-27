@@ -6,7 +6,7 @@ import com.clouway.friendlyserve.RsText;
 import com.clouway.friendlyserve.Status;
 import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
-import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
+import com.clouway.oauth2.common.DateTime;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jmock.Expectations;

@@ -4,6 +4,8 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
+import com.clouway.oauth2.client.ClientCredentials;
+import com.clouway.oauth2.common.DateTime;
 import com.google.common.base.Optional;
 
 /**

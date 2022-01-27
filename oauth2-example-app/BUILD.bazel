@@ -1,0 +1,62 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary", "kt_jvm_library")
+
+package(default_visibility = ["//visibility:public"])
+
+kt_jvm_library(
+    name = "oauth2-example-app",
+    srcs = glob([
+        "src/main/java/**/*.java",
+        "src/main/java/**/*.kt",
+    ]),
+    deps = [
+        "//oauth2-server:jarjar",
+        "@maven//:ch_qos_logback_logback_classic",
+        "@maven//:com_clouway_fserve_fserve",
+        "@maven//:com_clouway_security_jwt_java_client_okhttp",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_code_gson_gson",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_extensions_guice_servlet",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_sitebricks_sitebricks",
+        "@maven//:com_google_sitebricks_sitebricks_annotations",
+        "@maven//:com_google_sitebricks_sitebricks_client",
+        "@maven//:com_google_sitebricks_sitebricks_converter",
+        "@maven//:com_squareup_okhttp3_okhttp",
+        "@maven//:io_jsonwebtoken_jjwt_api",
+        "@maven//:io_jsonwebtoken_jjwt_impl",
+        "@maven//:io_jsonwebtoken_jjwt_jackson",
+        "@maven//:javax_annotation_javax_annotation_api",
+        "@maven//:javax_json_javax_json_api",
+        "@maven//:net_hamnaberg_json_json_javax",
+        "@maven//:org_eclipse_jetty_jetty_server",
+        "@maven//:org_eclipse_jetty_jetty_servlet",
+    ],
+)
+
+
+kt_jvm_binary(
+    name = "auth-bootstrap",
+    srcs = [
+        "src/main/java/com/clouway/oauth2/app/AuthBootstrap.java",
+    ],
+    main_class = "com.clouway.oauth2.app.AuthBootstrap",
+    deps = [
+        ":oauth2-example-app",
+
+    ],
+)
+
+kt_jvm_binary(
+    name = "jwt-client",
+    srcs = [
+        "src/main/java/com/clouway/oauth2/app/JwtClient.java",
+    ],
+    main_class = "com.clouway.oauth2.app.JwtClient",
+    deps = [
+        ":oauth2-example-app",
+
+    ],
+)

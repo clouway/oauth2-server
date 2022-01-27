@@ -4,13 +4,12 @@ import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.user.FindIdentityRequest;
-import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.util.Params;
+import com.clouway.oauth2.token.FindIdentityRequest;
+import com.clouway.oauth2.token.Identity;
+import com.clouway.oauth2.token.IdentityFinder;
 import com.google.common.base.Optional;
-
-import java.util.Map;
 
 /**
  * @author Vasil Mitov <vasil.mitov@clouway.com>

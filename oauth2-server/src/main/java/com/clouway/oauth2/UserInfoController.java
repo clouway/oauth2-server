@@ -3,10 +3,12 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.friendlyserve.RsJson;
+import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.Tokens;
-import com.clouway.oauth2.user.FindIdentityRequest;
-import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.token.FindIdentityRequest;
+import com.clouway.oauth2.token.Identity;
+import com.clouway.oauth2.token.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 

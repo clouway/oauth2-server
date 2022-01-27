@@ -1,0 +1,63 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary", "kt_jvm_library")
+load("@rules_java//java:defs.bzl", "java_binary", "java_import", "java_library")
+load("@rules_jvm_external//:defs.bzl", "java_export")
+load("@io_bazel_rules_kotlin//third_party:jarjar.bzl", "jar_jar")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(
+    ["shade.jarjar"],
+)
+
+java_binary(
+    name = "provided-deps",
+    create_executable = False,
+    runtime_deps = [
+        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+        "@com_github_jetbrains_kotlin//:kotlin-stdlib-jdk7",
+        "@com_github_jetbrains_kotlin//:kotlin-stdlib-jdk8",
+        "@maven//:com_clouway_fserve_fserve",
+        "@maven//:com_google_code_gson_gson",
+        "@maven//:com_google_guava_guava",
+        "@maven//:javax_annotation_javax_annotation_api",
+        "@maven//:javax_servlet_servlet_api",
+    ],
+)
+
+# A helper task used to bundle all classes
+# as a single jar to be provided to jarjar.
+java_binary(
+    name = "binaryjar",
+    create_executable = False,
+    deploy_env = [
+        ":provided-deps",
+    ],
+    runtime_deps = [
+        "//oauth2-server/src/main/java/com/clouway/oauth2",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/authorization",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/client",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/codechallenge",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/common",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/jwt",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/keystore",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/token",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/util",
+    ],
+)
+
+jar_jar(
+    name = "jarjar",
+    # Implicit deploy task is added from java_binary
+    # as kt_jvm_binary is not exporting such task
+    input_jar = ":binaryjar_deploy.jar",
+    rules = "shade.jarjar",
+)
+
+java_export(
+    name = "exported_lib",
+    maven_coordinates = "com.clouway.security:oauth2-server:2.0.0-SNAPSHOT",
+    runtime_deps = [
+        ":jarjar",
+    ],
+)

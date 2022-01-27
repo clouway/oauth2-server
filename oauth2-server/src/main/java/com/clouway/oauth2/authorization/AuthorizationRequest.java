@@ -2,7 +2,6 @@ package com.clouway.oauth2.authorization;
 
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.codechallenge.CodeChallenge;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.util.Map;

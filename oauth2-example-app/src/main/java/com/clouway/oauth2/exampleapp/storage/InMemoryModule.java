@@ -1,21 +1,21 @@
 package com.clouway.oauth2.exampleapp.storage;
 
-import com.clouway.oauth2.Duration;
 
-import com.clouway.oauth2.client.ClientRegistrationRequest;
-import com.clouway.oauth2.exampleapp.ResourceOwnerStore;
+import com.clouway.oauth2.ResourceOwnerIdentityFinder;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientFinder;
+import com.clouway.oauth2.client.ClientRegistrationRequest;
 import com.clouway.oauth2.client.JwtKeyStore;
+import com.clouway.oauth2.common.Duration;
 import com.clouway.oauth2.exampleapp.ResourceOwnerAuthentication;
+import com.clouway.oauth2.exampleapp.ResourceOwnerStore;
 import com.clouway.oauth2.exampleapp.SessionSecurity;
 import com.clouway.oauth2.exampleapp.UserLoader;
 import com.clouway.oauth2.exampleapp.UserLoaderImpl;
 import com.clouway.oauth2.exampleapp.UserRepository;
+import com.clouway.oauth2.token.IdentityFinder;
 import com.clouway.oauth2.token.Tokens;
 import com.clouway.oauth2.token.UrlSafeTokenGenerator;
-import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;

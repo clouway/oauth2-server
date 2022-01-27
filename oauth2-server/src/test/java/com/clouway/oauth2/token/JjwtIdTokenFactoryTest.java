@@ -1,9 +1,9 @@
 package com.clouway.oauth2.token;
 
-import com.clouway.oauth2.DateTime;
-import com.clouway.oauth2.KeyStore;
-import com.clouway.oauth2.PemKeyGenerator;
-import com.clouway.oauth2.client.IdentityKeyPair;
+import com.clouway.oauth2.util.PemKeyGenerator;
+import com.clouway.oauth2.common.DateTime;
+import com.clouway.oauth2.keystore.IdentityKeyPair;
+import com.clouway.oauth2.keystore.KeyStore;
 import com.google.common.base.Optional;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -16,8 +16,8 @@ import org.junit.Test;
 import java.security.KeyPair;
 import java.util.Collections;
 
-import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
-import static com.clouway.oauth2.util.CalendarUtil.newDateTime;
+import static com.clouway.oauth2.token.IdentityBuilder.aNewIdentity;
+import static com.clouway.oauth2.common.CalendarUtil.newDateTime;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -90,7 +90,7 @@ public class JjwtIdTokenFactoryTest {
   @Test
   public void noCertificatesAreAvailableForSigningOfKey() throws Exception {
     final KeyStore keyStore = context.mock(KeyStore.class);
-    
+
     context.checking(new Expectations() {{
       oneOf(keyStore).getKeys();
       will(returnValue(Collections.emptyList()));

@@ -1,0 +1,33 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_test")
+load("//tools/jvm:variables.bzl", "TEST_DEPS")
+
+kt_jvm_test(
+    name = "PemTest",
+    srcs = ["PemTest.java"],
+    test_class = "com.clouway.oauth2.jws.PemTest",
+    deps = TEST_DEPS + [
+        "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "ReadPemFilesTest",
+    srcs = ["ReadPemFilesTest.java"],
+    data = glob(["testdata/*.pem"]),
+    test_class = "com.clouway.oauth2.jws.ReadPemFilesTest",
+    deps = TEST_DEPS + [
+        "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "VerifySignaturesWithRsaTest",
+    srcs = ["VerifySignaturesWithRsaTest.java"],
+    test_class = "com.clouway.oauth2.jws.VerifySignaturesWithRsaTest",
+    deps = TEST_DEPS + [
+        "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
+        "@maven//:com_google_guava_guava",
+    ],
+)

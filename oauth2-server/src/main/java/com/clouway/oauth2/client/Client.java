@@ -1,6 +1,5 @@
 package com.clouway.oauth2.client;
 
-import com.clouway.oauth2.ClientCredentials;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;

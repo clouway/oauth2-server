@@ -53,7 +53,7 @@ public final class Pem {
 
     @Override
     public int hashCode() {
-      return Objects.hash(type, headers, content);
+      return Objects.hash(type, headers, Arrays.hashCode(content));
     }
 
     @Override

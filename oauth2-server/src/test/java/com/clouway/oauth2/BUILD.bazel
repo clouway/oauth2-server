@@ -1,0 +1,159 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library", "kt_jvm_test")
+load("//tools/jvm:variables.bzl", "FSERVE_TEST_DEPS", "TEST_DEPS")
+
+PACKAGE_DEPS = [
+    "//oauth2-server/src/main/java/com/clouway/oauth2",
+    "//oauth2-server/src/main/java/com/clouway/oauth2/token",
+    "//oauth2-server/src/test/java/com/clouway/oauth2/client",
+    "//oauth2-server/src/test/java/com/clouway/oauth2/common",
+    "//oauth2-server/src/test/java/com/clouway/oauth2/authorization",
+    "//oauth2-server/src/test/java/com/clouway/oauth2/util",
+    "//oauth2-server/src/test/java/com/clouway/oauth2/token",
+]
+
+kt_jvm_test(
+    name = "AuthCodeAuthorizationTest",
+    srcs = ["AuthCodeAuthorizationTest.java"],
+    test_class = "com.clouway.oauth2.AuthCodeAuthorizationTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS + [
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "AuthorizationEqualityTest",
+    srcs = ["AuthorizationEqualityTest.java"],
+    test_class = "com.clouway.oauth2.AuthorizationEqualityTest",
+    deps = TEST_DEPS + PACKAGE_DEPS + [
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "AuthorizationRequestEqualityTest",
+    srcs = ["AuthorizationRequestEqualityTest.java"],
+    test_class = "com.clouway.oauth2.AuthorizationRequestEqualityTest",
+    deps = TEST_DEPS + PACKAGE_DEPS + [
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "AuthorizationResponseTest",
+    srcs = ["AuthorizationResponseTest.java"],
+    test_class = "com.clouway.oauth2.AuthorizationResponseTest",
+    deps = TEST_DEPS + PACKAGE_DEPS + [
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "AuthorizeClientsTest",
+    srcs = ["AuthorizeClientsTest.java"],
+    test_class = "com.clouway.oauth2.AuthorizeClientsTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS + [
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "ClientEqualityTest",
+    srcs = ["ClientEqualityTest.java"],
+    test_class = "com.clouway.oauth2.ClientEqualityTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS + [
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "CodeExchangeVerificationFlowTest",
+    srcs = ["CodeExchangeVerificationFlowTest.java"],
+    test_class = "com.clouway.oauth2.CodeExchangeVerificationFlowTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS + [
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+kt_jvm_test(
+    name = "DecodeClientCredentialsTest",
+    srcs = ["DecodeClientCredentialsTest.java", "ByteRequest.java"],
+    test_class = "com.clouway.oauth2.DecodeClientCredentialsTest",
+    deps = TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "GetTokenInfoTest",
+    srcs = ["GetTokenInfoTest.java"],
+    test_class = "com.clouway.oauth2.GetTokenInfoTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "HandleJwtTokenRequestsTest",
+    srcs = ["HandleJwtTokenRequestsTest.java"],
+    test_class = "com.clouway.oauth2.HandleJwtTokenRequestsTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "IdentityAuthorizationActivityTest",
+    srcs = ["IdentityAuthorizationActivityTest.java"],
+    test_class = "com.clouway.oauth2.IdentityAuthorizationActivityTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "IdentityControllerTest",
+    srcs = ["IdentityControllerTest.java"],
+    test_class = "com.clouway.oauth2.IdentityControllerTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "IssueNewTokenForClientTest",
+    srcs = ["IssueNewTokenForClientTest.java"],
+    test_class = "com.clouway.oauth2.IssueNewTokenForClientTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "RefreshTokenForClientTest",
+    srcs = ["RefreshTokenForClientTest.java"],
+    test_class = "com.clouway.oauth2.RefreshTokenForClientTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "ResourceOwnerClientAuthorizationTest",
+    srcs = ["ResourceOwnerClientAuthorizationTest.java"],
+    test_class = "com.clouway.oauth2.ResourceOwnerClientAuthorizationTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "RetrievePublicCertsTest",
+    srcs = ["RetrievePublicCertsTest.java"],
+    test_class = "com.clouway.oauth2.RetrievePublicCertsTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "RetrieveUserInfoWithAccessTokenTest",
+    srcs = ["RetrieveUserInfoWithAccessTokenTest.java"],
+    test_class = "com.clouway.oauth2.RetrieveUserInfoWithAccessTokenTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "RevokeTokensTest",
+    srcs = ["RevokeTokensTest.java"],
+    test_class = "com.clouway.oauth2.RevokeTokensTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "SerializeBearerTokensTest",
+    srcs = ["SerializeBearerTokensTest.java"],
+    test_class = "com.clouway.oauth2.SerializeBearerTokensTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)

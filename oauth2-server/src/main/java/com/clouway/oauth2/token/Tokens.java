@@ -1,12 +1,7 @@
 package com.clouway.oauth2.token;
 
-import com.clouway.oauth2.DateTime;
-import com.clouway.oauth2.Identity;
-import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.common.DateTime;
 import com.google.common.base.Optional;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Tokens is responsible for issuing and retriving of issued tokens.

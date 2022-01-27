@@ -1,0 +1,42 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library", "kt_jvm_test")
+load("//tools/jvm:variables.bzl", "TEST_DEPS")
+
+PACKAGE_DEPS = [
+    "//oauth2-server/src/main/java/com/clouway/oauth2/common",
+    "//oauth2-server/src/main/java/com/clouway/oauth2/util",
+]
+
+kt_jvm_library(
+    name = "common",
+    srcs = ["CalendarUtil.java", "CommonMatchers.java"],
+    visibility = ["//visibility:public"],
+    deps = TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "DateTimeAddSecondsTest",
+    srcs = ["DateTimeAddSecondsTest.java"],
+    test_class = "com.clouway.oauth2.common.DateTimeAddSecondsTest",
+    deps = TEST_DEPS + PACKAGE_DEPS + [":common"],
+)
+
+kt_jvm_test(
+    name = "DurationEqualityTest",
+    srcs = ["DurationEqualityTest.java"],
+    test_class = "com.clouway.oauth2.common.DurationEqualityTest",
+    deps = TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "DurationTest",
+    srcs = ["DurationTest.java"],
+    test_class = "com.clouway.oauth2.common.DurationTest",
+    deps = TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
+    name = "DateTimeEqualityTest",
+    srcs = ["DateTimeEqualityTest.java"],
+    test_class = "com.clouway.oauth2.common.DateTimeEqualityTest",
+    deps = TEST_DEPS + PACKAGE_DEPS,
+)

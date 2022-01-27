@@ -7,9 +7,11 @@ import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.authorization.Authorization;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.codechallenge.CodeChallenge;
+import com.clouway.oauth2.common.DateTime;
+import com.clouway.oauth2.token.FindIdentityRequest;
 import com.clouway.oauth2.token.GrantType;
-import com.clouway.oauth2.user.FindIdentityRequest;
-import com.clouway.oauth2.user.IdentityFinder;
+import com.clouway.oauth2.token.Identity;
+import com.clouway.oauth2.token.IdentityFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import org.jmock.Expectations;
@@ -17,12 +19,10 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.HashMap;
-
 import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
-import static com.clouway.oauth2.IdentityBuilder.aNewIdentity;
 import static com.clouway.oauth2.authorization.AuthorizationBuilder.newAuthorization;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
+import static com.clouway.oauth2.token.IdentityBuilder.aNewIdentity;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;

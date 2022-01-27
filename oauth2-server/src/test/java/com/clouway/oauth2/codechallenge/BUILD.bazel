@@ -1,0 +1,12 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_test")
+load("//tools/jvm:variables.bzl", "TEST_DEPS")
+
+kt_jvm_test(
+    name = "AuthorizationCodeVerifierTest",
+    srcs = ["AuthorizationCodeVerifierTest.java"],
+    test_class = "com.clouway.oauth2.codechallenge.AuthorizationCodeVerifierTest",
+    deps = TEST_DEPS + [
+        "//oauth2-server/src/main/java/com/clouway/oauth2/authorization",
+        "@maven//:com_google_guava_guava",
+    ],
+)

@@ -1,0 +1,4 @@
+rule com.fasterxml.jackson.core.** com.clouway.security.internal.jackson.core.@1
+rule com.fasterxml.jackson.annotation.** com.clouway.security.internal.jackson.annotations.@1
+rule com.fasterxml.jackson.databind.** com.clouway.security.internal.jackson.databind.@1
+rule io.jsonwebtoken.** com.clouway.security.internal.jwt.@1

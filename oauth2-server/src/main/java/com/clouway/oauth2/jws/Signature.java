@@ -1,10 +1,5 @@
 package com.clouway.oauth2.jws;
 
-import com.clouway.oauth2.jws.Pem.Block;
-
-import java.security.Key;
-import java.security.KeyPair;
-
 /**
  * Signature is representing a single JWS signature that is applied over received messages.
  * <p/>

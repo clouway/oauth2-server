@@ -1,17 +1,18 @@
 package com.clouway.oauth2.exampleapp;
 
-import com.clouway.oauth2.Duration;
-import com.clouway.oauth2.KeyStore;
 import com.clouway.oauth2.OAuth2Config;
 import com.clouway.oauth2.OAuth2Servlet;
+import com.clouway.oauth2.ResourceOwnerIdentityFinder;
 import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
 import com.clouway.oauth2.client.ClientFinder;
-import com.clouway.oauth2.client.IdentityKeyPair;
 import com.clouway.oauth2.client.JwtKeyStore;
+import com.clouway.oauth2.common.Duration;
 import com.clouway.oauth2.exampleapp.security.SecurityModule;
+import com.clouway.oauth2.keystore.IdentityKeyPair;
+import com.clouway.oauth2.keystore.KeyStore;
+import com.clouway.oauth2.token.IdentityFinder;
 import com.clouway.oauth2.token.Tokens;
-import com.clouway.oauth2.user.IdentityFinder;
-import com.clouway.oauth2.user.ResourceOwnerIdentityFinder;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;

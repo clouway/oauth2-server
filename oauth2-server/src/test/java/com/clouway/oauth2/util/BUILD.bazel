@@ -1,0 +1,14 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library", "kt_jvm_test")
+load("//tools/jvm:variables.bzl", "FSERVE_TEST_DEPS", "TEST_DEPS")
+
+package(default_visibility = ["//visibility:public"])
+
+kt_jvm_library(
+    name = "util",
+    srcs = glob(["*.java"]),
+    deps = FSERVE_TEST_DEPS + TEST_DEPS + [
+        "//oauth2-server/src/main/java/com/clouway/oauth2/util",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/common",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
+    ],
+)
