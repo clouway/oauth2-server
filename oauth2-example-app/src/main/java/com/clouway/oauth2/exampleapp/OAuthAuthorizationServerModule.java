@@ -3,7 +3,7 @@ package com.clouway.oauth2.exampleapp;
 import com.clouway.oauth2.OAuth2Config;
 import com.clouway.oauth2.OAuth2Servlet;
 import com.clouway.oauth2.ResourceOwnerIdentityFinder;
-import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.authorization.ClientAuthorizer;
 import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.common.Duration;
@@ -34,7 +34,7 @@ public class OAuthAuthorizationServerModule extends AbstractModule {
   @Singleton
   static class OAuth2ServletBinding extends OAuth2Servlet {
 
-    private final ClientAuthorizationRepository clientAuthorizationRepository;
+    private final ClientAuthorizer clientAuthorizer;
     private final ClientFinder clientFinder;
     private final Tokens tokens;
     private final IdentityFinder identityFinder;
@@ -42,8 +42,8 @@ public class OAuthAuthorizationServerModule extends AbstractModule {
     private final JwtKeyStore jwtKeyStore;
 
     @Inject
-    public OAuth2ServletBinding(ClientAuthorizationRepository clientAuthorizationRepository, ClientFinder clientFinder, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, JwtKeyStore jwtKeyStore) {
-      this.clientAuthorizationRepository = clientAuthorizationRepository;
+    public OAuth2ServletBinding(ClientAuthorizer clientAuthorizer, ClientFinder clientFinder, Tokens tokens, IdentityFinder identityFinder, ResourceOwnerIdentityFinder resourceOwnerIdentityFinder, JwtKeyStore jwtKeyStore) {
+      this.clientAuthorizer = clientAuthorizer;
       this.clientFinder = clientFinder;
       this.tokens = tokens;
       this.identityFinder = identityFinder;
@@ -55,7 +55,7 @@ public class OAuthAuthorizationServerModule extends AbstractModule {
     protected OAuth2Config config() {
       return OAuth2Config.newConfig()
               .loginPageUrl("/r/oauth/login?continue=")
-              .clientAuthorizationRepository(clientAuthorizationRepository)
+              .clientAuthorizationRepository(clientAuthorizer)
               .clientFinder(clientFinder)
               .tokens(tokens)
               .identityFinder(identityFinder)

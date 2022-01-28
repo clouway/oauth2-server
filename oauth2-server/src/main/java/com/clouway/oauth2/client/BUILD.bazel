@@ -4,10 +4,14 @@ package(default_visibility = ["//visibility:public"])
 
 kt_jvm_library(
     name = "client",
-    srcs = glob(["*.kt", "*.java"]),
+    srcs = glob([
+        "*.kt",
+        "*.java",
+    ]),
     deps = [
-        "@maven//:com_google_guava_guava",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/codechallenge",
         "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
         "//oauth2-server/src/main/java/com/clouway/oauth2/jwt",
+        "@maven//:com_google_guava_guava",
     ],
 )

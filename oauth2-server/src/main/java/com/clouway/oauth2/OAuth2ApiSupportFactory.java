@@ -43,7 +43,7 @@ public class OAuth2ApiSupportFactory {
                     new InstantaneousRequestController(
                             new IdentityController(
                                     config.resourceOwnerIdentityFinder(),
-                                    new ClientAuthorizationActivity(config.clientFinder(), config.clientAuthorizationRepository()), config.loginPageUrl())
+                                    new ClientAuthorizationActivity(config.clientAuthorizer()), config.loginPageUrl())
                     )
             ),
             new FkRegex(".*/token",
@@ -51,21 +51,17 @@ public class OAuth2ApiSupportFactory {
                             new RequestHandlerMatchingParam("grant_type", "authorization_code",
                                     new InstantaneousRequestController(
                                             new ClientAuthenticationCredentialsRequest(
-                                                    new ClientController(
-                                                            config.clientFinder(),
-                                                            new AuthCodeAuthorization(
-                                                                    config.clientAuthorizationRepository(),
-                                                                    new CodeExchangeVerificationFlow(
-                                                                            new AuthorizationCodeVerifier(),
-                                                                            new IdentityAuthorizationActivity(
-                                                                                    config.identityFinder(),
-                                                                                    new IssueNewTokenActivity(
-                                                                                            config.tokens(),
-                                                                                            idTokenFactory)
-                                                                            )
+                                                    new AuthCodeAuthorization(
+                                                            config.clientAuthorizer(),
+                                                            new CodeExchangeVerificationFlow(
+                                                                    new AuthorizationCodeVerifier(),
+                                                                    new IdentityAuthorizationActivity(
+                                                                            config.identityFinder(),
+                                                                            new IssueNewTokenActivity(
+                                                                                    config.tokens(),
+                                                                                    idTokenFactory)
                                                                     )
                                                             )
-
                                                     )
                                             ))
                             ),

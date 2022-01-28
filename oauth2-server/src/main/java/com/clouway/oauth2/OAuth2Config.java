@@ -1,6 +1,6 @@
 package com.clouway.oauth2;
 
-import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.authorization.ClientAuthorizer;
 import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.keystore.KeyStore;
@@ -25,7 +25,7 @@ public final class OAuth2Config {
     private Tokens tokens;
     private IdentityFinder identityFinder;
     private JwtKeyStore jwtKeyStore;
-    private ClientAuthorizationRepository clientAuthorizationRepository;
+    private ClientAuthorizer clientAuthorizer;
     private ClientFinder clientFinder;
     private String loginPageUrl;
     private ResourceOwnerIdentityFinder resourceOwnerIdentityFinder;
@@ -51,8 +51,8 @@ public final class OAuth2Config {
       return this;
     }
 
-    public Builder clientAuthorizationRepository(ClientAuthorizationRepository clientAuthorizationRepository) {
-      this.clientAuthorizationRepository = clientAuthorizationRepository;
+    public Builder clientAuthorizationRepository(ClientAuthorizer clientAuthorizer) {
+      this.clientAuthorizer = clientAuthorizer;
       return this;
     }
 
@@ -82,7 +82,7 @@ public final class OAuth2Config {
   private final ClientFinder clientFinder;
 
   private final Tokens tokens;
-  private final ClientAuthorizationRepository clientAuthorizationRepository;
+  private final ClientAuthorizer clientAuthorizer;
   private final JwtKeyStore jwtKeyStore;
   private final String loginPageUrl;
   private final KeyStore keyStore;
@@ -92,14 +92,14 @@ public final class OAuth2Config {
     this.identityFinder = builder.identityFinder;
     this.resourceOwnerIdentityFinder = builder.resourceOwnerIdentityFinder;
     this.clientFinder = builder.clientFinder;
-    this.clientAuthorizationRepository = builder.clientAuthorizationRepository;
+    this.clientAuthorizer = builder.clientAuthorizer;
     this.jwtKeyStore = builder.jwtKeyStore;
     this.loginPageUrl = builder.loginPageUrl;
     this.keyStore = builder.keyStore;
   }
 
-  public ClientAuthorizationRepository clientAuthorizationRepository() {
-    return this.clientAuthorizationRepository;
+  public ClientAuthorizer clientAuthorizer() {
+    return this.clientAuthorizer;
   }
 
   public JwtKeyStore jwtKeyStore() {

@@ -2,7 +2,7 @@ package com.clouway.oauth2.exampleapp.storage;
 
 
 import com.clouway.oauth2.ResourceOwnerIdentityFinder;
-import com.clouway.oauth2.authorization.ClientAuthorizationRepository;
+import com.clouway.oauth2.authorization.ClientAuthorizer;
 import com.clouway.oauth2.client.ClientFinder;
 import com.clouway.oauth2.client.ClientRegistrationRequest;
 import com.clouway.oauth2.client.JwtKeyStore;
@@ -35,7 +35,8 @@ public class InMemoryModule extends AbstractModule {
     bind(ResourceOwnerAuthentication.class).toInstance(resourceOwnerRepository);
     bind(SessionSecurity.class).toInstance(resourceOwnerRepository);
 
-    InMemoryClientRepository clientRepository = new InMemoryClientRepository();
+    InMemoryClientRepository clientRepository = new InMemoryClientRepository(new UrlSafeTokenGenerator());
+    
     clientRepository.register(new ClientRegistrationRequest("857613db7b18232c72a5093ad19dbc6df74a139e", "test", Collections.singleton("http://localhost:8080/oauth/callback")));
     clientRepository.registerServiceAccount("xxx@apps.clouway.com", "-----BEGIN PRIVATE KEY-----\n" +
             "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCH/eazwg0BwuFx\n" +
@@ -69,8 +70,8 @@ public class InMemoryModule extends AbstractModule {
     bind(JwtKeyStore.class).toInstance(clientRepository);
     bind(ClientFinder.class).toInstance(clientRepository);
 
-    InMemoryClientAuthorizationRepository authorizationRepository = new InMemoryClientAuthorizationRepository(new UrlSafeTokenGenerator());
-    bind(ClientAuthorizationRepository.class).toInstance(authorizationRepository);
+    InMemoryClientAuthorizer authorizationRepository = new InMemoryClientAuthorizer();
+    bind(ClientAuthorizer.class).toInstance(authorizationRepository);
 
     InMemoryUserRepository userRepository = new InMemoryUserRepository();
 

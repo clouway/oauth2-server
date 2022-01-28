@@ -2,13 +2,14 @@ package com.clouway.oauth2.exampleapp.storage;
 
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.client.ClientFinder;
-import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.client.ClientRegistrationRequest;
+import com.clouway.oauth2.client.JwtKeyStore;
 import com.clouway.oauth2.exampleapp.ClientRegistry;
 import com.clouway.oauth2.jws.Pem;
 import com.clouway.oauth2.jws.Pem.Block;
 import com.clouway.oauth2.jwt.Jwt.ClaimSet;
 import com.clouway.oauth2.jwt.Jwt.Header;
+import com.clouway.oauth2.token.TokenGenerator;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -25,9 +26,11 @@ class InMemoryClientRepository implements ClientRegistry, ClientFinder, JwtKeySt
   private final Map<String, Client> clients = Maps.newHashMap();
   private final Map<String, Pem.Block> serviceAccountKeys = Maps.newHashMap();
   private final Pem pem = new Pem();
+  private final TokenGenerator tokenGenerator;
 
   @Inject
-  public InMemoryClientRepository() {
+  public InMemoryClientRepository(TokenGenerator tokenGenerator) {
+    this.tokenGenerator = tokenGenerator;
   }
 
   @Override
@@ -62,4 +65,6 @@ class InMemoryClientRepository implements ClientRegistry, ClientFinder, JwtKeySt
       e.printStackTrace();
     }
   }
+
+
 }

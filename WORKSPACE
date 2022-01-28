@@ -52,13 +52,14 @@ protobuf_version = "3.14.0"
 
 grpc_version = "1.37.1"
 
-load("@rules_jvm_external//:specs.bzl", "maven")
-
 MAVEN_REPOSITORIES = [
     "https://jcenter.bintray.com/",
     "https://maven.google.com",
     "https://repo1.maven.org/maven2",
+    "https://jitpack.io",
 ]
+
+load("@rules_jvm_external//:specs.bzl", "maven")
 
 maven_install(
     artifacts = [
@@ -87,6 +88,14 @@ maven_install(
         "net.hamnaberg.json:json-javax:1.0",
         "com.clouway.security:jwt-java-client-okhttp:0.0.1",
         "com.squareup.okhttp3:okhttp:3.6.0",
+        maven.artifact(
+            group = "com.github.mobiletoly",
+            artifact = "urlsome",
+            version = "0.4",
+            exclusions = [
+                "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+            ],
+        ),
         # Testin Libraries
         "org.hamcrest:hamcrest-all:1.3",
         "junit:junit:4.11",

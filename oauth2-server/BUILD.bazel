@@ -13,6 +13,9 @@ java_binary(
     name = "provided-deps",
     create_executable = False,
     runtime_deps = [
+        "@com_github_jetbrains_kotlin//:annotations",
+        "@com_github_jetbrains_kotlin//:jvm-abi-gen",
+        "@com_github_jetbrains_kotlin//:kotlin-reflect",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib-jdk7",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib-jdk8",

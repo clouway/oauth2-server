@@ -4,7 +4,10 @@ package(default_visibility = ["//visibility:public"])
 
 kt_jvm_library(
     name = "oauth2",
-    srcs = glob(["*.java", "*.kt"]),
+    srcs = glob([
+        "*.java",
+        "*.kt",
+    ]),
     deps = [
         "//oauth2-server/src/main/java/com/clouway/oauth2/authorization",
         "//oauth2-server/src/main/java/com/clouway/oauth2/client",
@@ -19,6 +22,7 @@ kt_jvm_library(
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_github_mobiletoly_urlsome",
         "@maven//:com_google_code_gson_gson",
         "@maven//:com_google_guava_guava",
         "@maven//:io_jsonwebtoken_jjwt_api",

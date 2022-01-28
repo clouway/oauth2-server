@@ -3,6 +3,7 @@ package com.clouway.oauth2;
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
 import com.clouway.oauth2.client.Client;
+import com.clouway.oauth2.client.ClientCredentials;
 import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.IdTokenFactory;
@@ -16,7 +17,7 @@ import com.google.common.base.Optional;
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-class RefreshTokenActivity implements ClientActivity {
+class RefreshTokenActivity implements ClientActivity, ClientRequest {
 
   private final Tokens tokens;
   private final IdTokenFactory idTokenFactory;
@@ -55,5 +56,34 @@ class RefreshTokenActivity implements ClientActivity {
       return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.accessToken.scopes, response.refreshToken, possibleIdToken.get());
     }
     return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(instant), response.accessToken.scopes, response.refreshToken);
+  }
+
+  @Override
+  public Response handleAsOf(Request request, ClientCredentials clientCredentials, DateTime dateTime) {
+    String refreshToken = request.param("refresh_token");
+
+    TokenResponse response = tokens.refreshToken(refreshToken, dateTime);
+    if (!response.isSuccessful()) {
+      return OAuthError.invalidGrant("Provided refresh_token was not found.");
+    }
+    BearerToken accessToken = response.accessToken;
+
+    Optional<Identity> possibleIdentity = identityFinder.findIdentity(
+            new FindIdentityRequest(accessToken.identityId, accessToken.grantType, dateTime, accessToken.params, accessToken.clientId));
+
+    if (!possibleIdentity.isPresent()) {
+      return OAuthError.invalidGrant("identity was not found");
+    }
+    Optional<String> possibleIdToken = idTokenFactory.create(
+            request.header("Host"),
+            clientCredentials.clientId(),
+            possibleIdentity.get(),
+            response.accessToken.ttlSeconds(dateTime),
+            dateTime
+    );
+    if (possibleIdToken.isPresent()) {
+      return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(dateTime), response.accessToken.scopes, response.refreshToken, possibleIdToken.get());
+    }
+    return new BearerTokenResponse(accessToken.value, accessToken.ttlSeconds(dateTime), response.accessToken.scopes, response.refreshToken);
   }
 }

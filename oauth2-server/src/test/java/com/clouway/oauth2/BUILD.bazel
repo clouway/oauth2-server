@@ -30,15 +30,6 @@ kt_jvm_test(
 )
 
 kt_jvm_test(
-    name = "AuthorizationRequestEqualityTest",
-    srcs = ["AuthorizationRequestEqualityTest.java"],
-    test_class = "com.clouway.oauth2.AuthorizationRequestEqualityTest",
-    deps = TEST_DEPS + PACKAGE_DEPS + [
-        "@maven//:com_google_guava_guava",
-    ],
-)
-
-kt_jvm_test(
     name = "AuthorizationResponseTest",
     srcs = ["AuthorizationResponseTest.java"],
     test_class = "com.clouway.oauth2.AuthorizationResponseTest",
@@ -76,7 +67,10 @@ kt_jvm_test(
 
 kt_jvm_test(
     name = "DecodeClientCredentialsTest",
-    srcs = ["DecodeClientCredentialsTest.java", "ByteRequest.java"],
+    srcs = [
+        "ByteRequest.java",
+        "DecodeClientCredentialsTest.java",
+    ],
     test_class = "com.clouway.oauth2.DecodeClientCredentialsTest",
     deps = TEST_DEPS + PACKAGE_DEPS,
 )
