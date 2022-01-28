@@ -37,7 +37,7 @@ final class IdentityController implements InstantaneousRequest {
       return new RsRedirect(loginPageUrl + continueTo);
     }
 
-    return identityActivity.execute(optIdentity.get(), request);
+    return identityActivity.execute(optIdentity.get(), request, instantTime);
   }
 
   private String queryParams(Request request) {

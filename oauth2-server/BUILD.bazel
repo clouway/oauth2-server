@@ -19,7 +19,6 @@ java_binary(
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib-jdk7",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib-jdk8",
-        "@maven//:com_clouway_fserve_fserve",
         "@maven//:com_google_code_gson_gson",
         "@maven//:com_google_guava_guava",
         "@maven//:javax_annotation_javax_annotation_api",
@@ -59,7 +58,7 @@ jar_jar(
 
 java_export(
     name = "exported_lib",
-    maven_coordinates = "com.clouway.security:oauth2-server:2.0.0-SNAPSHOT",
+    maven_coordinates = "com.clouway.security:oauth2-server:2.0.2-SNAPSHOT",
     runtime_deps = [
         ":jarjar",
     ],

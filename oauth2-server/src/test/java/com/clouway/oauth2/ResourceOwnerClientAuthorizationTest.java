@@ -8,6 +8,7 @@ import com.clouway.oauth2.authorization.ClientAuthorizationResult;
 import com.clouway.oauth2.authorization.ClientAuthorizer;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.codechallenge.CodeChallenge;
+import com.clouway.oauth2.common.DateTime;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import org.jmock.Expectations;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
@@ -57,7 +59,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(new ClientAuthorizationResult.Success(anyExistingClient, "1234")));
     }});
 
-    Response response = activity.execute("user1", authRequest);
+    Response response = activity.execute("user1", authRequest, new DateTime());
     Status status = response.status();
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
@@ -83,7 +85,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(new ClientAuthorizationResult.Success(anyExistingClient, "1234")));
     }});
 
-    Response response = activity.execute("user1", authRequest);
+    Response response = activity.execute("user1", authRequest, new DateTime());
     Status status = response.status();
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
@@ -102,20 +104,22 @@ public class ResourceOwnerClientAuthorizationTest {
             )
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
+    final DateTime anyInstantTime = new DateTime();
     AuthorizationRequest req = new AuthorizationRequest(
             "::client_id::",
             "user1",
             "code",
             Sets.newTreeSet(Arrays.asList("abc")),
             emptyCodeChallenge,
-            ImmutableMap.of("customerIndex", "::customerIndex::")
+            ImmutableMap.of("customerIndex", "::customerIndex::"),
+            anyInstantTime.toLocalDateTime()
     );
     context.checking(new Expectations() {{
       oneOf(clientAuthorization).authorizeClient(req);
       will(returnValue(new ClientAuthorizationResult.Success(anyExistingClient, "code")));
     }});
 
-    activity.execute("user1", authRequest);
+    activity.execute("user1", authRequest, anyInstantTime);
   }
 
   @Test
@@ -130,6 +134,7 @@ public class ResourceOwnerClientAuthorizationTest {
             )
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
+    final DateTime anyInstantTime = new DateTime();
 
     AuthorizationRequest req = new AuthorizationRequest(
             "::client_id::",
@@ -137,14 +142,15 @@ public class ResourceOwnerClientAuthorizationTest {
             "code",
             Sets.newTreeSet(Arrays.asList("CanDoX", "CanDoY", "CanDoZ")),
             emptyCodeChallenge,
-            ImmutableMap.of("customerIndex", "::customerIndex::")
+            ImmutableMap.of("customerIndex", "::customerIndex::"),
+            anyInstantTime.toLocalDateTime()
     );
     context.checking(new Expectations() {{
       oneOf(clientAuthorization).authorizeClient(req);
       will(returnValue(new ClientAuthorizationResult.Success(anyExistingClient, "code")));
     }});
 
-    activity.execute("user1", authRequest);
+    activity.execute("user1", authRequest, anyInstantTime);
   }
 
   @Test
@@ -153,15 +159,24 @@ public class ResourceOwnerClientAuthorizationTest {
             ImmutableMap.of("response_type", "code", "client_id", "::another client::", "customerIndex", "::customerIndex::")
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
+    final DateTime anyInstantTime = new DateTime();
 
-    AuthorizationRequest req = new AuthorizationRequest("::another client::", "user1", "code", Collections.<String>emptySet(), emptyCodeChallenge, ImmutableMap.of("customerIndex", "::customerIndex::"));
+    AuthorizationRequest req = new AuthorizationRequest(
+            "::another client::",
+            "user1",
+            "code",
+            Collections.<String>emptySet(),
+            emptyCodeChallenge,
+            ImmutableMap.of("customerIndex", "::customerIndex::"),
+            anyInstantTime.toLocalDateTime()
+    );
 
     context.checking(new Expectations() {{
       oneOf(clientAuthorization).authorizeClient(req);
       will(returnValue(new ClientAuthorizationResult.Success(anyExistingClient, "1234")));
     }});
 
-    Response response = activity.execute("user1", authRequest);
+    Response response = activity.execute("user1", authRequest, anyInstantTime);
     Status status = response.status();
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
@@ -179,7 +194,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(new ClientAuthorizationResult.AccessDenied("user_account_not_found")));
     }});
 
-    Response response = activity.execute("::identity_id::", authRequest);
+    Response response = activity.execute("::identity_id::", authRequest, new DateTime());
     Status status = response.status();
 
     assertThat(status.code, is(HttpURLConnection.HTTP_MOVED_TEMP));
@@ -197,7 +212,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(new ClientAuthorizationResult.ClientNotFound()));
     }});
 
-    Response response = activity.execute("::any_identity_id::", authRequest);
+    Response response = activity.execute("::any_identity_id::", authRequest, new DateTime());
     Status status = response.status();
     assertThat(status.code, is(HttpURLConnection.HTTP_BAD_REQUEST));
   }
@@ -219,7 +234,7 @@ public class ResourceOwnerClientAuthorizationTest {
       will(returnValue(new ClientAuthorizationResult.Success(anyExistingClient, "code")));
     }});
 
-    Response response = activity.execute("::identity_id::", authRequest);
+    Response response = activity.execute("::identity_id::", authRequest, new DateTime());
     Status status = response.status();
     assertThat(status.code, is(HttpURLConnection.HTTP_BAD_REQUEST));
   }
@@ -230,7 +245,7 @@ public class ResourceOwnerClientAuthorizationTest {
             ImmutableMap.of("response_type", "code", "client_id", "::client_id::", "redirect_uri", "http://example.com/callback", "code_challenge", "::code_challenge::", "code_challenge_method", "::chosenMethod::")
     ).build();
     final Client anyExistingClient = aNewClient().withRedirectUrl("http://example.com/callback").build();
-
+    final DateTime anyInstantTime = new DateTime();
     context.checking(new Expectations() {{
       oneOf(clientAuthorization).authorizeClient(
               new AuthorizationRequest(
@@ -239,11 +254,13 @@ public class ResourceOwnerClientAuthorizationTest {
                       "code",
                       Collections.<String>emptySet(),
                       new CodeChallenge("::code_challenge::", "::chosenMethod::"),
-                      Collections.<String, String>emptyMap())
+                      Collections.<String, String>emptyMap(),
+                      anyInstantTime.toLocalDateTime()
+              )
       );
       will(returnValue(new ClientAuthorizationResult.Success(anyExistingClient, "code")));
     }});
 
-    activity.execute("user1", authRequest);
+    activity.execute("user1", authRequest, anyInstantTime);
   }
 }

@@ -2,6 +2,7 @@ package com.clouway.oauth2;
 
 import com.clouway.friendlyserve.Request;
 import com.clouway.friendlyserve.Response;
+import com.clouway.oauth2.common.DateTime;
 
 /**
  * IdentityActivity is an activity which is executed for authorised users.
@@ -10,6 +11,6 @@ import com.clouway.friendlyserve.Response;
  */
 interface IdentityActivity {
 
-  Response execute(String identityId, Request request);
+  Response execute(String identityId, Request request, DateTime instantTime);
 
 }

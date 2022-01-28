@@ -7,10 +7,13 @@ import com.clouway.oauth2.authorization.ClientAuthorizer
 import com.clouway.oauth2.authorization.AuthorizationRequest
 import com.clouway.oauth2.authorization.ClientAuthorizationResult
 import com.clouway.oauth2.codechallenge.CodeChallenge
+import com.clouway.oauth2.common.DateTime
 import com.clouway.oauth2.util.Params
 import com.github.mobiletoly.urlsome.Urlsome
 import com.google.common.base.Splitter
 import com.google.common.collect.Sets
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -19,7 +22,7 @@ internal class ClientAuthorizationActivity(
 	private val clientAuthorizer: ClientAuthorizer
 ) : IdentityActivity {
 	private val params = Params()
-	override fun execute(identityId: String, request: Request): Response {
+	override fun execute(identityId: String, request: Request, instantTime: DateTime): Response {
 		val responseType = request.param("response_type")
 		val clientId = request.param("client_id")
 		val requestedUrl = request.param("redirect_uri")
@@ -49,7 +52,8 @@ internal class ClientAuthorizationActivity(
 				responseType,
 				scopes,
 				codeChallenge,
-				userDefinedParams
+				userDefinedParams,
+				time = instantTime.toLocalDateTime()
 			)
 		)
 		

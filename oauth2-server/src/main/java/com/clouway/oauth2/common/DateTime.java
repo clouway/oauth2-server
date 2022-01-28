@@ -1,6 +1,8 @@
 package com.clouway.oauth2.common;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Objects;
 
@@ -49,6 +51,10 @@ public final class DateTime implements Serializable {
 
   public Long timestamp() {
     return time.getTime();
+  }
+
+  public LocalDateTime toLocalDateTime() {
+    return time.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
   }
 
   @Override

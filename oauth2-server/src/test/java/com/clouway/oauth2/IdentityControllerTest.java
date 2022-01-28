@@ -49,7 +49,7 @@ public class IdentityControllerTest {
       oneOf(identityFinder).find(request, anyInstantTime);
       will(returnValue(Optional.of("::identity_id::")));
 
-      oneOf(identityActivity).execute("::identity_id::", request);
+      oneOf(identityActivity).execute("::identity_id::", request, anyInstantTime);
       will(returnValue(new RsText("test response")));
     }});
 
