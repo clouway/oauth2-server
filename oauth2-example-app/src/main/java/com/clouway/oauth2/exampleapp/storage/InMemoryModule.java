@@ -70,7 +70,7 @@ public class InMemoryModule extends AbstractModule {
     bind(JwtKeyStore.class).toInstance(clientRepository);
     bind(ClientFinder.class).toInstance(clientRepository);
 
-    InMemoryClientAuthorizer authorizationRepository = new InMemoryClientAuthorizer();
+    InMemoryClientAuthorizer authorizationRepository = new InMemoryClientAuthorizer(clientRepository);
     bind(ClientAuthorizer.class).toInstance(authorizationRepository);
 
     InMemoryUserRepository userRepository = new InMemoryUserRepository();

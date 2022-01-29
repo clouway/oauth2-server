@@ -71,8 +71,8 @@ internal class ClientAuthorizationActivity(
 			}
 			
 			is ClientAuthorizationResult.ClientNotFound -> {
-				// The identity provider is not able to determine the client
-				// so we have to tell the caller that it's an unknown or miss-configured. 
+				// The identity provider is not able to determine the client,
+				// so we tell the caller that it's an unknown or miss-configured.
 				return OAuthError.unauthorizedClient("Unknown client '$clientId'")
 			}
 			is ClientAuthorizationResult.AccessDenied -> {

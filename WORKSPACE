@@ -6,9 +6,9 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 # Download master or specific revisions
 http_archive(
     name = "io_bazel_rules_kotlin_master",
-    sha256 = "08710aa22db195d09ca0cbd0e8f4944bb51f6cfd9f63be743969dee505b2996f",
-    strip_prefix = "rules_kotlin-master",
-    urls = ["https://github.com/bazelbuild/rules_kotlin/archive/refs/heads/master.zip"],
+    sha256 = "8ed67ef51710461952b79debc5796e883d9f2d3a2e905b796b17e97570d27609",
+    strip_prefix = "rules_kotlin-35996519613f96236801c39d02e301d74df0a132",
+    url = "https://github.com/bazelbuild/rules_kotlin/archive/35996519613f96236801c39d02e301d74df0a132.tar.gz",
 )
 
 load("@io_bazel_rules_kotlin_master//src/main/starlark/release_archive:repository.bzl", "archive_repository")
