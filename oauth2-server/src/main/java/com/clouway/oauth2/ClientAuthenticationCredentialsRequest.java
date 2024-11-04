@@ -45,11 +45,13 @@ class ClientAuthenticationCredentialsRequest implements InstantaneousRequest {
     }
 
     String clientId = request.param("client_id");
+    String clientSecret = request.param("client_secret");
+    
     if (Strings.isNullOrEmpty(clientId)) {
       return new RsBadRequest();
     }
 
-    return clientRequest.handleAsOf(request, new ClientCredentials(clientId, ""), instantTime);
+    return clientRequest.handleAsOf(request, new ClientCredentials(clientId, clientSecret), instantTime);
   }
 
   private ClientCredentials parseCredentials(String decodedHeader) {

@@ -3,39 +3,34 @@ workspace(name = "oauth2-server")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-# Download master or specific revisions
+######################
+# KOTLIN SUPPORT
+######################
+
+rules_kotlin_version = "1.8.1"
+
+rules_kotlin_sha = "a630cda9fdb4f56cf2dc20a4bf873765c41cf00e9379e8d59cd07b24730f4fde"
+
 http_archive(
-    name = "io_bazel_rules_kotlin_master",
-    sha256 = "8ed67ef51710461952b79debc5796e883d9f2d3a2e905b796b17e97570d27609",
-    strip_prefix = "rules_kotlin-35996519613f96236801c39d02e301d74df0a132",
-    url = "https://github.com/bazelbuild/rules_kotlin/archive/35996519613f96236801c39d02e301d74df0a132.tar.gz",
-)
-
-load("@io_bazel_rules_kotlin_master//src/main/starlark/release_archive:repository.bzl", "archive_repository")
-
-archive_repository(
     name = "io_bazel_rules_kotlin",
-    source_repository_name = "io_bazel_rules_kotlin_master",
+    sha256 = rules_kotlin_sha,
+    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
 )
 
-load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version", "versions")
+load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "versions")
 
-kotlin_repositories(
-    compiler_release = kotlinc_version(
-        release = "1.5.31",
-        sha256 = "661111286f3e5ac06aaf3a9403d869d9a96a176b62b141814be626a47249fe9e",
-    ),
-)
+kotlin_repositories()  # if you want the default. Otherwise see custom kotlinc distribution below
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_register_toolchains")
-
-kt_register_toolchains()
+register_toolchains("//:kotlin_toolchain")
 
 http_archive(
     name = "rules_jvm_external",
     sha256 = versions.RULES_JVM_EXTERNAL_SHA,
     strip_prefix = "rules_jvm_external-%s" % versions.RULES_JVM_EXTERNAL_TAG,
-    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % versions.RULES_JVM_EXTERNAL_TAG,
+    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (
+        versions.RULES_JVM_EXTERNAL_TAG,
+        versions.RULES_JVM_EXTERNAL_TAG,
+    ),
 )
 
 load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
@@ -47,6 +42,7 @@ load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
 rules_jvm_external_setup()
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
+load("@rules_jvm_external//:specs.bzl", "maven")
 
 protobuf_version = "3.14.0"
 
@@ -89,12 +85,12 @@ maven_install(
         "com.clouway.security:jwt-java-client-okhttp:0.0.1",
         "com.squareup.okhttp3:okhttp:3.6.0",
         maven.artifact(
-            group = "com.github.mobiletoly",
             artifact = "urlsome",
-            version = "0.4",
             exclusions = [
                 "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
             ],
+            group = "com.github.mobiletoly",
+            version = "0.4",
         ),
         # Testin Libraries
         "org.hamcrest:hamcrest-all:1.3",

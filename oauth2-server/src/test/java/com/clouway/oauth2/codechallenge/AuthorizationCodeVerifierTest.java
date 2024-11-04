@@ -18,13 +18,10 @@ public class AuthorizationCodeVerifierTest {
 
   @Test
   public void happyPath() throws Exception {
-    String codeVerifierValue = "::code::";
-    byte[] hashedCodeChallenge = MessageDigest.getInstance("SHA-256").digest(codeVerifierValue.getBytes(StandardCharsets.UTF_8));
-    String transformedCodeChallenge = BaseEncoding.base64().encode(hashedCodeChallenge);
+    String cv = "By8FlXFBNZv5YseXWj0cPP5WxtkdMMOGeucC8uUszVYq9FFfdfR96D1M9kQzdAEQ3GvbGg85LbrPwuZYgZ0oP93BuGvjHGOEGRRYAGzMrzAvWcGPbVWDySDQXHTHuHEF";
 
-    CodeChallenge codeChallenge = new CodeChallenge(transformedCodeChallenge, "S256");
-
-    assertTrue(codeVerifier.verify(codeChallenge, codeVerifierValue));
+    CodeChallenge codeChallenge = new CodeChallenge("u3ifVLR4EQrCCLSIuFe52yZlHED17juKU3WbKxfnV6c", "S256");
+    assertTrue(codeVerifier.verify(codeChallenge, cv));
   }
 
   @Test

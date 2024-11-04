@@ -89,9 +89,10 @@ kt_jvm_test(
 
 kt_jvm_test(
     name = "IdentityControllerTest",
-    srcs = ["IdentityControllerTest.java"],
+    srcs = ["IdentityControllerTest.kt"],
+    associates = ["//oauth2-server/src/main/java/com/clouway/oauth2"],
     test_class = "com.clouway.oauth2.IdentityControllerTest",
-    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+    deps = TEST_DEPS + FSERVE_TEST_DEPS,
 )
 
 kt_jvm_test(

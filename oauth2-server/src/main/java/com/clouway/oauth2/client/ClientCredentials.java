@@ -1,5 +1,6 @@
 package com.clouway.oauth2.client;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -36,5 +37,13 @@ public class ClientCredentials {
   @Override
   public int hashCode() {
     return Objects.hashCode(clientId, clientSecret);
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+            .add("clientId", clientId)
+            .add("clientSecret", clientSecret)
+            .toString();
   }
 }
