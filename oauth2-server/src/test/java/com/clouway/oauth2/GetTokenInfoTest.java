@@ -8,6 +8,7 @@ import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.FindIdentityRequest;
+import com.clouway.oauth2.token.FindIdentityResult;
 import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.Identity;
 import com.clouway.oauth2.token.IdentityFinder;
@@ -61,7 +62,7 @@ public class GetTokenInfoTest {
       will(returnValue(Optional.of(anyToken)));
 
       oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
-      will(returnValue(Optional.of(anIdentity)));
+      will(returnValue(new FindIdentityResult.User(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
       oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));
@@ -95,7 +96,7 @@ public class GetTokenInfoTest {
       will(returnValue(Optional.of(anyToken)));
 
       oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
-      will(returnValue(Optional.of(anIdentity)));
+      will(returnValue(new FindIdentityResult.User(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
       oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));
@@ -119,7 +120,7 @@ public class GetTokenInfoTest {
       will(returnValue(Optional.of(anyToken)));
 
       oneOf(identityFinder).findIdentity(with(any(FindIdentityRequest.class)));
-      will(returnValue(Optional.of(anIdentity)));
+      will(returnValue(new FindIdentityResult.User(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
       oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));

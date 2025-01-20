@@ -6,6 +6,8 @@ import com.clouway.friendlyserve.testing.ParamRequest;
 import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.common.DateTime;
+import com.clouway.oauth2.token.FindIdentityResult;
+import com.clouway.oauth2.token.FindIdentityResult.NotFound;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.IdTokenFactory;
 import com.clouway.oauth2.token.Identity;
@@ -76,7 +78,7 @@ public class RefreshTokenForClientTest {
       ));
 
       oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap(), "::clientId::"));
-      will(returnValue(Optional.of(identity)));
+      will(returnValue(new FindIdentityResult.User(identity)));
 
       oneOf(request).header("Host");
       will(returnValue("::host::"));
@@ -120,7 +122,7 @@ public class RefreshTokenForClientTest {
       ));
 
       oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap(), "::clientId::"));
-      will(returnValue(Optional.of(identity)));
+      will(returnValue(new FindIdentityResult.User(identity)));
 
       oneOf(request).header("Host");
       will(returnValue("::host::"));
@@ -163,7 +165,7 @@ public class RefreshTokenForClientTest {
       ));
 
       oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, Collections.<String, String>emptyMap(), "::clientId::"));
-      will(returnValue(Optional.absent()));
+      will(returnValue(NotFound.INSTANCE));
     }});
 
     Response response = action.execute(client, request, anyTime);

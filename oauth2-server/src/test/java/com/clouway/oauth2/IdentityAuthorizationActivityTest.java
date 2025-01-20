@@ -9,6 +9,8 @@ import com.clouway.oauth2.client.Client;
 import com.clouway.oauth2.codechallenge.CodeChallenge;
 import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.token.FindIdentityRequest;
+import com.clouway.oauth2.token.FindIdentityResult;
+import com.clouway.oauth2.token.FindIdentityResult.NotFound;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Identity;
 import com.clouway.oauth2.token.IdentityFinder;
@@ -53,7 +55,7 @@ public class IdentityAuthorizationActivityTest {
     context.checking(new Expectations() {{
 
       oneOf(identityFinder).findIdentity(new FindIdentityRequest("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap(), anyAuth.clientId));
-      will(returnValue(Optional.of(identity)));
+      will(returnValue(new FindIdentityResult.User(identity)));
 
       oneOf(authorizedIdentityActivity).execute(anyClient, identity, anyAuth.scopes, request, anyInstantTime, anyAuth.params);
       will(returnValue(new RsText("::response::")));
@@ -76,7 +78,7 @@ public class IdentityAuthorizationActivityTest {
     context.checking(new Expectations() {{
 
       oneOf(identityFinder).findIdentity(new FindIdentityRequest("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap(), anyAuth.clientId));
-      will(returnValue(Optional.absent()));
+      will(returnValue(NotFound.INSTANCE));
 
     }});
 
@@ -93,7 +95,7 @@ public class IdentityAuthorizationActivityTest {
 
     context.checking(new Expectations() {{
       oneOf(identityFinder).findIdentity(new FindIdentityRequest(anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime, anyAuth.params, anyAuth.clientId));
-      will(returnValue(Optional.absent()));
+      will(returnValue(NotFound.INSTANCE));
     }});
 
     identityAuthorizationActivity.execute(anyAuth, anyClient, aNewRequest().param("code", "::any code::").build(), anyInstantTime);

@@ -50,6 +50,10 @@ class ClientAuthenticationCredentialsRequest implements InstantaneousRequest {
     if (Strings.isNullOrEmpty(clientId)) {
       return new RsBadRequest();
     }
+    
+    if (Strings.isNullOrEmpty(clientSecret)) {
+      clientSecret = "";
+    }
 
     return clientRequest.handleAsOf(request, new ClientCredentials(clientId, clientSecret), instantTime);
   }

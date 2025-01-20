@@ -7,6 +7,8 @@ import com.clouway.friendlyserve.testing.RsPrint;
 import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.token.BearerToken;
 import com.clouway.oauth2.token.FindIdentityRequest;
+import com.clouway.oauth2.token.FindIdentityResult;
+import com.clouway.oauth2.token.FindIdentityResult.NotFound;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Identity;
 import com.clouway.oauth2.token.IdentityFinder;
@@ -50,7 +52,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
       will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, "::identity_id::", "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
       oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, ImmutableMap.of("::index::", "::1::"), "::clientId::"));
-      will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
+      will(returnValue(new FindIdentityResult.User(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
     }});
 
     Response response = new UserInfoController(identityFinder, tokens).handleAsOf(request, anyInstantTime);
@@ -76,7 +78,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
       will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, "::identity_id::", "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
       oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, ImmutableMap.of("::index::", "::1::"), "::clientId::"));
-      will(returnValue(Optional.of(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
+      will(returnValue(new FindIdentityResult.User(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
               ImmutableMap.<String, Object>of("claim1", "::any string value::", "claim2", 342)))));
     }});
 
@@ -90,6 +92,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
   @Test
   public void tokenIsExpired() {
     final Tokens tokens = context.mock(Tokens.class);
+    final IdentityFinder identityFinder = context.mock(IdentityFinder.class);
 
     final DateTime anyInstantTime = new DateTime();
 
@@ -98,7 +101,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
       will(returnValue(Optional.absent()));
     }});
 
-    Response response = new UserInfoController(null, tokens).handleAsOf(new ParamRequest(ImmutableMap.of("access_token", "::expired token id::")), anyInstantTime);
+    Response response = new UserInfoController(identityFinder, tokens).handleAsOf(new ParamRequest(ImmutableMap.of("access_token", "::expired token id::")), anyInstantTime);
     assertThat(response.status().code, is(equalTo(HttpURLConnection.HTTP_UNAUTHORIZED)));
   }
 
@@ -117,7 +120,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
       will(returnValue(Optional.of(new BearerToken("", GrantType.JWT, "::identity_id::", "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
       oneOf(identityFinder).findIdentity(new FindIdentityRequest("::identity_id::", GrantType.JWT, anyInstantTime, ImmutableMap.of("::index::", "::1::"), "::clientId::"));
-      will(returnValue(Optional.absent()));
+      will(returnValue(NotFound.INSTANCE));
     }});
 
     Response response = new UserInfoController(identityFinder, tokens).handleAsOf(request, anyInstantTime);

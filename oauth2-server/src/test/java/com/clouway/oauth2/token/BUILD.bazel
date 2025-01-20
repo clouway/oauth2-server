@@ -15,7 +15,7 @@ kt_jvm_library(
 
 kt_jvm_test(
     name = "VerifyingJjwtTokensTest",
-    srcs = ["VerifyingJjwtTokensTest.java"],
+    srcs = ["VerifyingJjwtTokensTest.kt"],
     test_class = "com.clouway.oauth2.token.VerifyingJjwtTokensTest",
     deps = TEST_DEPS + FSERVE_TEST_DEPS + [
         "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
@@ -23,7 +23,6 @@ kt_jvm_test(
         "@maven//:com_google_guava_guava",
     ],
 )
-
 
 kt_jvm_test(
     name = "UrlSafeTokenGeneratorTest",
@@ -34,18 +33,17 @@ kt_jvm_test(
     ],
 )
 
-
 kt_jvm_test(
     name = "JjwtIdTokenFactoryTest",
     srcs = ["JjwtIdTokenFactoryTest.java"],
     test_class = "com.clouway.oauth2.token.JjwtIdTokenFactoryTest",
     deps = TEST_DEPS + FSERVE_TEST_DEPS + [
+        ":token",
         "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
         "//oauth2-server/src/main/java/com/clouway/oauth2/token",
         "//oauth2-server/src/test/java/com/clouway/oauth2/common",
         "//oauth2-server/src/test/java/com/clouway/oauth2/util",
         "@maven//:com_google_guava_guava",
-        ":token",
     ],
 )
 
@@ -64,23 +62,9 @@ kt_jvm_test(
     srcs = ["TokenIsExpiredAtTest.java"],
     test_class = "com.clouway.oauth2.token.TokenIsExpiredAtTest",
     deps = TEST_DEPS + [
+        ":token",
         "//oauth2-server/src/main/java/com/clouway/oauth2/token",
         "//oauth2-server/src/test/java/com/clouway/oauth2/common",
         "@maven//:com_google_guava_guava",
-        ":token",
     ],
 )
-
-
-kt_jvm_test(
-    name = "TokenRequestEqualityTest",
-    srcs = ["TokenRequestEqualityTest.java"],
-    test_class = "com.clouway.oauth2.token.TokenRequestEqualityTest",
-    deps = TEST_DEPS + [
-        "//oauth2-server/src/main/java/com/clouway/oauth2/token",
-        "//oauth2-server/src/test/java/com/clouway/oauth2/common",
-        "@maven//:com_google_guava_guava",
-        ":token",
-    ],
-)
-

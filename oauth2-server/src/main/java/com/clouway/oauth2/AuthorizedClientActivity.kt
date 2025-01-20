@@ -10,5 +10,10 @@ import com.clouway.oauth2.common.DateTime
  * @author Vasil Mitov <vasil.mitov></vasil.mitov>@clouway.com>
  */
 internal interface AuthorizedClientActivity {
-	fun execute(authorization: Authorization, client: Client, request: Request, instant: DateTime?): Response
+    fun execute(
+        authorization: Authorization,
+        client: Client,
+        request: Request,
+        instant: DateTime,
+    ): Response
 }

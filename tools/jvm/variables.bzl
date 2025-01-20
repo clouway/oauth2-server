@@ -3,6 +3,7 @@ TEST_DEPS = [
     "@maven//:junit_junit",
     "@maven//:org_jmock_jmock",
     "@maven//:org_jmock_jmock_junit4",
+    "@maven//:io_mockk_mockk_jvm",
     "@maven//:nl_jqno_equalsverifier_equalsverifier",
 ]
 

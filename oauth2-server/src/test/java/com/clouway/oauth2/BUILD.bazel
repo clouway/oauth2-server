@@ -75,7 +75,7 @@ kt_jvm_test(
 
 kt_jvm_test(
     name = "HandleJwtTokenRequestsTest",
-    srcs = ["HandleJwtTokenRequestsTest.java"],
+    srcs = ["HandleJwtTokenRequestsTest.kt"],
     test_class = "com.clouway.oauth2.HandleJwtTokenRequestsTest",
     deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
 )
@@ -97,7 +97,7 @@ kt_jvm_test(
 
 kt_jvm_test(
     name = "IssueNewTokenForClientTest",
-    srcs = ["IssueNewTokenForClientTest.java"],
+    srcs = ["IssueNewTokenForClientTest.kt"],
     test_class = "com.clouway.oauth2.IssueNewTokenForClientTest",
     deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
 )

@@ -97,6 +97,8 @@ maven_install(
         "junit:junit:4.11",
         "org.jmock:jmock:2.6.0",
         "org.jmock:jmock-junit4:2.6.0",
+        "io.mockk:mockk:1.12.8",
+        "io.mockk:mockk-jvm:1.12.8",
         "com.clouway.fserve:testing:0.1.3",
         "nl.jqno.equalsverifier:equalsverifier:2.4",
     ],

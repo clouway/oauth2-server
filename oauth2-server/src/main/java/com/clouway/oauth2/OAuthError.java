@@ -45,6 +45,10 @@ public final class OAuthError extends RsWrap {
     return new OAuthError(HttpURLConnection.HTTP_BAD_REQUEST, "invalid_grant", description);
   }
 
+  public static OAuthError internalError() {
+    return new OAuthError(HttpURLConnection.HTTP_BAD_GATEWAY, "internal_error", "Internal server error was occurred");
+  }
+
   public static OAuthError unknownClient() {
     return new OAuthError(HttpURLConnection.HTTP_BAD_REQUEST, "invalid_client", "Unknown Client");
   }
