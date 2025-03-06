@@ -43,10 +43,12 @@ public class AppServer {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
-        try {
-          server.stop();
-        } catch (Exception e) {
-          e.printStackTrace();
+        if (server != null) {
+          try {
+            server.stop();
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         }
       }
     });
