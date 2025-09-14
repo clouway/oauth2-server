@@ -124,6 +124,7 @@ class JwtController(
                             grantType = GrantType.JWT,
                             client = client,
                             serviceAccount = serviceAccount,
+                            subjectKind = com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT,
                             scopes = scopes,
                             `when` = instant,
                             params = params,
@@ -135,28 +136,22 @@ class JwtController(
                 }
 	            				
                 val accessToken = response.accessToken
-                val possibleIdToken =
-                    idTokenFactory.create(
-                        request.header("Host"),
-                        client.id,
-                        serviceAccount,
-                        accessToken.ttlSeconds(instant),
-                        instant,
-                    )
-                if (possibleIdToken.isPresent) {
-                    return BearerTokenResponse(
-                        accessToken.value,
-                        accessToken.ttlSeconds(instant),
-                        accessToken.scopes,
-                        response.refreshToken,
-                        possibleIdToken.get(),
-                    )
-                }
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(request.header("Host"))
+                        .audience(client.id)
+                        .subjectServiceAccount(serviceAccount)
+                        .ttl(accessToken.ttlSeconds(instant))
+                        .issuedAt(instant)
+                        .withAccessToken(accessToken.value)
+                        .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
                     accessToken.scopes,
                     response.refreshToken,
+                    idToken,
                 )
             }
 

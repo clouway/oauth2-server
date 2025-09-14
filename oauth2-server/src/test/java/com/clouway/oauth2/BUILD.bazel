@@ -81,6 +81,13 @@ kt_jvm_test(
 )
 
 kt_jvm_test(
+    name = "HandleTokenExchangeRequestsTest",
+    srcs = ["HandleTokenExchangeRequestsTest.kt"],
+    test_class = "com.clouway.oauth2.HandleTokenExchangeRequestsTest",
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+)
+
+kt_jvm_test(
     name = "IdentityAuthorizationActivityTest",
     srcs = ["IdentityAuthorizationActivityTest.java"],
     test_class = "com.clouway.oauth2.IdentityAuthorizationActivityTest",
@@ -104,9 +111,16 @@ kt_jvm_test(
 
 kt_jvm_test(
     name = "RefreshTokenForClientTest",
-    srcs = ["RefreshTokenForClientTest.java"],
+    srcs = ["RefreshTokenForClientTest.kt"],
     test_class = "com.clouway.oauth2.RefreshTokenForClientTest",
-    deps = TEST_DEPS + FSERVE_TEST_DEPS + PACKAGE_DEPS,
+    deps = TEST_DEPS + FSERVE_TEST_DEPS + [
+        "//oauth2-server/src/main/java/com/clouway/oauth2",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/token",
+        "//oauth2-server/src/test/java/com/clouway/oauth2/token",
+        "//oauth2-server/src/test/java/com/clouway/oauth2/client",
+        "//oauth2-server/src/test/java/com/clouway/oauth2/common",
+        "//oauth2-server/src/test/java/com/clouway/oauth2/util",
+    ],
 )
 
 kt_jvm_test(

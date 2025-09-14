@@ -14,7 +14,7 @@ import com.clouway.oauth2.token.Tokens
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-internal class RefreshTokenActivity(
+class RefreshTokenActivity(
     private val tokens: Tokens,
     private val idTokenFactory: IdTokenFactory,
     private val identityFinder: IdentityFinder,
@@ -44,54 +44,39 @@ internal class RefreshTokenActivity(
 		
         when (val res = identityFinder.findIdentity(findReq)) {
             is FindIdentityResult.User -> {
-                val possibleIdToken =
-                    idTokenFactory.create(
-                        request.header("Host"),
-                        client.id,
-                        res.identity,
-                        response.accessToken.ttlSeconds(instant),
-                        instant,
-                    )
-                if (possibleIdToken.isPresent) {
-                    return BearerTokenResponse(
-                        accessToken.value,
-                        accessToken.ttlSeconds(instant),
-                        response.accessToken.scopes,
-                        response.refreshToken,
-                        possibleIdToken.get(),
-                    )
-                }
+                val idToken = idTokenFactory
+                    .newBuilder()
+                    .issuer(request.header("Host"))
+                    .audience(client.id)
+                    .subjectUser(res.identity)
+                    .ttl(response.accessToken.ttlSeconds(instant))
+                    .issuedAt(instant)
+                    .withAccessToken(accessToken.value)
+                    .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
                     response.accessToken.scopes,
                     response.refreshToken,
+                    idToken,
                 )
             }
             is FindIdentityResult.ServiceAccountClient -> {
-                val possibleIdToken =
-                    idTokenFactory.create(
-                        request.header("Host"),
-                        client.id,
-                        res.serviceAccount,
-                        response.accessToken.ttlSeconds(instant),
-                        instant,
-                    )
-
-                if (possibleIdToken.isPresent) {
-                    return BearerTokenResponse(
-                        accessToken.value,
-                        accessToken.ttlSeconds(instant),
-                        response.accessToken.scopes,
-                        response.refreshToken,
-                        possibleIdToken.get(),
-                    )
-                }
+                val idToken = idTokenFactory
+                    .newBuilder()
+                    .issuer(request.header("Host"))
+                    .audience(client.id)
+                    .subjectServiceAccount(res.serviceAccount)
+                    .ttl(response.accessToken.ttlSeconds(instant))
+                    .issuedAt(instant)
+                    .withAccessToken(accessToken.value)
+                    .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
                     response.accessToken.scopes,
                     response.refreshToken,
+                    idToken,
                 )
             }
 			
@@ -129,53 +114,39 @@ internal class RefreshTokenActivity(
 		
         when (val res = identityFinder.findIdentity(findReq)) {
             is FindIdentityResult.User -> {
-                val possibleIdToken =
-                    idTokenFactory.create(
-                        request.header("Host"),
-                        credentials.clientId(),
-                        res.identity,
-                        response.accessToken.ttlSeconds(instant),
-                        instant,
-                    )
-                if (possibleIdToken.isPresent) {
-                    return BearerTokenResponse(
-                        accessToken.value,
-                        accessToken.ttlSeconds(instant),
-                        response.accessToken.scopes,
-                        response.refreshToken,
-                        possibleIdToken.get(),
-                    )
-                }
+                val idToken = idTokenFactory
+                    .newBuilder()
+                    .issuer(request.header("Host"))
+                    .audience(credentials.clientId())
+                    .subjectUser(res.identity)
+                    .ttl(response.accessToken.ttlSeconds(instant))
+                    .issuedAt(instant)
+                    .withAccessToken(accessToken.value)
+                    .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
                     response.accessToken.scopes,
                     response.refreshToken,
+                    idToken,
                 )
             }
             is FindIdentityResult.ServiceAccountClient -> {
-                val possibleIdToken =
-                    idTokenFactory.create(
-                        request.header("Host"),
-                        credentials.clientId(),
-                        res.serviceAccount,
-                        response.accessToken.ttlSeconds(instant),
-                        instant,
-                    )
-                if (possibleIdToken.isPresent) {
-                    return BearerTokenResponse(
-                        accessToken.value,
-                        accessToken.ttlSeconds(instant),
-                        response.accessToken.scopes,
-                        response.refreshToken,
-                        possibleIdToken.get(),
-                    )
-                }
+                val idToken = idTokenFactory
+                    .newBuilder()
+                    .issuer(request.header("Host"))
+                    .audience(credentials.clientId())
+                    .subjectServiceAccount(res.serviceAccount)
+                    .ttl(response.accessToken.ttlSeconds(instant))
+                    .issuedAt(instant)
+                    .withAccessToken(accessToken.value)
+                    .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
                     response.accessToken.scopes,
                     response.refreshToken,
+                    idToken,
                 )
             }
 

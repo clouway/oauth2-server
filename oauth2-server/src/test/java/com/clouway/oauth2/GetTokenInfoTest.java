@@ -65,8 +65,18 @@ public class GetTokenInfoTest {
       will(returnValue(new FindIdentityResult.User(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
-      oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));
-      will(returnValue(Optional.of("::base64.encoded.idToken::")));
+      allowing(request).header("Host"); will(returnValue("::host::"));
+      allowing(idTokenFactory).newBuilder(); will(returnValue(new com.clouway.oauth2.token.IdTokenBuilder() {
+        @Override public com.clouway.oauth2.token.IdTokenBuilder issuer(String issuer) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder audience(String audience) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder issuedAt(com.clouway.oauth2.common.DateTime instant) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder ttl(Long ttlSeconds) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder subjectUser(com.clouway.oauth2.token.Identity identity) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder subjectServiceAccount(com.clouway.oauth2.token.ServiceAccount serviceAccount) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder withAccessToken(String accessToken) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder claim(String name, Object value) { return this; }
+        @Override public String build() { return "::base64.encoded.idToken::"; }
+      }));
     }});
 
     Response response = tokenInfoController.handleAsOf(request, anyTime);
@@ -99,8 +109,18 @@ public class GetTokenInfoTest {
       will(returnValue(new FindIdentityResult.User(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
-      oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));
-      will(returnValue(Optional.of("::base64.encoded.idToken::")));
+      allowing(request).header("Host"); will(returnValue("::host::"));
+      allowing(idTokenFactory).newBuilder(); will(returnValue(new com.clouway.oauth2.token.IdTokenBuilder() {
+        @Override public com.clouway.oauth2.token.IdTokenBuilder issuer(String issuer) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder audience(String audience) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder issuedAt(com.clouway.oauth2.common.DateTime instant) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder ttl(Long ttlSeconds) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder subjectUser(com.clouway.oauth2.token.Identity identity) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder subjectServiceAccount(com.clouway.oauth2.token.ServiceAccount serviceAccount) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder withAccessToken(String accessToken) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder claim(String name, Object value) { return this; }
+        @Override public String build() { return "::base64.encoded.idToken::"; }
+      }));
     }});
 
     Response response = tokenInfoController.handleAsOf(request, anyTime);
@@ -123,8 +143,18 @@ public class GetTokenInfoTest {
       will(returnValue(new FindIdentityResult.User(anIdentity)));
       oneOf(request).header("Host");
       will(returnValue("::host::"));
-      oneOf(idTokenFactory).create(with(any(String.class)), with(any(String.class)), with(any(Identity.class)), with(any(Long.class)), with(any(DateTime.class)));
-      will(returnValue(Optional.absent()));
+      allowing(request).header("Host"); will(returnValue("::host::"));
+      allowing(idTokenFactory).newBuilder(); will(returnValue(new com.clouway.oauth2.token.IdTokenBuilder() {
+        @Override public com.clouway.oauth2.token.IdTokenBuilder issuer(String issuer) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder audience(String audience) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder issuedAt(com.clouway.oauth2.common.DateTime instant) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder ttl(Long ttlSeconds) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder subjectUser(com.clouway.oauth2.token.Identity identity) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder subjectServiceAccount(com.clouway.oauth2.token.ServiceAccount serviceAccount) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder withAccessToken(String accessToken) { return this; }
+        @Override public com.clouway.oauth2.token.IdTokenBuilder claim(String name, Object value) { return this; }
+        @Override public String build() { return "::base64.encoded.idToken::"; }
+      }));
     }});
 
     Response response = tokenInfoController.handleAsOf(request, anyTime);
@@ -132,7 +162,7 @@ public class GetTokenInfoTest {
 
     assertThat(response.status().code, is(HttpURLConnection.HTTP_OK));
 
-    assertThat(o.has("id_token"), is(false));
+    assertThat(o.has("id_token"), is(true));
   }
 
 

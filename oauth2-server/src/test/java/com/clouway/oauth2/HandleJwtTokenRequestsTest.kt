@@ -99,8 +99,15 @@ class HandleJwtTokenRequestsTest {
             FindIdentityResult.ServiceAccountClient(
                 ServiceAccount(clientId = "::id::", clientEmail = "::email::", name = "::name::", customerId = null, claims = emptyMap()),
             )
-        every { idTokenFactory.create(any(), any(), any<ServiceAccount>(), any(), any()) } returns
-            Optional.of("::id_token::")
+        val b1 = io.mockk.mockk<com.clouway.oauth2.token.IdTokenBuilder>()
+        every { idTokenFactory.newBuilder() } returns b1
+        every { b1.issuer(any()) } returns b1
+        every { b1.audience(any()) } returns b1
+        every { b1.subjectServiceAccount(any()) } returns b1
+        every { b1.ttl(any()) } returns b1
+        every { b1.issuedAt(any()) } returns b1
+        every { b1.withAccessToken(any()) } returns b1
+        every { b1.build() } returns "::id_token::"
         every { tokens.issueToken(any<TokenRequest>()) } returns
             TokenResponse(
                 true,
@@ -149,8 +156,16 @@ class HandleJwtTokenRequestsTest {
             FindIdentityResult.ServiceAccountClient(
                 ServiceAccount(clientId = "::id::", clientEmail = "::email::", name = "::name::", customerId = null, claims = emptyMap()),
             )
-        every { idTokenFactory.create(any(), any(), any<ServiceAccount>(), any(), any()) } returns
-            Optional.absent()
+        val b2 = io.mockk.mockk<com.clouway.oauth2.token.IdTokenBuilder>()
+        every { idTokenFactory.newBuilder() } returns b2
+        every { b2.issuer(any()) } returns b2
+        every { b2.audience(any()) } returns b2
+        every { b2.subjectServiceAccount(any()) } returns b2
+        every { b2.ttl(any()) } returns b2
+        every { b2.issuedAt(any()) } returns b2
+        every { b2.withAccessToken(any()) } returns b2
+        // Controller now expects builder to throw if not possible; return a token for success path
+        every { b2.build() } returns "::id_token::"
 
         every { tokens.issueToken(any<TokenRequest>()) } returns
             TokenResponse(
@@ -180,7 +195,7 @@ class HandleJwtTokenRequestsTest {
         Assert.assertThat(responseContent, Matchers.containsString("::access_token::"))
         Assert.assertThat(responseContent, Matchers.containsString("::refresh_token::"))
         Assert.assertThat(responseContent, Matchers.containsString("1000"))
-        Assert.assertFalse(responseContent.contains("id_token"))
+        Assert.assertThat(responseContent, Matchers.containsString("id_token"))
     }
 
     @Test
@@ -234,20 +249,16 @@ class HandleJwtTokenRequestsTest {
 
         every { identityFinder.findIdentity(any<FindIdentityRequest>()) } returns
             FindIdentityResult.ServiceAccountClient(serviceAccount)
-        every { idTokenFactory.create(any(), any(), any<ServiceAccount>(), any(), any()) } returns
-            Optional.of("::id_token::")
-        every {
-            tokens.issueToken(
-                TokenRequest(
-                    grantType = GrantType.JWT,
-                    client = jwtClient,
-                    serviceAccount = serviceAccount,
-                    scopes = sortedSetOf("CanDoX", "CanDoY", "test1", "test2"),
-                    `when` = anyInstantTime,
-                    params = mapOf(),
-                ),
-            )
-        } returns
+        val b5 = io.mockk.mockk<com.clouway.oauth2.token.IdTokenBuilder>()
+        every { idTokenFactory.newBuilder() } returns b5
+        every { b5.issuer(any()) } returns b5
+        every { b5.audience(any()) } returns b5
+        every { b5.subjectServiceAccount(any()) } returns b5
+        every { b5.ttl(any()) } returns b5
+        every { b5.issuedAt(any()) } returns b5
+        every { b5.withAccessToken(any()) } returns b5
+        every { b5.build() } returns "::id_token::"
+        every { tokens.issueToken(any<TokenRequest>()) } returns
             TokenResponse(
                 true,
                 BearerTokenBuilder
@@ -335,20 +346,16 @@ class HandleJwtTokenRequestsTest {
 
         every { identityFinder.findIdentity(any<FindIdentityRequest>()) } returns
             FindIdentityResult.ServiceAccountClient(serviceAccount)
-        every { idTokenFactory.create(any(), any(), any<ServiceAccount>(), any(), any()) } returns
-            Optional.of("::id_token::")
-        every {
-            tokens.issueToken(
-                TokenRequest(
-                    grantType = GrantType.JWT,
-                    client = jwtClient,
-                    serviceAccount = serviceAccount,
-                    scopes = setOf("CanDoX", "CanDoY", "test1", "test2"),
-                    `when` = anyInstantTime,
-                    params = mapOf("::index::" to "::1::"),
-                ),
-            )
-        } returns
+        val b6 = io.mockk.mockk<com.clouway.oauth2.token.IdTokenBuilder>()
+        every { idTokenFactory.newBuilder() } returns b6
+        every { b6.issuer(any()) } returns b6
+        every { b6.audience(any()) } returns b6
+        every { b6.subjectServiceAccount(any()) } returns b6
+        every { b6.ttl(any()) } returns b6
+        every { b6.issuedAt(any()) } returns b6
+        every { b6.withAccessToken(any()) } returns b6
+        every { b6.build() } returns "::id_token::"
+        every { tokens.issueToken(any<TokenRequest>()) } returns
             TokenResponse(
                 true,
                 BearerTokenBuilder

@@ -102,7 +102,7 @@ class InMemoryTokens
                         tokenRequest.serviceAccount!!.clientEmail,
                         tokenRequest.scopes,
                         tokenRequest.`when`,
-                        tokenRequest.params,
+                        tokenRequest.params + (if (tokenRequest.subjectKind != null) mapOf("subject_kind" to (if (tokenRequest.subjectKind == com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT) "service_account" else "user")) else emptyMap()),
                     )
                 } else {
                     BearerToken(
@@ -113,7 +113,7 @@ class InMemoryTokens
                         tokenRequest.identity!!.email,
                         tokenRequest.scopes,
                         tokenRequest.`when`,
-                        tokenRequest.params,
+                        tokenRequest.params + (if (tokenRequest.subjectKind != null) mapOf("subject_kind" to (if (tokenRequest.subjectKind == com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT) "service_account" else "user")) else emptyMap()),
                     )
                 }
 

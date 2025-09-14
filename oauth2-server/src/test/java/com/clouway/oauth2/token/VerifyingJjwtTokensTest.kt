@@ -129,7 +129,7 @@ class VerifyingJjwtTokensTest {
                 .builder()
                 .setHeaderParam("cid", "certKeyIdentifiers")
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.RS256, getPrivateKey(block!!))
+                .signWith(getPrivateKey(block!!), SignatureAlgorithm.RS256)
                 .compact()
 		
         val tokenHasBeenTemperedWithSignature =

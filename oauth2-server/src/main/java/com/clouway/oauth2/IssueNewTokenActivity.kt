@@ -7,6 +7,7 @@ import com.clouway.oauth2.common.DateTime
 import com.clouway.oauth2.token.GrantType
 import com.clouway.oauth2.token.IdTokenFactory
 import com.clouway.oauth2.token.Identity
+import com.clouway.oauth2.token.SubjectKind
 import com.clouway.oauth2.token.TokenRequest
 import com.clouway.oauth2.token.Tokens
 
@@ -33,6 +34,7 @@ class IssueNewTokenActivity(
                     grantType = GrantType.AUTHORIZATION_CODE,
                     client = client,
                     identity = identity,
+                    subjectKind = SubjectKind.USER,
                     scopes = scopes,
                     `when` = instant,
                     params = params,
@@ -44,30 +46,23 @@ class IssueNewTokenActivity(
         }
 		
         val accessToken = response.accessToken
-        val possibleIdToken =
-            idTokenFactory.create(
-                request.header("Host"),
-                client.id,
-                identity,
-                accessToken.ttlSeconds(instant),
-                instant,
-            )
+        val idToken = idTokenFactory
+            .newBuilder()
+            .issuer(request.header("Host"))
+            .audience(client.id)
+            .subjectUser(identity)
+            .ttl(accessToken.ttlSeconds(instant))
+            .issuedAt(instant)
+            .withAccessToken(accessToken.value)
+            .build()
 		
-        if (possibleIdToken.isPresent) {
-            return BearerTokenResponse(
-                accessToken.value,
-                accessToken.ttlSeconds(instant),
-                accessToken.scopes,
-                response.refreshToken,
-                possibleIdToken.get(),
-            )
-        }
-		
+        // Compute at_hash when id_token is present and access_token is issued with it
         return BearerTokenResponse(
             accessToken.value,
             accessToken.ttlSeconds(instant),
             accessToken.scopes,
             response.refreshToken,
+            idToken,
         )
     }
 }

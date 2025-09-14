@@ -61,9 +61,9 @@ maven_install(
     artifacts = [
         "javax.annotation:javax.annotation-api:1.3.2",
         "com.google.guava:guava:18.0",
-        "io.jsonwebtoken:jjwt-api:0.10.5",
-        "io.jsonwebtoken:jjwt-impl:0.10.5",
-        "io.jsonwebtoken:jjwt-jackson:0.10.5",
+        "io.jsonwebtoken:jjwt-api:0.13.0",
+        "io.jsonwebtoken:jjwt-impl:0.13.0",
+        "io.jsonwebtoken:jjwt-jackson:0.13.0",
         "javax.servlet:servlet-api:2.5",
         "com.clouway.fserve:fserve:0.1.3",
         "com.fasterxml.jackson.core:jackson-core:2.9.0.pr2",

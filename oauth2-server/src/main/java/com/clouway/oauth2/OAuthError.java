@@ -45,6 +45,14 @@ public final class OAuthError extends RsWrap {
     return new OAuthError(HttpURLConnection.HTTP_BAD_REQUEST, "invalid_grant", description);
   }
 
+  public static OAuthError invalidScope(String description) {
+    return new OAuthError(HttpURLConnection.HTTP_BAD_REQUEST, "invalid_scope", description);
+  }
+
+  public static OAuthError unsupportedTokenType(String description) {
+    return new OAuthError(HttpURLConnection.HTTP_BAD_REQUEST, "unsupported_token_type", description);
+  }
+
   public static OAuthError internalError() {
     return new OAuthError(HttpURLConnection.HTTP_BAD_GATEWAY, "internal_error", "Internal server error was occurred");
   }

@@ -8,6 +8,7 @@ kt_jvm_library(
     deps = [
         "@maven//:com_google_guava_guava",
         "//oauth2-server/src/main/java/com/clouway/oauth2/common",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/util",
         "//oauth2-server/src/main/java/com/clouway/oauth2/client",
         "//oauth2-server/src/main/java/com/clouway/oauth2/keystore",
         "//oauth2-server/src/main/java/com/clouway/oauth2/jws",

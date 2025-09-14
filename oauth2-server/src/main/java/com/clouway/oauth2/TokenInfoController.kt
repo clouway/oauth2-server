@@ -48,14 +48,15 @@ internal class TokenInfoController(
             is FindIdentityResult.User -> {
                 val identity = res.identity
                 val host = request.header("Host")
-                val possibleIdToken =
-                    idTokenFactory.create(
-                        host,
-                        token.clientId,
-                        identity,
-                        token.ttlSeconds(instantTime),
-                        instantTime,
-                    )
+                val idToken = idTokenFactory
+                    .newBuilder()
+                    .issuer(host)
+                    .audience(token.clientId)
+                    .subjectUser(identity)
+                    .ttl(token.ttlSeconds(instantTime))
+                    .issuedAt(instantTime)
+                    .withAccessToken(token.value)
+                    .build()
 					
                 val o = JsonObject()
                 o.addProperty("azp", token.clientId)
@@ -69,22 +70,21 @@ internal class TokenInfoController(
                     o.addProperty("scope", Joiner.on(" ").join(token.scopes))
                 }
 					
-                if (possibleIdToken.isPresent) {
-                    o.addProperty("id_token", possibleIdToken.get())
-                }
+                o.addProperty("id_token", idToken)
 					
                 return RsJson(o)
             }
             is FindIdentityResult.ServiceAccountClient -> {
                 val host = request.header("Host")
-                val possibleIdToken =
-                    idTokenFactory.create(
-                        host,
-                        token.clientId,
-                        res.serviceAccount,
-                        token.ttlSeconds(instantTime),
-                        instantTime,
-                    )
+                val idToken = idTokenFactory
+                    .newBuilder()
+                    .issuer(host)
+                    .audience(token.clientId)
+                    .subjectServiceAccount(res.serviceAccount)
+                    .ttl(token.ttlSeconds(instantTime))
+                    .issuedAt(instantTime)
+                    .withAccessToken(token.value)
+                    .build()
 	            					
                 val o = JsonObject()
                 o.addProperty("azp", token.clientId)
@@ -98,9 +98,7 @@ internal class TokenInfoController(
                     o.addProperty("scope", Joiner.on(" ").join(token.scopes))
                 }
 	            					
-                if (possibleIdToken.isPresent) {
-                    o.addProperty("id_token", possibleIdToken.get())
-                }
+                o.addProperty("id_token", idToken)
 	            					
                 return RsJson(o)
             }

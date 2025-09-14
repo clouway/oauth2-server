@@ -5,6 +5,7 @@ import com.clouway.oauth2.common.DateTime;
 import com.clouway.oauth2.keystore.IdentityKeyPair;
 import com.clouway.oauth2.keystore.KeyStore;
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +15,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.security.KeyPair;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import static com.clouway.oauth2.token.IdentityBuilder.aNewIdentity;
 import static com.clouway.oauth2.common.CalendarUtil.newDateTime;
@@ -43,14 +46,18 @@ public class JjwtIdTokenFactoryTest {
     }});
 
     JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
-    Optional<String> possibleIdToken = factory.create(
-            "::any host::", "::any client::",
-            aNewIdentity().withId("123").build(), 10L, instant
-    );
+    String charSequence = factory
+            .newBuilder()
+            .issuer("::any host::")
+            .audience("::any client::")
+            .subjectUser(aNewIdentity().withId("123").build())
+            .ttl(10L)
+            .issuedAt(instant)
+            .build();
+    
+    Jws<Claims> jwt = Jwts.parser().verifyWith(keyPair.getPublic()).build().parseSignedClaims(charSequence);
 
-    Jws<Claims> jwt = Jwts.parser().setSigningKey(keyPair.getPublic()).parseClaimsJws(possibleIdToken.get());
-
-    assertThat(jwt.getBody().getAudience(), is(equalTo("::any client::")));
+    assertThat(jwt.getBody().getAudience(), is(equalTo(Collections.singleton("::any client::"))));
     assertThat(jwt.getBody().getIssuer(), is(equalTo("::any host::")));
     assertThat(jwt.getBody().getSubject(), is(equalTo("123")));
   }
@@ -74,17 +81,17 @@ public class JjwtIdTokenFactoryTest {
 
     JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
 
-    Optional<String> firstIdToken = factory.create(
-            "::any host::", "::client 1::",
-            aNewIdentity().withId("123").build(), 10L, anyInstantTime
-    );
+    String firstIdToken = factory.newBuilder()
+            .issuer("::any host::").audience("::client 1::")
+            .subjectUser(aNewIdentity().withId("123").build())
+            .ttl(10L).issuedAt(anyInstantTime).build();
 
-    Optional<String> secondIdToken = factory.create(
-            "::any host::", "::client 2::",
-            aNewIdentity().withId("123").build(), 10L, anyInstantTime
-    );
+    String secondIdToken = factory.newBuilder()
+            .issuer("::any host::").audience("::client 2::")
+            .subjectUser(aNewIdentity().withId("123").build())
+            .ttl(10L).issuedAt(anyInstantTime).build();
 
-    assertThat(firstIdToken.get(), is(not(equalTo(secondIdToken.get()))));
+    assertThat(firstIdToken, is(not(equalTo(secondIdToken))));
   }
 
   @Test
@@ -97,9 +104,97 @@ public class JjwtIdTokenFactoryTest {
     }});
 
     JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
-    Optional<String> possibleIdToken = factory.create("::any host::", "::any client::", aNewIdentity().withId("123").build(), 10L, new DateTime());
+    try {
+      factory.newBuilder()
+              .issuer("::any host::")
+              .audience("::any client::")
+              .subjectUser(aNewIdentity().withId("123").build())
+              .ttl(10L)
+              .issuedAt(new DateTime())
+              .build();
+    } catch (IllegalStateException e) {
+      assertThat(e.getMessage(), is("No signing keys are configured"));
+      return;
+    }
+    throw new AssertionError("Expected IllegalStateException to be thrown");
+  }
 
-    assertThat(possibleIdToken.isPresent(), is(false));
+  @Test
+  public void missingIssuedAtThrows() throws Exception {
+    final KeyStore keyStore = context.mock(KeyStore.class);
+    final KeyPair keyPair = PemKeyGenerator.generatePair();
+
+    context.checking(new Expectations() {{
+      oneOf(keyStore).getKeys();
+      will(returnValue(Collections.singletonList(new IdentityKeyPair("::kid::", keyPair.getPrivate(), keyPair.getPublic()))));
+    }});
+
+    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
+    try {
+      factory.newBuilder()
+          .issuer("::host::")
+          .audience("::client::")
+          .subjectUser(aNewIdentity().withId("u1").build())
+          .ttl(60L)
+          // missing issuedAt
+          .build();
+    } catch (IllegalStateException e) {
+      assertThat(e.getMessage(), is("issuedAt must be specified"));
+      return;
+    }
+    throw new AssertionError("Expected IllegalStateException to be thrown");
+  }
+
+  @Test
+  public void missingTtlThrows() throws Exception {
+    final KeyStore keyStore = context.mock(KeyStore.class);
+    final KeyPair keyPair = PemKeyGenerator.generatePair();
+
+    context.checking(new Expectations() {{
+      oneOf(keyStore).getKeys();
+      will(returnValue(Collections.singletonList(new IdentityKeyPair("::kid::", keyPair.getPrivate(), keyPair.getPublic()))));
+    }});
+
+    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
+    try {
+      factory.newBuilder()
+          .issuer("::host::")
+          .audience("::client::")
+          .subjectUser(aNewIdentity().withId("u1").build())
+          .issuedAt(new DateTime())
+          // missing ttl
+          .build();
+    } catch (IllegalStateException e) {
+      assertThat(e.getMessage(), is("ttl must be specified"));
+      return;
+    }
+    throw new AssertionError("Expected IllegalStateException to be thrown");
+  }
+
+  @Test
+  public void missingSubjectThrows() throws Exception {
+    final KeyStore keyStore = context.mock(KeyStore.class);
+    final KeyPair keyPair = PemKeyGenerator.generatePair();
+
+    context.checking(new Expectations() {{
+      oneOf(keyStore).getKeys();
+      will(returnValue(Collections.singletonList(new IdentityKeyPair("::kid::", keyPair.getPrivate(), keyPair.getPublic()))));
+    }});
+
+    JjwtIdTokenFactory factory = new JjwtIdTokenFactory(keyStore);
+    try {
+      factory.newBuilder()
+          .issuer("::host::")
+          .audience("::client::")
+          // missing subject
+          .ttl(60L)
+          .issuedAt(new DateTime())
+          .build();
+    } catch (IllegalStateException e) {
+      assertThat(e.getMessage(), is("subject must be specified"));
+      return;
+    }
+    throw new AssertionError("Expected IllegalStateException to be thrown");
   }
 
 }

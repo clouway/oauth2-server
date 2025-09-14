@@ -85,7 +85,23 @@ public class OAuth2ApiSupportFactory {
                                                     config.identityFinder(),
                                                     idTokenFactory
                                             )))
-                            ))
+                            ),
+
+                            // Token Exchange Support
+                            new RequestHandlerMatchingParam("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange",
+                                new RequiresParam("subject_token",
+                                    new InstantaneousRequestController(
+                                        new ClientAuthenticationCredentialsRequest(
+                                            new TokenExchangeController(
+                                                config.tokens(),
+                                                config.identityFinder(),
+                                                idTokenFactory
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                    )
             ),
             new FkRegex(".*/revoke",
                     new RequiresParam("token",

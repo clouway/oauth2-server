@@ -9,6 +9,7 @@ import com.clouway.oauth2.common.DateTime
 data class TokenRequest(
     val grantType: GrantType,
     val client: Client,
+    val subjectKind: SubjectKind? = null,
     val identity: Identity? = null,
     val serviceAccount: ServiceAccount? = null,
     val scopes: Set<String>,
