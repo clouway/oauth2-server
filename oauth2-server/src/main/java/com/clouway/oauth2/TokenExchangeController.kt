@@ -83,17 +83,13 @@ class TokenExchangeController(
 
         // Find identity behind the subject token before issuing
         val subject = token.get()
-        val identityRes =
-            identityFinder.findIdentity(
-                FindIdentityRequest(
-                    subject.subjectKind,
-                    subject.identityId,
-                    subject.grantType,
-                    instant,
-                    subject.params,
-                    subject.clientId,
-                ),
-            )
+        val identityRes = identityFinder.findIdentity(
+            FindIdentityRequest(
+                subject = subject.subject,
+                instantTime = instant,
+                clientId = subject.clientId,
+            ),
+        )
 
         // Build params per RFC 8693 to reflect exchange context
         val params = mutableMapOf<String, String>()
@@ -106,20 +102,16 @@ class TokenExchangeController(
 
         when (identityRes) {
             is FindIdentityResult.User -> {
-                val tokenResponse =
-                    tokens.issueToken(
-                        TokenRequest(
-                            grantType = GrantType.TOKEN_EXCHANGE,
-                            client =
-                                Client(credentials.clientId(), "", "", emptySet(), false),
-                            identity = identityRes.identity,
-                            serviceAccount = null,
-                            subjectKind = com.clouway.oauth2.token.SubjectKind.USER,
-                            scopes = requestedScopes,
-                            `when` = instant,
-                            params = params,
-                        ),
-                    )
+                val tokenResponse = tokens.issueToken(
+                    TokenRequest(
+                        grantType = GrantType.TOKEN_EXCHANGE,
+                        client = Client(credentials.clientId(), "", "", emptySet(), false),
+                        subject = com.clouway.oauth2.token.Subject.User(identityRes.identity.id),
+                        scopes = requestedScopes,
+                        `when` = instant,
+                        params = params,
+                    ),
+                )
 
                 if (!tokenResponse.isSuccessful) {
                     return OAuthError.invalidRequest("Token cannot be issued.")
@@ -144,20 +136,16 @@ class TokenExchangeController(
                 return TokenExchangeResponse(accessToken, idt, issuedType, refresh)
             }
             is FindIdentityResult.ServiceAccountClient -> {
-                val tokenResponse =
-                    tokens.issueToken(
-                        TokenRequest(
-                            grantType = GrantType.TOKEN_EXCHANGE,
-                            client =
-                                Client(credentials.clientId(), credentials.clientSecret(), "", emptySet(), false),
-                            identity = null,
-                            serviceAccount = identityRes.serviceAccount,
-                            subjectKind = com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT,
-                            scopes = requestedScopes,
-                            `when` = instant,
-                            params = params,
-                        ),
-                    )
+                val tokenResponse = tokens.issueToken(
+                    TokenRequest(
+                        grantType = GrantType.TOKEN_EXCHANGE,
+                        client = Client(credentials.clientId(), credentials.clientSecret(), "", emptySet(), false),
+                        subject = com.clouway.oauth2.token.Subject.ServiceAccount(identityRes.serviceAccount.clientId),
+                        scopes = requestedScopes,
+                        `when` = instant,
+                        params = params,
+                    ),
+                )
 
                 if (!tokenResponse.isSuccessful) {
                     return OAuthError.invalidRequest("Token cannot be issued.")

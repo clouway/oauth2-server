@@ -53,31 +53,3 @@ interface Tokens {
      */
     fun revokeToken(token: String)
 }
-
-data class TokenIdentityResponse(
-    val isSuccessful: Boolean,
-    val identity: Identity,
-    val scopes: Set<String>,
-) {
-    companion object {
-        fun failure() =
-            TokenIdentityResponse(
-                false,
-                Identity(
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    mapOf(),
-                ),
-                emptySet(),
-            )
-
-        fun success(
-            identity: Identity,
-            scopes: Set<String>,
-        ) = TokenIdentityResponse(true, identity, scopes)
-    }
-}

@@ -13,8 +13,7 @@ import java.util.Set;
 public final class BearerToken implements Serializable {
   public final String value;
   public final GrantType grantType;
-  public final SubjectKind subjectKind;
-  public final String identityId;
+  public final Subject subject;
   public final String clientId;
   public final String email;
   public final Map<String, String> params;
@@ -22,14 +21,13 @@ public final class BearerToken implements Serializable {
   private final DateTime expiresAt;
 
   public BearerToken() {
-    this(null, null, null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null, null);
   }
 
-  public BearerToken(String value, GrantType grantType, SubjectKind subjectKind, String identityId, String clientId, String email, Set<String> scopes, DateTime expiresAt, Map<String, String> params) {
+  public BearerToken(String value, GrantType grantType, Subject subject, String clientId, String email, Set<String> scopes, DateTime expiresAt, Map<String, String> params) {
     this.value = value;
     this.grantType = grantType;
-    this.subjectKind = subjectKind;
-    this.identityId = identityId;
+    this.subject = subject;
     this.clientId = clientId;
     this.email = email;
     this.scopes = scopes;
@@ -72,7 +70,7 @@ public final class BearerToken implements Serializable {
     if (o == null || getClass() != o.getClass()) return false;
     BearerToken token = (BearerToken) o;
     return Objects.equal(value, token.value) &&
-            Objects.equal(identityId, token.identityId) &&
+            Objects.equal(subject, token.subject) &&
             Objects.equal(clientId, token.clientId) &&
             Objects.equal(expiresAt, token.expiresAt);
   }

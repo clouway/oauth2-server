@@ -34,7 +34,7 @@ internal class InMemoryUserRepository :
     }
 
     override fun findIdentity(request: FindIdentityRequest): FindIdentityResult =
-        if (request.grantType == GrantType.AUTHORIZATION_CODE) {
+        if (request.subject is com.clouway.oauth2.token.Subject.User) {
             FindIdentityResult.User(
                 Identity(
                     id = "testUserID",

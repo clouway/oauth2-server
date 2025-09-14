@@ -159,7 +159,8 @@ class IssueNewTokenForClientTest {
         )
         Assert.assertThat(captured.captured.grantType, Matchers.`is`(GrantType.AUTHORIZATION_CODE))
         Assert.assertThat(captured.captured.client, Matchers.`is`(client))
-        Assert.assertThat(captured.captured.identity, Matchers.`is`(identity))
+        // Subject now carries identity id
+        Assert.assertThat((captured.captured.subject as com.clouway.oauth2.token.Subject.User).id, Matchers.`is`(identity.id))
         Assert.assertThat(captured.captured.scopes, Matchers.`is`(authorization.scopes))
     }
 }

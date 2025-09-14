@@ -40,8 +40,7 @@ class InMemoryTokens
                         BearerToken(
                             token.value,
                             token.grantType,
-                            token.subjectKind,
-                            token.identityId,
+                            token.subject,
                             token.clientId,
                             token.email,
                             emptySet(),
@@ -72,8 +71,7 @@ class InMemoryTokens
                     BearerToken(
                         newTokenValue,
                         oldToken!!.grantType,
-                        oldToken.subjectKind,
-                        oldToken.identityId,
+                        oldToken.subject,
                         oldToken.clientId,
                         oldToken.email,
                         emptySet(),
@@ -94,32 +92,34 @@ class InMemoryTokens
             val token = tokenGenerator.generate()
             val refreshTokenValue = tokenGenerator.generate()
 		
-            val bearerToken =
-                if (tokenRequest.grantType == GrantType.JWT) {
+            val bearerToken = when (tokenRequest.grantType) {
+                GrantType.JWT -> {
+                    val subj = tokenRequest.subject as com.clouway.oauth2.token.Subject.ServiceAccount
                     BearerToken(
                         token,
                         GrantType.JWT,
-                        com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT,
-                        tokenRequest.serviceAccount!!.clientId,
+                        subj,
                         tokenRequest.client.id,
-                        tokenRequest.serviceAccount!!.clientEmail,
-                        tokenRequest.scopes,
-                        tokenRequest.`when`,
-                        tokenRequest.params,
-                    )
-                } else {
-                    BearerToken(
-                        token,
-                        GrantType.AUTHORIZATION_CODE,
-                        com.clouway.oauth2.token.SubjectKind.USER,
-                        tokenRequest.identity!!.id,
-                        tokenRequest.client.id,
-                        tokenRequest.identity!!.email,
+                        "", // email may be looked up elsewhere in real impl
                         tokenRequest.scopes,
                         tokenRequest.`when`,
                         tokenRequest.params,
                     )
                 }
+                else -> {
+                    val subj = tokenRequest.subject as com.clouway.oauth2.token.Subject.User
+                    BearerToken(
+                        token,
+                        GrantType.AUTHORIZATION_CODE,
+                        subj,
+                        tokenRequest.client.id,
+                        "",
+                        tokenRequest.scopes,
+                        tokenRequest.`when`,
+                        tokenRequest.params,
+                    )
+                }
+            }
 
             tokens[token] = bearerToken
 		

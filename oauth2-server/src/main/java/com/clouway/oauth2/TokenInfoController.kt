@@ -8,6 +8,7 @@ import com.clouway.oauth2.token.FindIdentityRequest
 import com.clouway.oauth2.token.FindIdentityResult
 import com.clouway.oauth2.token.IdTokenFactory
 import com.clouway.oauth2.token.IdentityFinder
+import com.clouway.oauth2.token.Subject
 import com.clouway.oauth2.token.Tokens
 import com.google.common.base.Joiner
 import com.google.common.collect.Maps
@@ -33,16 +34,11 @@ internal class TokenInfoController(
         }
 		
         val token = possibleToken.get()
-        val params = token.params ?: Maps.newHashMap()
-
         val req =
             FindIdentityRequest(
-                token.subjectKind,
-                token.identityId,
-                token.grantType,
-                instantTime,
-                params,
-                token.clientId,
+                subject = token.subject,
+                instantTime = instantTime,
+                clientId = token.clientId,
             )
 		
         when (val res = identityFinder.findIdentity(req)) {
@@ -63,7 +59,12 @@ internal class TokenInfoController(
                 val o = JsonObject()
                 o.addProperty("azp", token.clientId)
                 o.addProperty("aud", token.clientId)
-                o.addProperty("sub", token.identityId)
+                val sub =
+                    when (val s = token.subject) {
+                        is Subject.User -> s.id
+                        is Subject.ServiceAccount -> s.id
+                    }
+                o.addProperty("sub", sub)
                 o.addProperty("exp", token.expirationTimestamp())
                 o.addProperty("expires_in", token.ttlSeconds(instantTime))
                 o.addProperty("email", token.email)
@@ -92,7 +93,12 @@ internal class TokenInfoController(
                 val o = JsonObject()
                 o.addProperty("azp", token.clientId)
                 o.addProperty("aud", token.clientId)
-                o.addProperty("sub", token.identityId)
+                val sub =
+                    when (val s = token.subject) {
+                        is Subject.User -> s.id
+                        is Subject.ServiceAccount -> s.id
+                    }
+                o.addProperty("sub", sub)
                 o.addProperty("exp", token.expirationTimestamp())
                 o.addProperty("expires_in", token.ttlSeconds(instantTime))
                 o.addProperty("email", token.email)

@@ -15,6 +15,7 @@ public class BearerTokenBuilder {
   }
 
   private String clientId = "";
+  private Subject sub = null;
   private String identityId = "";
   private GrantType grantType = GrantType.AUTHORIZATION_CODE;
   private DateTime expiresAt = new DateTime();
@@ -47,13 +48,21 @@ public class BearerTokenBuilder {
     return this;
   }
 
+  public BearerTokenBuilder subject(Subject subject){
+    this.sub = subject;
+    return this;
+  }
+
   public BearerTokenBuilder grantType(GrantType grantType){
     this.grantType = grantType;
     return this;
   }
 
   public BearerToken build() {
-    return new BearerToken(value, grantType, com.clouway.oauth2.token.SubjectKind.USER, identityId, clientId, email, Collections.<String>emptySet(), expiresAt, params);
+    if (sub == null) {
+      sub = new Subject.User(identityId);
+    }
+    return new BearerToken(value, grantType, sub, clientId, email, Collections.<String>emptySet(), expiresAt, params);
   }
 
   public BearerTokenBuilder forClient(String clientId) {

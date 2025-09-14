@@ -7,9 +7,8 @@ import com.clouway.oauth2.client.Client
 import com.clouway.oauth2.common.DateTime
 import com.clouway.oauth2.token.FindIdentityRequest
 import com.clouway.oauth2.token.FindIdentityResult
-import com.clouway.oauth2.token.GrantType
 import com.clouway.oauth2.token.IdentityFinder
-import com.clouway.oauth2.token.SubjectKind
+import com.clouway.oauth2.token.Subject
 
 /**
  * @author Vasil Mitov <vasil.mitov></vasil.mitov>@clouway.com>
@@ -26,12 +25,9 @@ class IdentityAuthorizationActivity(
     ): Response {
         val findIdentityRequest =
             FindIdentityRequest(
-                SubjectKind.USER,
-                authorization.identityId,
-                GrantType.AUTHORIZATION_CODE,
-                instant,
-                authorization.params,
-                authorization.clientId,
+                subject = Subject.User(authorization.subjectId),
+                instantTime = instant,
+                clientId = authorization.clientId,
             )
 
         when (val res = identityFinder.findIdentity(findIdentityRequest)) {

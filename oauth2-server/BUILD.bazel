@@ -58,7 +58,7 @@ jar_jar(
 
 java_export(
     name = "exported_lib",
-    maven_coordinates = "com.clouway.security:oauth2-server:2.0.11-SNAPSHOT",
+    maven_coordinates = "com.clouway.security:oauth2-server:2.0.12-SNAPSHOT",
     runtime_deps = [
         ":jarjar",
     ],

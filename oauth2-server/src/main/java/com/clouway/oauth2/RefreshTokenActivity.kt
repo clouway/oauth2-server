@@ -33,16 +33,11 @@ class RefreshTokenActivity(
         }
         val accessToken = response.accessToken
 		
-        val subjectKind = accessToken.subjectKind
-        val findReq =
-            FindIdentityRequest(
-                subjectKind,
-                accessToken.identityId,
-                accessToken.grantType,
-                instant,
-                accessToken.params,
-                accessToken.clientId,
-            )
+        val findReq = FindIdentityRequest(
+            subject = accessToken.subject,
+            instantTime = instant,
+            clientId = accessToken.clientId,
+        )
 		
         when (val res = identityFinder.findIdentity(findReq)) {
             is FindIdentityResult.User -> {
@@ -107,15 +102,11 @@ class RefreshTokenActivity(
         }
         val accessToken = response.accessToken
 
-        val findReq =
-            FindIdentityRequest(
-                accessToken.subjectKind,
-                accessToken.identityId,
-                accessToken.grantType,
-                instant,
-                accessToken.params,
-                accessToken.clientId,
-            )
+        val findReq = FindIdentityRequest(
+            subject = accessToken.subject,
+            instantTime = instant,
+            clientId = accessToken.clientId,
+        )
 		
         when (val res = identityFinder.findIdentity(findReq)) {
             is FindIdentityResult.User -> {

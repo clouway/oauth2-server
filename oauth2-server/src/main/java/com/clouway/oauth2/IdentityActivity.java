@@ -11,6 +11,6 @@ import com.clouway.oauth2.common.DateTime;
  */
 interface IdentityActivity {
 
-  Response execute(String identityId, Request request, DateTime instantTime);
+  Response execute(String subjectId, Request request, DateTime instantTime);
 
 }

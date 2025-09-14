@@ -7,7 +7,7 @@ import com.clouway.oauth2.common.DateTime
 import com.clouway.oauth2.token.GrantType
 import com.clouway.oauth2.token.IdTokenFactory
 import com.clouway.oauth2.token.Identity
-import com.clouway.oauth2.token.SubjectKind
+import com.clouway.oauth2.token.Subject
 import com.clouway.oauth2.token.TokenRequest
 import com.clouway.oauth2.token.Tokens
 
@@ -33,8 +33,7 @@ class IssueNewTokenActivity(
                 TokenRequest(
                     grantType = GrantType.AUTHORIZATION_CODE,
                     client = client,
-                    identity = identity,
-                    subjectKind = SubjectKind.USER,
+                    subject = Subject.User(identity.id),
                     scopes = scopes,
                     `when` = instant,
                     params = params,

@@ -8,7 +8,7 @@ import java.time.LocalDateTime
  */
 data class AuthorizationRequest(
 	@JvmField val clientId: String,
-	@JvmField val identityId: String,
+	@JvmField val subjectId: String,
 	@JvmField val responseType: String,
 	@JvmField val scopes: Set<String>,
 	@JvmField val codeChallenge: CodeChallenge,

@@ -31,16 +31,11 @@ internal class UserInfoController(
 		
         val token = possibleTokenResponse.get()
 		
-        val subjectKind = if (token.grantType == com.clouway.oauth2.token.GrantType.JWT) com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT else com.clouway.oauth2.token.SubjectKind.USER
-        val findReq =
-            FindIdentityRequest(
-                subjectKind,
-                token.identityId,
-                token.grantType,
-                instantTime,
-                token.params,
-                token.clientId,
-            )
+        val findReq = FindIdentityRequest(
+            subject = token.subject,
+            instantTime = instantTime,
+            clientId = token.clientId,
+        )
 		
         val o = JsonObject()
         var claims: Map<String, Any> = mutableMapOf()

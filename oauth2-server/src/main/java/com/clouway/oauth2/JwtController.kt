@@ -12,7 +12,7 @@ import com.clouway.oauth2.token.FindIdentityResult
 import com.clouway.oauth2.token.GrantType
 import com.clouway.oauth2.token.IdTokenFactory
 import com.clouway.oauth2.token.IdentityFinder
-import com.clouway.oauth2.token.SubjectKind
+import com.clouway.oauth2.token.Subject
 import com.clouway.oauth2.token.TokenRequest
 import com.clouway.oauth2.token.Tokens
 import com.clouway.oauth2.util.Params
@@ -94,19 +94,13 @@ class JwtController(
                 ).filter { it.isNotEmpty() }
                 .toSortedSet()
 
-        when (
-            val res =
-                identityFinder.findIdentity(
-                    FindIdentityRequest(
-                        subjectKind = SubjectKind.SERVICE_ACCOUNT,
-                        subject = claimSet.iss,
-                        grantType = GrantType.JWT,
-                        instantTime = instant,
-                        params = params,
-                        clientId = "",
-                    ),
-                )
-        ) {
+        when (val res = identityFinder.findIdentity(
+            FindIdentityRequest(
+                subject = com.clouway.oauth2.token.Subject.ServiceAccount(claimSet.iss),
+                instantTime = instant,
+                clientId = "",
+            ),
+        )) {
             is FindIdentityResult.User -> {
                 return OAuthError.invalidClient("authorization_code client cannot be used for JWT grant")
             }
@@ -131,18 +125,16 @@ class JwtController(
 
                 val client = Client(claimSet.iss, "", "", emptySet(), false)
 
-                val response =
-                    tokens.issueToken(
-                        TokenRequest(
-                            grantType = GrantType.JWT,
-                            client = client,
-                            serviceAccount = serviceAccount,
-                            subjectKind = com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT,
-                            scopes = scopes,
-                            `when` = instant,
-                            params = params,
-                        ),
-                    )
+                val response = tokens.issueToken(
+                    TokenRequest(
+                        grantType = GrantType.JWT,
+                        client = client,
+                        subject = com.clouway.oauth2.token.Subject.ServiceAccount(serviceAccount.clientId),
+                        scopes = scopes,
+                        `when` = instant,
+                        params = params,
+                    ),
+                )
 	            				
                 if (!response.isSuccessful) {
                     return OAuthError.invalidRequest("tokens issuing is temporary unavailable")

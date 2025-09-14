@@ -12,7 +12,7 @@ import com.clouway.oauth2.token.FindIdentityResult.NotFound;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Identity;
 import com.clouway.oauth2.token.IdentityFinder;
-import com.clouway.oauth2.token.SubjectKind;
+import com.clouway.oauth2.token.Subject;
 import com.clouway.oauth2.token.Tokens;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -50,11 +50,9 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, SubjectKind.USER, "::identity_id::", "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, new Subject.User("::identity_id::"), "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(SubjectKind.USER,
-              "::identity_id::",
-              GrantType.AUTHORIZATION_CODE, anyInstantTime, ImmutableMap.of("::index::", "::1::"), "::clientId::"));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User("::identity_id::"), anyInstantTime, "::clientId::"));
       will(returnValue(new FindIdentityResult.User(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
     }});
 
@@ -78,9 +76,9 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
-      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, com.clouway.oauth2.token.SubjectKind.USER, "::identity_id::", "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, new Subject.User("::identity_id::"), "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(SubjectKind.USER, "::identity_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, ImmutableMap.of("::index::", "::1::"), "::clientId::"));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User("::identity_id::"), anyInstantTime, "::clientId::"));
       will(returnValue(new FindIdentityResult.User(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
               ImmutableMap.<String, Object>of("claim1", "::any string value::", "claim2", 342)))));
     }});
@@ -120,9 +118,9 @@ public class RetrieveUserInfoWithAccessTokenTest {
 
     context.checking(new Expectations() {{
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
-      will(returnValue(Optional.of(new BearerToken("", GrantType.JWT, com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT, "::identity_id::", "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
+      will(returnValue(Optional.of(new BearerToken("", GrantType.JWT, new Subject.ServiceAccount("::identity_id::"), "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(SubjectKind.SERVICE_ACCOUNT, "::identity_id::", GrantType.JWT, anyInstantTime, ImmutableMap.of("::index::", "::1::"), "::clientId::"));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.ServiceAccount("::identity_id::"), anyInstantTime, "::clientId::"));
       will(returnValue(NotFound.INSTANCE));
     }});
 

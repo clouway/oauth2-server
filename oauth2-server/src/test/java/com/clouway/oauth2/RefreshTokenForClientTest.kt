@@ -15,7 +15,7 @@ import com.clouway.oauth2.token.IdTokenBuilder
 import com.clouway.oauth2.token.IdTokenFactory
 import com.clouway.oauth2.token.Identity
 import com.clouway.oauth2.token.IdentityBuilder
-import com.clouway.oauth2.token.SubjectKind
+import com.clouway.oauth2.token.Subject
 import com.clouway.oauth2.token.TokenResponse
 import com.clouway.oauth2.token.Tokens
 import com.google.common.base.Optional
@@ -70,7 +70,7 @@ class RefreshTokenForClientTest {
             )
         every {
             identityFinder.findIdentity(
-                FindIdentityRequest(SubjectKind.USER, "::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, emptyMap(), "::clientId::"),
+                FindIdentityRequest(Subject.User("::identityId::"), anyTime, "::clientId::"),
             )
         } returns FindIdentityResult.User(identity)
         every { request.header("Host") } returns "::host::"
@@ -123,14 +123,7 @@ class RefreshTokenForClientTest {
             )
         every {
             identityFinder.findIdentity(
-                FindIdentityRequest(
-                    SubjectKind.USER,
-                    "::identityId::",
-                    GrantType.AUTHORIZATION_CODE,
-                    anyTime,
-                    emptyMap(),
-                    "::clientId::",
-                ),
+                FindIdentityRequest(Subject.User("::identityId::"), anyTime, "::clientId::"),
             )
         } returns FindIdentityResult.User(identity)
         every { request.header("Host") } returns "::host::"
@@ -184,14 +177,7 @@ class RefreshTokenForClientTest {
             )
         every {
             identityFinder.findIdentity(
-                FindIdentityRequest(
-                    SubjectKind.USER,
-                    "::identityId::",
-                    GrantType.AUTHORIZATION_CODE,
-                    anyTime,
-                    emptyMap(),
-                    "::clientId::",
-                ),
+                FindIdentityRequest(Subject.User("::identityId::"), anyTime, "::clientId::"),
             )
         } returns FindIdentityResult.NotFound
 
