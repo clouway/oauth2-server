@@ -7,11 +7,23 @@ package com.clouway.oauth2.token
  * @author Miroslav Genov (
  */
 sealed interface Subject {
+    fun kind(): String
+
+    fun id(): String
+
     data class User(
         val id: String,
-    ) : Subject
+    ) : Subject {
+        override fun kind(): String = "user"
+
+        override fun id(): String = id
+    }
 
     data class ServiceAccount(
         val clientEmail: String,
-    ) : Subject
+    ) : Subject {
+        override fun kind(): String = "service_account"
+
+        override fun id(): String = clientEmail
+    }
 }
