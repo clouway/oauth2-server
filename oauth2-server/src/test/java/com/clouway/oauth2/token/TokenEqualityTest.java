@@ -19,8 +19,8 @@ public class TokenEqualityTest {
   @Test
   public void areEqual() {
     DateTime creationDate = new DateTime();
-    BearerToken token1 = new BearerToken("value", GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), creationDate, of("::index::", "::1::"));
-    BearerToken token2 = new BearerToken("value", GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), creationDate, of("::index::", "::1::"));
+    BearerToken token1 = new BearerToken("value", GrantType.AUTHORIZATION_CODE, SubjectKind.USER, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), creationDate, of("::index::", "::1::"));
+    BearerToken token2 = new BearerToken("value", GrantType.AUTHORIZATION_CODE, SubjectKind.USER, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), creationDate, of("::index::", "::1::"));
 
     assertThat(token1, is(token2));
   }
@@ -28,16 +28,16 @@ public class TokenEqualityTest {
   @Test
   public void areNotEqual() {
     DateTime creationDate = new DateTime();
-    BearerToken token1 = new BearerToken("value1", GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), creationDate, of("::index::", "::1::"));
-    BearerToken token2 = new BearerToken("value2", GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), creationDate, of("::index::", "::1::"));
+    BearerToken token1 = new BearerToken("value1", GrantType.AUTHORIZATION_CODE, SubjectKind.USER, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), creationDate, of("::index::", "::1::"));
+    BearerToken token2 = new BearerToken("value2", GrantType.AUTHORIZATION_CODE, SubjectKind.USER, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), creationDate, of("::index::", "::1::"));
 
     assertThat(token1, is(not(token2)));
   }
 
   @Test
   public void areNotEqualWhenDifferentExpirationTimes() {
-    BearerToken token1 = new BearerToken("value", GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), new DateTime(new Date(1408532291030L)), of("::index::", "::1::"));
-    BearerToken token2 = new BearerToken("value", GrantType.AUTHORIZATION_CODE, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), new DateTime(new Date(1408532291031L)), of("::index::", "::1::"));
+    BearerToken token1 = new BearerToken("value", GrantType.AUTHORIZATION_CODE, SubjectKind.USER, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), new DateTime(new Date(1408532291030L)), of("::index::", "::1::"));
+    BearerToken token2 = new BearerToken("value", GrantType.AUTHORIZATION_CODE, SubjectKind.USER, "identityId", "::client id::", "::email::", Collections.<String>emptySet(), new DateTime(new Date(1408532291031L)), of("::index::", "::1::"));
 
     assertThat(token1, is(not(token2)));
   }

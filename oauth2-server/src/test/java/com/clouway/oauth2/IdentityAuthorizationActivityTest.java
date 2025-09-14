@@ -14,6 +14,7 @@ import com.clouway.oauth2.token.FindIdentityResult.NotFound;
 import com.clouway.oauth2.token.GrantType;
 import com.clouway.oauth2.token.Identity;
 import com.clouway.oauth2.token.IdentityFinder;
+import com.clouway.oauth2.token.SubjectKind;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import org.jmock.Expectations;
@@ -54,7 +55,7 @@ public class IdentityAuthorizationActivityTest {
 
     context.checking(new Expectations() {{
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap(), anyAuth.clientId));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(SubjectKind.USER, "::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap(), anyAuth.clientId));
       will(returnValue(new FindIdentityResult.User(identity)));
 
       oneOf(authorizedIdentityActivity).execute(anyClient, identity, anyAuth.scopes, request, anyInstantTime, anyAuth.params);
@@ -77,7 +78,7 @@ public class IdentityAuthorizationActivityTest {
 
     context.checking(new Expectations() {{
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest("::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap(), anyAuth.clientId));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(SubjectKind.USER, "::user_id::", GrantType.AUTHORIZATION_CODE, anyInstantTime, Maps.<String, String>newHashMap(), anyAuth.clientId));
       will(returnValue(NotFound.INSTANCE));
 
     }});
@@ -94,7 +95,7 @@ public class IdentityAuthorizationActivityTest {
     final Authorization anyAuth = newAuthorization().addParam("index", "1").build();
 
     context.checking(new Expectations() {{
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime, anyAuth.params, anyAuth.clientId));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(SubjectKind.USER, anyAuth.identityId, GrantType.AUTHORIZATION_CODE, anyInstantTime, anyAuth.params, anyAuth.clientId));
       will(returnValue(NotFound.INSTANCE));
     }});
 

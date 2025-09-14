@@ -3,11 +3,11 @@ package com.clouway.oauth2
 import com.clouway.friendlyserve.Request
 import com.clouway.friendlyserve.testing.ParamRequest
 import com.clouway.friendlyserve.testing.RsPrint
+import com.clouway.oauth2.RefreshTokenActivity
 import com.clouway.oauth2.client.Client
 import com.clouway.oauth2.client.ClientBuilder
 import com.clouway.oauth2.common.DateTime
 import com.clouway.oauth2.token.BearerTokenBuilder
-import com.clouway.oauth2.RefreshTokenActivity
 import com.clouway.oauth2.token.FindIdentityRequest
 import com.clouway.oauth2.token.FindIdentityResult
 import com.clouway.oauth2.token.GrantType
@@ -15,6 +15,7 @@ import com.clouway.oauth2.token.IdTokenBuilder
 import com.clouway.oauth2.token.IdTokenFactory
 import com.clouway.oauth2.token.Identity
 import com.clouway.oauth2.token.IdentityBuilder
+import com.clouway.oauth2.token.SubjectKind
 import com.clouway.oauth2.token.TokenResponse
 import com.clouway.oauth2.token.Tokens
 import com.google.common.base.Optional
@@ -22,9 +23,9 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.mockk
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.`is`
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Rule
 import org.junit.Test
 
@@ -32,24 +33,46 @@ class RefreshTokenForClientTest {
     @get:Rule val mockkRule = MockKRule(this)
 
     @MockK lateinit var request: Request
+
     @MockK lateinit var tokens: Tokens
+
     @MockK lateinit var identityFinder: com.clouway.oauth2.token.IdentityFinder
+
     @MockK lateinit var idTokenFactory: IdTokenFactory
 
     @Test
     fun happyPath() {
         val action = RefreshTokenActivity(tokens, idTokenFactory, identityFinder)
-        val client: Client = ClientBuilder.aNewClient().withId("client1").withSecret("secret1").build()
+        val client: Client =
+            ClientBuilder
+                .aNewClient()
+                .withId("client1")
+                .withSecret("secret1")
+                .build()
         val identity: Identity = IdentityBuilder.aNewIdentity().withId("::identityId::").build()
         val anyTime = DateTime()
 
         every { request.param("refresh_token") } returns "::refresh_token::"
-        every { tokens.refreshToken("::refresh_token::", anyTime) } returns TokenResponse(
-            true,
-            BearerTokenBuilder.aNewToken().withValue("::access_token::").identityId("::identityId::").grantType(GrantType.AUTHORIZATION_CODE).forClient("::clientId::").expiresAt(anyTime.plusSeconds(600)).build(),
-            "::refresh_token::",
-        )
-        every { identityFinder.findIdentity(FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, emptyMap(), "::clientId::")) } returns FindIdentityResult.User(identity)
+        every { tokens.refreshToken("::refresh_token::", anyTime) } returns
+            TokenResponse(
+                true,
+                BearerTokenBuilder
+                    .aNewToken()
+                    .withValue(
+                        "::access_token::",
+                    ).identityId(
+                        "::identityId::",
+                    ).grantType(GrantType.AUTHORIZATION_CODE)
+                    .forClient("::clientId::")
+                    .expiresAt(anyTime.plusSeconds(600))
+                    .build(),
+                "::refresh_token::",
+            )
+        every {
+            identityFinder.findIdentity(
+                FindIdentityRequest(SubjectKind.USER, "::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, emptyMap(), "::clientId::"),
+            )
+        } returns FindIdentityResult.User(identity)
         every { request.header("Host") } returns "::host::"
 
         val builder = mockk<IdTokenBuilder>()
@@ -73,17 +96,43 @@ class RefreshTokenForClientTest {
     @Test
     fun idTokenWasNotGenerated() {
         val action = RefreshTokenActivity(tokens, idTokenFactory, identityFinder)
-        val client: Client = ClientBuilder.aNewClient().withId("client1").withSecret("secret1").build()
+        val client: Client =
+            ClientBuilder
+                .aNewClient()
+                .withId("client1")
+                .withSecret("secret1")
+                .build()
         val identity: Identity = IdentityBuilder.aNewIdentity().withId("::identityId::").build()
         val anyTime = DateTime()
 
         every { request.param("refresh_token") } returns "::refresh_token::"
-        every { tokens.refreshToken("::refresh_token::", anyTime) } returns TokenResponse(
-            true,
-            BearerTokenBuilder.aNewToken().withValue("::access_token::").identityId("::identityId::").grantType(GrantType.AUTHORIZATION_CODE).forClient("::clientId::").expiresAt(anyTime.plusSeconds(600)).build(),
-            "::refresh_token::",
-        )
-        every { identityFinder.findIdentity(FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, emptyMap(), "::clientId::")) } returns FindIdentityResult.User(identity)
+        every { tokens.refreshToken("::refresh_token::", anyTime) } returns
+            TokenResponse(
+                true,
+                BearerTokenBuilder
+                    .aNewToken()
+                    .withValue(
+                        "::access_token::",
+                    ).identityId(
+                        "::identityId::",
+                    ).grantType(GrantType.AUTHORIZATION_CODE)
+                    .forClient("::clientId::")
+                    .expiresAt(anyTime.plusSeconds(600))
+                    .build(),
+                "::refresh_token::",
+            )
+        every {
+            identityFinder.findIdentity(
+                FindIdentityRequest(
+                    SubjectKind.USER,
+                    "::identityId::",
+                    GrantType.AUTHORIZATION_CODE,
+                    anyTime,
+                    emptyMap(),
+                    "::clientId::",
+                ),
+            )
+        } returns FindIdentityResult.User(identity)
         every { request.header("Host") } returns "::host::"
 
         val builder = mockk<IdTokenBuilder>()
@@ -109,16 +158,42 @@ class RefreshTokenForClientTest {
     @Test
     fun identityNotFound() {
         val action = RefreshTokenActivity(tokens, idTokenFactory, identityFinder)
-        val client: Client = ClientBuilder.aNewClient().withId("client1").withSecret("secret1").build()
+        val client: Client =
+            ClientBuilder
+                .aNewClient()
+                .withId("client1")
+                .withSecret("secret1")
+                .build()
         val anyTime = DateTime()
 
         every { request.param("refresh_token") } returns "::refresh_token::"
-        every { tokens.refreshToken("::refresh_token::", anyTime) } returns TokenResponse(
-            true,
-            BearerTokenBuilder.aNewToken().withValue("::access_token::").identityId("::identityId::").grantType(GrantType.AUTHORIZATION_CODE).forClient("::clientId::").expiresAt(anyTime.plusSeconds(600)).build(),
-            "::refresh_token::",
-        )
-        every { identityFinder.findIdentity(FindIdentityRequest("::identityId::", GrantType.AUTHORIZATION_CODE, anyTime, emptyMap(), "::clientId::")) } returns FindIdentityResult.NotFound
+        every { tokens.refreshToken("::refresh_token::", anyTime) } returns
+            TokenResponse(
+                true,
+                BearerTokenBuilder
+                    .aNewToken()
+                    .withValue(
+                        "::access_token::",
+                    ).identityId(
+                        "::identityId::",
+                    ).grantType(GrantType.AUTHORIZATION_CODE)
+                    .forClient("::clientId::")
+                    .expiresAt(anyTime.plusSeconds(600))
+                    .build(),
+                "::refresh_token::",
+            )
+        every {
+            identityFinder.findIdentity(
+                FindIdentityRequest(
+                    SubjectKind.USER,
+                    "::identityId::",
+                    GrantType.AUTHORIZATION_CODE,
+                    anyTime,
+                    emptyMap(),
+                    "::clientId::",
+                ),
+            )
+        } returns FindIdentityResult.NotFound
 
         val response = action.execute(client, request, anyTime)
         val body = RsPrint(response).printBody()
@@ -128,7 +203,12 @@ class RefreshTokenForClientTest {
     @Test
     fun refreshTokenWasExpired() {
         val action = RefreshTokenActivity(tokens, idTokenFactory, identityFinder)
-        val client: Client = ClientBuilder.aNewClient().withId("client1").withSecret("secret1").build()
+        val client: Client =
+            ClientBuilder
+                .aNewClient()
+                .withId("client1")
+                .withSecret("secret1")
+                .build()
         val anyTime = DateTime()
 
         every { tokens.refreshToken("::refresh_token::", anyTime) } returns TokenResponse(false, null, "")

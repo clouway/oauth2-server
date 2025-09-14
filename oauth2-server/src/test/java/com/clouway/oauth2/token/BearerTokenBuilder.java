@@ -53,7 +53,7 @@ public class BearerTokenBuilder {
   }
 
   public BearerToken build() {
-    return new BearerToken(value, grantType, identityId, clientId, email, Collections.<String>emptySet(), expiresAt, params);
+    return new BearerToken(value, grantType, com.clouway.oauth2.token.SubjectKind.USER, identityId, clientId, email, Collections.<String>emptySet(), expiresAt, params);
   }
 
   public BearerTokenBuilder forClient(String clientId) {

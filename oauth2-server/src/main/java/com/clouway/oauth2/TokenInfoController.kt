@@ -34,9 +34,10 @@ internal class TokenInfoController(
 		
         val token = possibleToken.get()
         val params = token.params ?: Maps.newHashMap()
-		
+
         val req =
             FindIdentityRequest(
+                token.subjectKind,
                 token.identityId,
                 token.grantType,
                 instantTime,
@@ -48,15 +49,16 @@ internal class TokenInfoController(
             is FindIdentityResult.User -> {
                 val identity = res.identity
                 val host = request.header("Host")
-                val idToken = idTokenFactory
-                    .newBuilder()
-                    .issuer(host)
-                    .audience(token.clientId)
-                    .subjectUser(identity)
-                    .ttl(token.ttlSeconds(instantTime))
-                    .issuedAt(instantTime)
-                    .withAccessToken(token.value)
-                    .build()
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(host)
+                        .audience(token.clientId)
+                        .subjectUser(identity)
+                        .ttl(token.ttlSeconds(instantTime))
+                        .issuedAt(instantTime)
+                        .withAccessToken(token.value)
+                        .build()
 					
                 val o = JsonObject()
                 o.addProperty("azp", token.clientId)
@@ -76,15 +78,16 @@ internal class TokenInfoController(
             }
             is FindIdentityResult.ServiceAccountClient -> {
                 val host = request.header("Host")
-                val idToken = idTokenFactory
-                    .newBuilder()
-                    .issuer(host)
-                    .audience(token.clientId)
-                    .subjectServiceAccount(res.serviceAccount)
-                    .ttl(token.ttlSeconds(instantTime))
-                    .issuedAt(instantTime)
-                    .withAccessToken(token.value)
-                    .build()
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(host)
+                        .audience(token.clientId)
+                        .subjectServiceAccount(res.serviceAccount)
+                        .ttl(token.ttlSeconds(instantTime))
+                        .issuedAt(instantTime)
+                        .withAccessToken(token.value)
+                        .build()
 	            					
                 val o = JsonObject()
                 o.addProperty("azp", token.clientId)

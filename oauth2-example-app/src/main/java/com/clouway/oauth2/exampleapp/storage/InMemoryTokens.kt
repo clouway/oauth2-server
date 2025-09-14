@@ -40,6 +40,7 @@ class InMemoryTokens
                         BearerToken(
                             token.value,
                             token.grantType,
+                            token.subjectKind,
                             token.identityId,
                             token.clientId,
                             token.email,
@@ -71,6 +72,7 @@ class InMemoryTokens
                     BearerToken(
                         newTokenValue,
                         oldToken!!.grantType,
+                        oldToken.subjectKind,
                         oldToken.identityId,
                         oldToken.clientId,
                         oldToken.email,
@@ -97,23 +99,25 @@ class InMemoryTokens
                     BearerToken(
                         token,
                         GrantType.JWT,
+                        com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT,
                         tokenRequest.serviceAccount!!.clientId,
                         tokenRequest.client.id,
                         tokenRequest.serviceAccount!!.clientEmail,
                         tokenRequest.scopes,
                         tokenRequest.`when`,
-                        tokenRequest.params + (if (tokenRequest.subjectKind != null) mapOf("subject_kind" to (if (tokenRequest.subjectKind == com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT) "service_account" else "user")) else emptyMap()),
+                        tokenRequest.params,
                     )
                 } else {
                     BearerToken(
                         token,
                         GrantType.AUTHORIZATION_CODE,
+                        com.clouway.oauth2.token.SubjectKind.USER,
                         tokenRequest.identity!!.id,
                         tokenRequest.client.id,
                         tokenRequest.identity!!.email,
                         tokenRequest.scopes,
                         tokenRequest.`when`,
-                        tokenRequest.params + (if (tokenRequest.subjectKind != null) mapOf("subject_kind" to (if (tokenRequest.subjectKind == com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT) "service_account" else "user")) else emptyMap()),
+                        tokenRequest.params,
                     )
                 }
 

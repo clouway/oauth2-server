@@ -34,6 +34,7 @@ fun createToken(
     }
     json.addProperty("token_type", "Bearer")
     json.addProperty("expires_in", token.ttlSeconds(DateTime()))
+    // subject_kind is already included in id_token by IdTokenFactory; no need to duplicate here
     if (token.scopes != null) {
         json.addProperty("scope", token.scopes.joinToString(" "))
     }

@@ -45,12 +45,13 @@ class HandleTokenExchangeRequestsTest {
         val subject = BearerToken(
             "sub123",
             GrantType.AUTHORIZATION_CODE,
+            com.clouway.oauth2.token.SubjectKind.USER,
             "user-1",
             "client-a",
             "user@example.com",
             setOf("read", "write"),
             now.plusSeconds(3600),
-            mapOf("subject_kind" to "user"),
+            mapOf(),
         )
 
         every { tokens.findTokenAvailableAt("subtoken", any()) } returns Optional.of(subject)
@@ -59,7 +60,7 @@ class HandleTokenExchangeRequestsTest {
         )
 
         every { tokens.issueToken(any()) } returns TokenResponse(true,
-            BearerToken("new-access", GrantType.TOKEN_EXCHANGE, "user-1", "caller", "user@example.com", setOf("read"), now.plusSeconds(3600), mapOf()),
+            BearerToken("new-access", GrantType.TOKEN_EXCHANGE, com.clouway.oauth2.token.SubjectKind.USER, "user-1", "caller", "user@example.com", setOf("read"), now.plusSeconds(3600), mapOf()),
             "new-refresh")
 
         val builder = io.mockk.mockk<IdTokenBuilder>()
@@ -94,7 +95,7 @@ class HandleTokenExchangeRequestsTest {
     @Test
     fun rejectsScopeNotSubset() {
         val now = DateTime()
-        val subject = BearerToken("sub", GrantType.AUTHORIZATION_CODE, "user-1", "client-a", "user@example.com", setOf("read"), now.plusSeconds(3600), mapOf())
+        val subject = BearerToken("sub", GrantType.AUTHORIZATION_CODE, com.clouway.oauth2.token.SubjectKind.USER, "user-1", "client-a", "user@example.com", setOf("read"), now.plusSeconds(3600), mapOf())
         every { tokens.findTokenAvailableAt("subtoken", any()) } returns Optional.of(subject)
 
         val req = ParamRequest(
@@ -117,12 +118,13 @@ class HandleTokenExchangeRequestsTest {
         val subject = BearerToken(
             "subsvc",
             GrantType.JWT,
+            com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT,
             "svc-1",
             "client-a",
             "svc@example.com",
             setOf("svc.read"),
             now.plusSeconds(3600),
-            mapOf("subject_kind" to "service_account"),
+            mapOf(),
         )
 
         every { tokens.findTokenAvailableAt("subtoken", any()) } returns Optional.of(subject)
@@ -131,7 +133,7 @@ class HandleTokenExchangeRequestsTest {
         )
 
         every { tokens.issueToken(any()) } returns TokenResponse(true,
-            BearerToken("new-access", GrantType.TOKEN_EXCHANGE, "svc-1", "caller", "svc@example.com", setOf("svc.read"), now.plusSeconds(3600), mapOf()),
+            BearerToken("new-access", GrantType.TOKEN_EXCHANGE, com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT, "svc-1", "caller", "svc@example.com", setOf("svc.read"), now.plusSeconds(3600), mapOf()),
             "new-refresh")
 
         val builder2 = io.mockk.mockk<IdTokenBuilder>()
@@ -165,7 +167,7 @@ class HandleTokenExchangeRequestsTest {
     @Test
     fun rejectsUnsupportedRequestedTokenType() {
         val now = DateTime()
-        val subject = BearerToken("sub", GrantType.AUTHORIZATION_CODE, "user-1", "client-a", "user@example.com", setOf("read"), now.plusSeconds(3600), mapOf())
+        val subject = BearerToken("sub", GrantType.AUTHORIZATION_CODE, com.clouway.oauth2.token.SubjectKind.USER, "user-1", "client-a", "user@example.com", setOf("read"), now.plusSeconds(3600), mapOf())
         every { tokens.findTokenAvailableAt("subtoken", any()) } returns Optional.of(subject)
 
         val req = ParamRequest(
@@ -214,7 +216,7 @@ class HandleTokenExchangeRequestsTest {
             val tr = firstArg<com.clouway.oauth2.token.TokenRequest>()
             capturedParams = tr.params
             TokenResponse(true,
-                BearerToken("new-access", GrantType.TOKEN_EXCHANGE, "user-1", "caller", "user@example.com", setOf("read"), now.plusSeconds(3600), mapOf()),
+                BearerToken("new-access", GrantType.TOKEN_EXCHANGE, com.clouway.oauth2.token.SubjectKind.USER, "user-1", "caller", "user@example.com", setOf("read"), now.plusSeconds(3600), mapOf()),
                 null)
         }
         val builder3 = io.mockk.mockk<IdTokenBuilder>()
@@ -246,7 +248,7 @@ class HandleTokenExchangeRequestsTest {
     fun inheritsSubjectScopesWhenScopeOmitted() {
         val now = DateTime()
         val subjectScopes = setOf("read", "write")
-        val subject = BearerToken("sub", GrantType.AUTHORIZATION_CODE, "user-1", "client-a", "user@example.com", subjectScopes, now.plusSeconds(3600), mapOf())
+        val subject = BearerToken("sub", GrantType.AUTHORIZATION_CODE, com.clouway.oauth2.token.SubjectKind.USER, "user-1", "client-a", "user@example.com", subjectScopes, now.plusSeconds(3600), mapOf())
         every { tokens.findTokenAvailableAt("subtoken", any()) } returns Optional.of(subject)
         every { identityFinder.findIdentity(any<FindIdentityRequest>()) } returns FindIdentityResult.User(
             Identity("user-1", "User One", "User", "One", "user@example.com", null, emptyMap()),
@@ -256,7 +258,7 @@ class HandleTokenExchangeRequestsTest {
             // ensure scopes inherited
             assertThat(tr.scopes, equalTo(subjectScopes))
             TokenResponse(true,
-                BearerToken("new-access", GrantType.TOKEN_EXCHANGE, "user-1", "caller", "user@example.com", tr.scopes, now.plusSeconds(3600), mapOf()),
+                BearerToken("new-access", GrantType.TOKEN_EXCHANGE, com.clouway.oauth2.token.SubjectKind.USER, "user-1", "caller", "user@example.com", tr.scopes, now.plusSeconds(3600), mapOf()),
                 null)
         }
         val builder4 = io.mockk.mockk<IdTokenBuilder>()

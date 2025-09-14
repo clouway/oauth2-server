@@ -86,6 +86,7 @@ class TokenExchangeController(
         val identityRes =
             identityFinder.findIdentity(
                 FindIdentityRequest(
+                    subject.subjectKind,
                     subject.identityId,
                     subject.grantType,
                     instant,
@@ -102,14 +103,6 @@ class TokenExchangeController(
             params["requested_token_type"] = requestedTypes.joinToString(" ")
         }
         audience?.let { params["audience"] = it }
-        // Preserve/propagate subject kind for downstream components
-        val subjectKind =
-            when (identityRes) {
-                is FindIdentityResult.User -> com.clouway.oauth2.token.SubjectKind.USER
-                is FindIdentityResult.ServiceAccountClient -> com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT
-                else -> com.clouway.oauth2.token.SubjectKind.USER
-            }
-        params["subject_kind"] = if (subjectKind == com.clouway.oauth2.token.SubjectKind.SERVICE_ACCOUNT) "service_account" else "user"
 
         when (identityRes) {
             is FindIdentityResult.User -> {
@@ -133,15 +126,16 @@ class TokenExchangeController(
                 }
 
                 val accessToken = tokenResponse.accessToken
-                val idToken = idTokenFactory
-                    .newBuilder()
-                    .issuer(request.header("Host"))
-                    .audience(credentials.clientId())
-                    .subjectUser(identityRes.identity)
-                    .ttl(accessToken.ttlSeconds(instant))
-                    .issuedAt(instant)
-                    .withAccessToken(accessToken.value)
-                    .build()
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(request.header("Host"))
+                        .audience(credentials.clientId())
+                        .subjectUser(identityRes.identity)
+                        .ttl(accessToken.ttlSeconds(instant))
+                        .issuedAt(instant)
+                        .withAccessToken(accessToken.value)
+                        .build()
                 val idtRequested = requestedTypes.contains("urn:ietf:params:oauth:token-type:id_token")
                 val idt = if (idtRequested) idToken else null
                 val refreshRequested = requestedTypes.contains("urn:ietf:params:oauth:token-type:refresh_token")
@@ -170,15 +164,16 @@ class TokenExchangeController(
                 }
 
                 val accessToken = tokenResponse.accessToken
-                val idToken = idTokenFactory
-                    .newBuilder()
-                    .issuer(request.header("Host"))
-                    .audience(credentials.clientId())
-                    .subjectServiceAccount(identityRes.serviceAccount)
-                    .ttl(accessToken.ttlSeconds(instant))
-                    .issuedAt(instant)
-                    .withAccessToken(accessToken.value)
-                    .build()
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(request.header("Host"))
+                        .audience(credentials.clientId())
+                        .subjectServiceAccount(identityRes.serviceAccount)
+                        .ttl(accessToken.ttlSeconds(instant))
+                        .issuedAt(instant)
+                        .withAccessToken(accessToken.value)
+                        .build()
                 val idtRequested = requestedTypes.contains("urn:ietf:params:oauth:token-type:id_token")
                 val idt = if (idtRequested) idToken else null
                 val refreshRequested = requestedTypes.contains("urn:ietf:params:oauth:token-type:refresh_token")

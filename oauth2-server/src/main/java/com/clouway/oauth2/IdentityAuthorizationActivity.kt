@@ -9,6 +9,7 @@ import com.clouway.oauth2.token.FindIdentityRequest
 import com.clouway.oauth2.token.FindIdentityResult
 import com.clouway.oauth2.token.GrantType
 import com.clouway.oauth2.token.IdentityFinder
+import com.clouway.oauth2.token.SubjectKind
 
 /**
  * @author Vasil Mitov <vasil.mitov></vasil.mitov>@clouway.com>
@@ -25,6 +26,7 @@ class IdentityAuthorizationActivity(
     ): Response {
         val findIdentityRequest =
             FindIdentityRequest(
+                SubjectKind.USER,
                 authorization.identityId,
                 GrantType.AUTHORIZATION_CODE,
                 instant,

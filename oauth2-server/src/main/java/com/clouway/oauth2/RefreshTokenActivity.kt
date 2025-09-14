@@ -33,8 +33,10 @@ class RefreshTokenActivity(
         }
         val accessToken = response.accessToken
 		
+        val subjectKind = accessToken.subjectKind
         val findReq =
             FindIdentityRequest(
+                subjectKind,
                 accessToken.identityId,
                 accessToken.grantType,
                 instant,
@@ -44,15 +46,16 @@ class RefreshTokenActivity(
 		
         when (val res = identityFinder.findIdentity(findReq)) {
             is FindIdentityResult.User -> {
-                val idToken = idTokenFactory
-                    .newBuilder()
-                    .issuer(request.header("Host"))
-                    .audience(client.id)
-                    .subjectUser(res.identity)
-                    .ttl(response.accessToken.ttlSeconds(instant))
-                    .issuedAt(instant)
-                    .withAccessToken(accessToken.value)
-                    .build()
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(request.header("Host"))
+                        .audience(client.id)
+                        .subjectUser(res.identity)
+                        .ttl(response.accessToken.ttlSeconds(instant))
+                        .issuedAt(instant)
+                        .withAccessToken(accessToken.value)
+                        .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
@@ -62,15 +65,16 @@ class RefreshTokenActivity(
                 )
             }
             is FindIdentityResult.ServiceAccountClient -> {
-                val idToken = idTokenFactory
-                    .newBuilder()
-                    .issuer(request.header("Host"))
-                    .audience(client.id)
-                    .subjectServiceAccount(res.serviceAccount)
-                    .ttl(response.accessToken.ttlSeconds(instant))
-                    .issuedAt(instant)
-                    .withAccessToken(accessToken.value)
-                    .build()
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(request.header("Host"))
+                        .audience(client.id)
+                        .subjectServiceAccount(res.serviceAccount)
+                        .ttl(response.accessToken.ttlSeconds(instant))
+                        .issuedAt(instant)
+                        .withAccessToken(accessToken.value)
+                        .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
@@ -105,6 +109,7 @@ class RefreshTokenActivity(
 
         val findReq =
             FindIdentityRequest(
+                accessToken.subjectKind,
                 accessToken.identityId,
                 accessToken.grantType,
                 instant,
@@ -114,15 +119,16 @@ class RefreshTokenActivity(
 		
         when (val res = identityFinder.findIdentity(findReq)) {
             is FindIdentityResult.User -> {
-                val idToken = idTokenFactory
-                    .newBuilder()
-                    .issuer(request.header("Host"))
-                    .audience(credentials.clientId())
-                    .subjectUser(res.identity)
-                    .ttl(response.accessToken.ttlSeconds(instant))
-                    .issuedAt(instant)
-                    .withAccessToken(accessToken.value)
-                    .build()
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(request.header("Host"))
+                        .audience(credentials.clientId())
+                        .subjectUser(res.identity)
+                        .ttl(response.accessToken.ttlSeconds(instant))
+                        .issuedAt(instant)
+                        .withAccessToken(accessToken.value)
+                        .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
@@ -132,15 +138,16 @@ class RefreshTokenActivity(
                 )
             }
             is FindIdentityResult.ServiceAccountClient -> {
-                val idToken = idTokenFactory
-                    .newBuilder()
-                    .issuer(request.header("Host"))
-                    .audience(credentials.clientId())
-                    .subjectServiceAccount(res.serviceAccount)
-                    .ttl(response.accessToken.ttlSeconds(instant))
-                    .issuedAt(instant)
-                    .withAccessToken(accessToken.value)
-                    .build()
+                val idToken =
+                    idTokenFactory
+                        .newBuilder()
+                        .issuer(request.header("Host"))
+                        .audience(credentials.clientId())
+                        .subjectServiceAccount(res.serviceAccount)
+                        .ttl(response.accessToken.ttlSeconds(instant))
+                        .issuedAt(instant)
+                        .withAccessToken(accessToken.value)
+                        .build()
                 return BearerTokenResponse(
                     accessToken.value,
                     accessToken.ttlSeconds(instant),
