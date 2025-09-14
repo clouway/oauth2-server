@@ -94,13 +94,16 @@ class JwtController(
                 ).filter { it.isNotEmpty() }
                 .toSortedSet()
 
-        when (val res = identityFinder.findIdentity(
-            FindIdentityRequest(
-                subject = com.clouway.oauth2.token.Subject.ServiceAccount(claimSet.iss),
-                instantTime = instant,
-                clientId = "",
-            ),
-        )) {
+        when (
+            val res =
+                identityFinder.findIdentity(
+                    FindIdentityRequest(
+                        subject = Subject.ServiceAccount(claimSet.iss),
+                        instantTime = instant,
+                        clientId = "",
+                    ),
+                )
+        ) {
             is FindIdentityResult.User -> {
                 return OAuthError.invalidClient("authorization_code client cannot be used for JWT grant")
             }
@@ -125,16 +128,20 @@ class JwtController(
 
                 val client = Client(claimSet.iss, "", "", emptySet(), false)
 
-                val response = tokens.issueToken(
-                    TokenRequest(
-                        grantType = GrantType.JWT,
-                        client = client,
-                        subject = com.clouway.oauth2.token.Subject.ServiceAccount(serviceAccount.clientId),
-                        scopes = scopes,
-                        `when` = instant,
-                        params = params,
-                    ),
-                )
+                val response =
+                    tokens.issueToken(
+                        TokenRequest(
+                            grantType = GrantType.JWT,
+                            client = client,
+                            subject =
+                                Subject
+                                    .ServiceAccount(serviceAccount.clientId),
+                            scopes = scopes,
+                            `when` = instant,
+                            claims = serviceAccount.claims,
+                            params = params,
+                        ),
+                    )
 	            				
                 if (!response.isSuccessful) {
                     return OAuthError.invalidRequest("tokens issuing is temporary unavailable")

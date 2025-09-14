@@ -89,7 +89,7 @@ public class GetTokenInfoTest {
     if (anyToken.subject instanceof com.clouway.oauth2.token.Subject.User) {
       sub = ((com.clouway.oauth2.token.Subject.User) anyToken.subject).getId();
     } else {
-      sub = ((com.clouway.oauth2.token.Subject.ServiceAccount) anyToken.subject).getId();
+      sub = ((com.clouway.oauth2.token.Subject.ServiceAccount) anyToken.subject).clientEmail();
     }
     assertThat(o.get("sub").getAsString(), equalTo(sub));
     assertThat(o.get("exp").getAsString(), equalTo("" + anyTime.plusSeconds(200).asDate().getTime()));

@@ -36,6 +36,7 @@ class IssueNewTokenActivity(
                     subject = Subject.User(identity.id),
                     scopes = scopes,
                     `when` = instant,
+                    claims = identity.claims,
                     params = params,
                 ),
             )
@@ -45,15 +46,16 @@ class IssueNewTokenActivity(
         }
 		
         val accessToken = response.accessToken
-        val idToken = idTokenFactory
-            .newBuilder()
-            .issuer(request.header("Host"))
-            .audience(client.id)
-            .subjectUser(identity)
-            .ttl(accessToken.ttlSeconds(instant))
-            .issuedAt(instant)
-            .withAccessToken(accessToken.value)
-            .build()
+        val idToken =
+            idTokenFactory
+                .newBuilder()
+                .issuer(request.header("Host"))
+                .audience(client.id)
+                .subjectUser(identity)
+                .ttl(accessToken.ttlSeconds(instant))
+                .issuedAt(instant)
+                .withAccessToken(accessToken.value)
+                .build()
 		
         // Compute at_hash when id_token is present and access_token is issued with it
         return BearerTokenResponse(

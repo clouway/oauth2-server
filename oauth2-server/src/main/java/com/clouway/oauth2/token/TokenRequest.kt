@@ -11,6 +11,7 @@ data class TokenRequest(
     val client: Client,
     val subject: Subject,
     val scopes: Set<String>,
+    val claims: Map<String, Any>,
     val `when`: DateTime,
     val params: Map<String, String>,
 )

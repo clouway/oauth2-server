@@ -31,7 +31,7 @@ public class UserLoaderImpl implements UserLoader {
     if (token.get().subject instanceof com.clouway.oauth2.token.Subject.User) {
       subjectId = ((com.clouway.oauth2.token.Subject.User) token.get().subject).getId();
     } else if (token.get().subject instanceof com.clouway.oauth2.token.Subject.ServiceAccount) {
-      subjectId = ((com.clouway.oauth2.token.Subject.ServiceAccount) token.get().subject).getId();
+      subjectId = ((com.clouway.oauth2.token.Subject.ServiceAccount) token.get().subject).clientEmail();
     } else {
       return Optional.absent();
     }

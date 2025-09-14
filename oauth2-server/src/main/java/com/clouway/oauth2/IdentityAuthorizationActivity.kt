@@ -28,6 +28,7 @@ class IdentityAuthorizationActivity(
                 subject = Subject.User(authorization.subjectId),
                 instantTime = instant,
                 clientId = authorization.clientId,
+                params = authorization.params,
             )
 
         when (val res = identityFinder.findIdentity(findIdentityRequest)) {

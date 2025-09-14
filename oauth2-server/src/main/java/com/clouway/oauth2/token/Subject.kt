@@ -12,6 +12,6 @@ sealed interface Subject {
     ) : Subject
 
     data class ServiceAccount(
-        val id: String,
+        val clientEmail: String,
     ) : Subject
 }

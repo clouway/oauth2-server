@@ -11,7 +11,6 @@ import com.clouway.oauth2.token.IdentityFinder
 import com.clouway.oauth2.token.Subject
 import com.clouway.oauth2.token.Tokens
 import com.google.common.base.Joiner
-import com.google.common.collect.Maps
 import com.google.gson.JsonObject
 
 /**
@@ -62,7 +61,7 @@ internal class TokenInfoController(
                 val sub =
                     when (val s = token.subject) {
                         is Subject.User -> s.id
-                        is Subject.ServiceAccount -> s.id
+                        is Subject.ServiceAccount -> s.clientEmail
                     }
                 o.addProperty("sub", sub)
                 o.addProperty("exp", token.expirationTimestamp())
@@ -96,7 +95,7 @@ internal class TokenInfoController(
                 val sub =
                     when (val s = token.subject) {
                         is Subject.User -> s.id
-                        is Subject.ServiceAccount -> s.id
+                        is Subject.ServiceAccount -> s.clientEmail
                     }
                 o.addProperty("sub", sub)
                 o.addProperty("exp", token.expirationTimestamp())

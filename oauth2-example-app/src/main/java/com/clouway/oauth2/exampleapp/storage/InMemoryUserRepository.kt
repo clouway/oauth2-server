@@ -10,6 +10,7 @@ import com.clouway.oauth2.token.GrantType
 import com.clouway.oauth2.token.Identity
 import com.clouway.oauth2.token.IdentityFinder
 import com.clouway.oauth2.token.ServiceAccount
+import com.clouway.oauth2.token.Subject
 import com.clouway.oauth2.token.User
 import com.google.common.base.Optional
 
@@ -34,7 +35,7 @@ internal class InMemoryUserRepository :
     }
 
     override fun findIdentity(request: FindIdentityRequest): FindIdentityResult =
-        if (request.subject is com.clouway.oauth2.token.Subject.User) {
+        if (request.subject is Subject.User) {
             FindIdentityResult.User(
                 Identity(
                     id = "testUserID",
