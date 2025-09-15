@@ -19,6 +19,8 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static com.clouway.friendlyserve.testing.FakeRequest.aNewRequest;
 import static com.clouway.oauth2.authorization.AuthorizationBuilder.newAuthorization;
 import static com.clouway.oauth2.client.ClientBuilder.aNewClient;
@@ -52,7 +54,14 @@ public class IdentityAuthorizationActivityTest {
 
     context.checking(new Expectations() {{
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User("::user_id::"), anyInstantTime, anyAuth.clientId));
+      oneOf(identityFinder).findIdentity(
+              new FindIdentityRequest(
+                      new Subject.User("::user_id::"),
+                      anyInstantTime,
+                      anyAuth.clientId,
+                      Collections.emptyMap()
+              )
+      );
       will(returnValue(new FindIdentityResult.User(identity)));
 
       oneOf(authorizedIdentityActivity).execute(anyClient, identity, anyAuth.scopes, request, anyInstantTime, anyAuth.params);
@@ -75,7 +84,7 @@ public class IdentityAuthorizationActivityTest {
 
     context.checking(new Expectations() {{
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User("::user_id::"), anyInstantTime, anyAuth.clientId));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User("::user_id::"), anyInstantTime, anyAuth.clientId, Collections.emptyMap()));
       will(returnValue(NotFound.INSTANCE));
 
     }});
@@ -92,7 +101,7 @@ public class IdentityAuthorizationActivityTest {
     final Authorization anyAuth = newAuthorization().addParam("index", "1").build();
 
     context.checking(new Expectations() {{
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User(anyAuth.subjectId), anyInstantTime, anyAuth.clientId));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User(anyAuth.subjectId), anyInstantTime, anyAuth.clientId, Collections.singletonMap("index", "1")));
       will(returnValue(NotFound.INSTANCE));
     }});
 

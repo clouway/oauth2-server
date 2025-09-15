@@ -52,7 +52,8 @@ public class RetrieveUserInfoWithAccessTokenTest {
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
       will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, new Subject.User("::identity_id::"), "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User("::identity_id::"), anyInstantTime, "::clientId::"));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(
+              new Subject.User("::identity_id::"), anyInstantTime, "::clientId::", Collections.emptyMap()));
       will(returnValue(new FindIdentityResult.User(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::", Collections.<String, Object>emptyMap()))));
     }});
 
@@ -78,7 +79,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
       oneOf(tokens).findTokenAvailableAt(with(any(String.class)), with(any(DateTime.class)));
       will(returnValue(Optional.of(new BearerToken("", GrantType.AUTHORIZATION_CODE, new Subject.User("::identity_id::"), "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User("::identity_id::"), anyInstantTime, "::clientId::"));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.User("::identity_id::"), anyInstantTime, "::clientId::", Collections.emptyMap()));
       will(returnValue(new FindIdentityResult.User(new Identity("985", "::user name::", "::user given name::", "::family name::", "::user email::", "::user picture::",
               ImmutableMap.<String, Object>of("claim1", "::any string value::", "claim2", 342)))));
     }});
@@ -120,7 +121,7 @@ public class RetrieveUserInfoWithAccessTokenTest {
       oneOf(tokens).findTokenAvailableAt("::any token id::", anyInstantTime);
       will(returnValue(Optional.of(new BearerToken("", GrantType.JWT, new Subject.ServiceAccount("::identity_id::"), "::clientId::", "::user email::", Collections.<String>emptySet(), anyInstantTime, ImmutableMap.of("::index::", "::1::")))));
 
-      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.ServiceAccount("::identity_id::"), anyInstantTime, "::clientId::"));
+      oneOf(identityFinder).findIdentity(new FindIdentityRequest(new Subject.ServiceAccount("::identity_id::"), anyInstantTime, "::clientId::", Collections.emptyMap()));
       will(returnValue(NotFound.INSTANCE));
     }});
 

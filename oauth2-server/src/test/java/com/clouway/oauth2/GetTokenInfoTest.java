@@ -85,12 +85,7 @@ public class GetTokenInfoTest {
     assertThat(response.status().code, is(HttpURLConnection.HTTP_OK));
     assertThat(o.get("azp").getAsString(), equalTo(anyToken.clientId));
     assertThat(o.get("aud").getAsString(), equalTo(anyToken.clientId));
-    String sub;
-    if (anyToken.subject instanceof com.clouway.oauth2.token.Subject.User) {
-      sub = ((com.clouway.oauth2.token.Subject.User) anyToken.subject).getId();
-    } else {
-      sub = ((com.clouway.oauth2.token.Subject.ServiceAccount) anyToken.subject).clientEmail();
-    }
+    String sub = anyToken.subject.id();
     assertThat(o.get("sub").getAsString(), equalTo(sub));
     assertThat(o.get("exp").getAsString(), equalTo("" + anyTime.plusSeconds(200).asDate().getTime()));
     assertThat(o.get("expires_in").getAsInt(), equalTo(anyToken.ttlSeconds(anyTime).intValue()));

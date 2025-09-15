@@ -26,15 +26,7 @@ public class UserLoaderImpl implements UserLoader {
     if (!token.isPresent()) {
       return Optional.absent();
     }
-
-    String subjectId;
-    if (token.get().subject instanceof com.clouway.oauth2.token.Subject.User) {
-      subjectId = ((com.clouway.oauth2.token.Subject.User) token.get().subject).getId();
-    } else if (token.get().subject instanceof com.clouway.oauth2.token.Subject.ServiceAccount) {
-      subjectId = ((com.clouway.oauth2.token.Subject.ServiceAccount) token.get().subject).clientEmail();
-    } else {
-      return Optional.absent();
-    }
+    String subjectId = token.get().subject.id();
     Optional<User> user = repository.load(subjectId);
     if (!token.isPresent()) {
       return Optional.absent();

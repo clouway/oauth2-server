@@ -32,16 +32,13 @@ class TokenExchangeController(
         val subjectTokenType: String? = request.param("subject_token_type")
         val requestedTokenType: String? = request.param("requested_token_type")
         val scope: String? = request.param("scope")
-        val audience: String? = request.param("audience")
+
+        // rfc8707 - The "resource" parameter can be included to indicate the target resource server. Some clients fallback
+        // to using "audience" parameter instead of "resource" so we support both.
+        val audience: String? = request.paramOf("audience", "resource")
 
         if (subjectToken.isNullOrEmpty()) {
             return OAuthError.invalidRequest("subject_token is required")
-        }
-
-        // Validate subject token
-        val token: Optional<BearerToken> = tokens.findTokenAvailableAt(subjectToken, instant)
-        if (!token.isPresent) {
-            return OAuthError.invalidToken("Subject token is invalid or expired")
         }
 
         // Validate subject token type (support access_token and id_token as subject)
@@ -69,18 +66,26 @@ class TokenExchangeController(
             return OAuthError.invalidRequest("requested_token_type not supported")
         }
 
+        // Validate subject token
+        val possibleToken: Optional<BearerToken> = tokens.findTokenAvailableAt(subjectToken, instant)
+        if (!possibleToken.isPresent) {
+            return OAuthError.invalidToken("Subject token is invalid or expired")
+        }
+
+        val token = possibleToken.get()
+
         // Determine requested scopes; default to subject token scopes when omitted
         val requestedScopes: Set<String> =
-            if (!scope.isNullOrBlank()) scope.split(" ").filter { it.isNotBlank() }.toSet() else token.get().scopes ?: emptySet()
+            if (!scope.isNullOrBlank()) scope.split(" ").filter { it.isNotBlank() }.toSet() else token.scopes ?: emptySet()
 
         // Enforce subset: all requested scopes must be within subject token scopes
-        val subjectScopes = token.get().scopes ?: emptySet()
+        val subjectScopes = token.scopes ?: emptySet()
         if (!requestedScopes.all { subjectScopes.contains(it) }) {
             return OAuthError.invalidScope("requested scopes must be subset of subject token scopes")
         }
 
         // Find identity behind the subject token before issuing
-        val existingToken = token.get()
+        val existingToken = possibleToken.get()
         val identityRes =
             identityFinder.findIdentity(
                 FindIdentityRequest(
@@ -98,7 +103,10 @@ class TokenExchangeController(
         if (requestedTypes.isNotEmpty()) {
             params["requested_token_type"] = requestedTypes.joinToString(" ")
         }
+        // rfc8707 - The "resource" parameter can be included to indicate the target resource server
         audience?.let { params["audience"] = it }
+
+        val issuer = LocalConfig.jwtIssuerName() ?: request.buildIssuer()
 
         when (identityRes) {
             is FindIdentityResult.User -> {
@@ -125,8 +133,8 @@ class TokenExchangeController(
                 val idToken =
                     idTokenFactory
                         .newBuilder()
-                        .issuer(request.header("Host"))
-                        .audience(credentials.clientId())
+                        .issuer(issuer)
+                        .audience(audience)
                         .subjectUser(identityRes.identity)
                         .ttl(accessToken.ttlSeconds(instant))
                         .issuedAt(instant)

@@ -7,10 +7,8 @@ kt_jvm_library(
         "BearerTokenBuilder.java",
         "IdentityBuilder.java",
     ],
+    associates = ["//oauth2-server/src/main/java/com/clouway/oauth2/token:token"],
     visibility = ["//visibility:public"],
-    deps = [
-        "//oauth2-server/src/main/java/com/clouway/oauth2/token",
-    ],
 )
 
 kt_jvm_test(
