@@ -95,6 +95,8 @@ private class DefaultIdTokenBuilder(
             Jwts
                 .builder()
                 .header()
+                // Backward compatibility with clients which expect "cid" header parameter.
+                .add("cid", signingKey.keyId)
                 .keyId(signingKey.keyId)
                 .and()
                 .claims(claims)

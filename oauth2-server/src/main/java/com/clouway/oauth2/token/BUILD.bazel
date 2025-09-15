@@ -4,17 +4,20 @@ package(default_visibility = ["//visibility:public"])
 
 kt_jvm_library(
     name = "token",
-    srcs = glob(["*.kt", "*.java"]),
+    srcs = glob([
+        "*.kt",
+        "*.java",
+    ]),
     deps = [
-        "@maven//:com_google_guava_guava",
-        "//oauth2-server/src/main/java/com/clouway/oauth2/common",
-        "//oauth2-server/src/main/java/com/clouway/oauth2/util",
         "//oauth2-server/src/main/java/com/clouway/oauth2/client",
-        "//oauth2-server/src/main/java/com/clouway/oauth2/keystore",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/common",
         "//oauth2-server/src/main/java/com/clouway/oauth2/jws",
         "//oauth2-server/src/main/java/com/clouway/oauth2/jwt",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/keystore",
+        "//oauth2-server/src/main/java/com/clouway/oauth2/util",
+        "@maven//:com_google_guava_guava",
         "@maven//:io_jsonwebtoken_jjwt_api",
         "@maven//:io_jsonwebtoken_jjwt_impl",
         "@maven//:io_jsonwebtoken_jjwt_jackson",
-    ]
+    ],
 )
