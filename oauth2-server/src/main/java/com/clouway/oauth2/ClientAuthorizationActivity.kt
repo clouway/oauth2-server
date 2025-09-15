@@ -50,7 +50,7 @@ internal class ClientAuthorizationActivity(
                 "code_challenge_method",
             )
         val scopes: Set<String> = Sets.newTreeSet(Splitter.on(" ").omitEmptyStrings().split(scope))
-		
+
         val result =
             clientAuthorizer.authorizeClient(
                 AuthorizationRequest(
