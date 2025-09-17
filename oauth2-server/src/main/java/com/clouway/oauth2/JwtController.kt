@@ -135,7 +135,7 @@ class JwtController(
                             client = client,
                             subject =
                                 Subject
-                                    .ServiceAccount(serviceAccount.clientId),
+                                    .ServiceAccount(serviceAccount.clientEmail),
                             scopes = scopes,
                             `when` = instant,
                             claims = serviceAccount.claims,

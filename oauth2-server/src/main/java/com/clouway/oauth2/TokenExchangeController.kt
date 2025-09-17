@@ -155,7 +155,7 @@ class TokenExchangeController(
                             client = Client(credentials.clientId(), credentials.clientSecret(), "", emptySet(), false),
                             subject =
                                 com.clouway.oauth2.token.Subject
-                                    .ServiceAccount(identityRes.serviceAccount.clientId),
+                                    .ServiceAccount(identityRes.serviceAccount.clientEmail),
                             scopes = requestedScopes,
                             `when` = instant,
                             claims = identityRes.serviceAccount.claims,

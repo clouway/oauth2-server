@@ -12,6 +12,4 @@ import com.google.common.base.Optional;
  */
 public interface IdTokenFactory {
   IdTokenBuilder newBuilder();
-
-
 }

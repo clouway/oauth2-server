@@ -14,11 +14,14 @@ import com.clouway.oauth2.token.BearerTokenBuilder
 import com.clouway.oauth2.token.FindIdentityRequest
 import com.clouway.oauth2.token.FindIdentityResult
 import com.clouway.oauth2.token.GrantType
+import com.clouway.oauth2.token.IdTokenBuilder
 import com.clouway.oauth2.token.IdTokenFactory
 import com.clouway.oauth2.token.IdentityFinder
+import com.clouway.oauth2.token.JjwtIdTokenFactory
 import com.clouway.oauth2.token.Permissions
 import com.clouway.oauth2.token.Scope
 import com.clouway.oauth2.token.ServiceAccount
+import com.clouway.oauth2.token.Subject
 import com.clouway.oauth2.token.TokenRequest
 import com.clouway.oauth2.token.TokenResponse
 import com.clouway.oauth2.token.Tokens
@@ -109,6 +112,82 @@ class HandleJwtTokenRequestsTest {
         every { b1.withAccessToken(any()) } returns b1
         every { b1.build() } returns "::id_token::"
         every { tokens.issueToken(any<TokenRequest>()) } returns
+            TokenResponse(
+                true,
+                BearerTokenBuilder
+                    .aNewToken()
+                    .withValue("::access_token::")
+                    .expiresAt(anyInstantTime.plusSeconds(1000))
+                    .build(),
+                "::refresh_token::",
+            )
+
+        val response =
+            controller.handleAsOf(
+                newJwtRequest(
+                    String.format(
+                        "%s.%s.%s",
+                        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9",
+                        body,
+                        signature,
+                    ),
+                    "::host::",
+                ),
+                anyInstantTime,
+            )
+        val responseContent = RsPrint(response).printBody()
+        Assert.assertThat(responseContent, Matchers.containsString("::access_token::"))
+        Assert.assertThat(responseContent, Matchers.containsString("::refresh_token::"))
+        Assert.assertThat(responseContent, Matchers.containsString("1000"))
+        Assert.assertThat(responseContent, Matchers.containsString("::id_token::"))
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun tokenParamsArePassed() {
+        val anySignatureThatWillVerifies =
+            mockk<Signature>()
+
+        val anyInstantTime = DateTime()
+        every { repository.findKey(any<Jwt.Header>(), any<Jwt.ClaimSet>()) } returns
+            Optional.of(Pem.Block("", ImmutableMap.of(), byteArrayOf()))
+        every { signatureFactory.createSignature(any(), any()) } returns
+            Optional.of(anySignatureThatWillVerifies)
+        every { anySignatureThatWillVerifies.verifyWithPrivateKey(any(), any()) } returns true
+
+        every { identityFinder.findIdentity(any<FindIdentityRequest>()) } returns
+            FindIdentityResult.ServiceAccountClient(
+                ServiceAccount(
+                    clientId = "::id::",
+                    clientEmail = "::email::",
+                    name = "::name::",
+                    customerId = null,
+                    claims = emptyMap(),
+                ),
+            )
+
+        val b1 = mockk<IdTokenBuilder>()
+        every { idTokenFactory.newBuilder() } returns b1
+        every { b1.issuer(any()) } returns b1
+        every { b1.audience(any()) } returns b1
+        every { b1.subjectServiceAccount(any()) } returns b1
+        every { b1.ttl(any()) } returns b1
+        every { b1.issuedAt(any()) } returns b1
+        every { b1.withAccessToken(any()) } returns b1
+        every { b1.build() } returns "::id_token::"
+        every {
+            tokens.issueToken(
+                TokenRequest(
+                    GrantType.JWT,
+                    Client("xxx@developer.com", "", "", emptySet(), false),
+                    Subject.ServiceAccount("::email::"),
+                    setOf("test1", "test2"),
+                    mapOf(),
+                    anyInstantTime,
+                    mapOf(),
+                ),
+            )
+        } returns
             TokenResponse(
                 true,
                 BearerTokenBuilder
